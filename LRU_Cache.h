@@ -10,8 +10,6 @@
 #include<list>
 #include<unordered_map>
 #include<utility>
-using namespace std;
-
 
 template<typename KeyType,typename ValueType>
 class LRUCache{
