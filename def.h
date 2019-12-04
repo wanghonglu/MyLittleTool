@@ -10,6 +10,9 @@
 #include<iostream>
 #include<ctime>
 #include<cstdlib>
+#include<random>
+#include<chrono>
+#include<algorithm>
 unsigned int Random(unsigned int max=0,unsigned int min=0 )
 {
     static bool  seed_init = false;
@@ -23,6 +26,26 @@ unsigned int Random(unsigned int max=0,unsigned int min=0 )
     
     return min+random()%(max-min);
 }
+int32_t GetRandomNumber()
+{
+    static std::default_random_engine e(
+            std::chrono::system_clock::now().time_since_epoch().count()
+            );
+    static std::uniform_int_distribution<int32_t>u;
+
+    return u(e);
+}
+std::string GetRandomString()
+{
+    static thread_local std::string str="abcdefghijklmnopqrsjuvwxyz@!*&$%+-=;:/.,()[]{}|";
+    static std::random_device rd;
+    static std::mt19937 engine(rd());
+
+    std::shuffle( str.begin(),str.end(),engine );
+
+    return str;
+}
+
 
 
 #endif
