@@ -13,6 +13,8 @@
 #include<random>
 #include<chrono>
 #include<algorithm>
+#include<sys/time.h>
+#include<sstream>
 unsigned int Random(unsigned int max=0,unsigned int min=0 )
 {
     static bool  seed_init = false;
@@ -44,6 +46,46 @@ std::string GetRandomString()
     std::shuffle( str.begin(),str.end(),engine );
 
     return str;
+}
+uint64_t now_sec()
+{
+    return std::chrono::duration_cast<std::chrono::seconds>(
+            std::chrono::system_clock::now().time_since_epoch()).count();
+}
+uint64_t now_ms()
+{
+    return std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch()).count();
+}
+uint64_t C_now_sec()
+{
+    struct timeval tv;
+    gettimeofday(&tv,NULL);
+    return tv.tv_sec;
+};
+uint64_t C_now_ms()
+{
+    struct timeval tv;
+    gettimeofday(&tv,NULL);
+    return tv.tv_usec/1000;
+}
+std::string DateTimeFmt( char split='-',bool WithMillSeconds=false )
+{
+    struct timeval tv;
+    struct tm _tm;
+    gettimeofday(&tv,NULL);
+    localtime_r( &tv.tv_sec, &_tm );
+
+    std::stringstream ss;
+    ss<<_tm.tm_year+1900<<split<<_tm.tm_mon+1<<split<<_tm.tm_mday<<" ";
+    ss<<_tm.tm_hour<<":"<<_tm.tm_min<<":"<<_tm.tm_sec;
+    if( WithMillSeconds )
+        ss<<" "<<(tv.tv_usec/1000)%1000;
+    return ss.str(); 
+
+
+
+
 }
 
 
