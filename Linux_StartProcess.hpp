@@ -21,6 +21,7 @@
 #include <sys/resource.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include<string.h>
  /* 设置core文件 */
 void SetCoreFileUnlimit()
 {
@@ -72,18 +73,22 @@ void Daemonize( const char* dir  )
 {
     if( 0!=fork() )
         exit(0);//父进程结束
-    if( -1 !=setsid()  )
+    if( -1 ==setsid()  )
         exit(0);//将该进程脱离原会话组，新建新的会话，并让该进程为会话主进程
     if( 0!=fork() )
         exit(0);//这个感觉没必要
     chdir(dir);
 }
-int SwitchFileTo( int fd ,const char*file = "dev/null" )
+int SwitchFileTo( int fd ,const char*file )
 {
     int tmpfd;
     close( fd );
 
-    tmpfd = open( file, O_RDWR );
+    //如果是重新定位到另一个文件 这里面的标志位必须有 CREAT(创建) APPEND(原文件的基础上追加)
+    if( strcmp( file, "/dev/null" ) !=0 )
+        tmpfd = open(file,O_RDWR|O_CREAT|O_APPEND, 0644);//拥有这 读写权限 同组用户读 其他用户读权限
+    else 
+        tmpfd = open( file,O_RDWR );
     if( tmpfd !=-1 && tmpfd !=fd  )
     {
         // dup2( oldfd, newfd );
