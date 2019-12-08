@@ -10,22 +10,24 @@
 #include<vector>
 #include<atomic>
 #include<cassert>
-#include<sys/syscall.h>
 #include<unistd.h>
+#include <sys/prctl.h>
+#include<chrono>
 template< typename T>
 class ThreadOper{
+    public:
     explicit ThreadOper()
     {
-        m_listDoing = std::make_unique<std::list<T>>();
-        m_listWait = std::make_unique<std::list<T>>();
-        m_stop = false;
+        m_listDoing = std::make_shared<std::list<T>>();
+        m_listWait = std::make_shared<std::list<T>>();
+        m_stop.store(false);
     }
 
     void    Start()
     {
-        m_thread.reset([](){
+        m_thread.reset( new std::thread ([this](){
                 LoopRun();
-                });
+                }));
     }
 
     virtual  void LoopRun()=0;//子类实现
@@ -33,14 +35,14 @@ class ThreadOper{
     void    Push( const T& t)
     {
         std::unique_lock< std::mutex > l( m_mutex  );
-        m_listWait->push_back( t );
+//        m_listWait->push_back( t );
         m_condition.notify_one();
     }
 
 
     void    Stop()
     {
-        m_stop = true;
+        m_stop.store(true);
     }
 
     void    Join()
@@ -48,32 +50,37 @@ class ThreadOper{
         if( m_thread.get() && m_thread->joinable() )
             m_thread->join();
     }
+    void    Sleep( uint32_t ms )
+    {
+        std::this_thread::sleep_for( std::chrono::milliseconds(ms) );
+    }
+
+    void   SignNameForThread( const std::string threadname )
+    {
+#ifdef __linux__ 
+        prctl(PR_SET_NAME, threadname.c_str());
+#endif
+    }
 
     inline bool IsStoped()const 
     {
-        return m_stop;
+        return m_stop.load() == true;
     }
-    static unsigned int GetThreadId()
-    {
-        static thread_local  unsigned int s_threadId=0;
-        if( s_threadId !=0  ) return s_threadId;
-        return s_threadId = syscall(SYS_gettid);
-    }
-    private:
-    void Swap()
+    std::shared_ptr<std::list<T>>&  Pop()
     {
         std::unique_lock<std::mutex> l(m_mutex);
         m_condition.wait(l,[this]()->bool{ return m_stop || !m_listWait->empty(); });
         if( m_stop  )
-            return;
+            return m_listDoing;
         m_listDoing.swap( m_listWait );
-        return;
+        return m_listDoing;
     }
+    private:
         mutable std::mutex               m_mutex;
         std::condition_variable          m_condition;
-        std::unique_ptr<std::list<T>>    m_listDoing;
-        std::unique_ptr<std::list<T>>    m_listWait;
+        std::shared_ptr<std::list<T>>    m_listDoing;
+        std::shared_ptr<std::list<T>>    m_listWait;
         std::shared_ptr<std::thread>     m_thread;
-        std::atomic<bool>                m_stop = false;
+        std::atomic<bool>                m_stop;
 };
 #endif

@@ -6,23 +6,27 @@
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
 Add	LRU_Cache.h	/^        void Add(const KeyType& key,const ValueType& val )$/;"	f	class:LRUCache
 BeforStartProcess	Linux_StartProcess.hpp	/^void BeforStartProcess( const char*stdoutFile="dev\/null", const char*stderrFile="dev\/null" )$/;"	f
-C_now_ms	def.h	/^uint64_t C_now_ms()$/;"	f
-C_now_sec	def.h	/^uint64_t C_now_sec()$/;"	f
+C_now_ms	def.cpp	/^uint64_t C_now_ms()$/;"	f
+C_now_sec	def.cpp	/^uint64_t C_now_sec()$/;"	f
 Capacity	LRU_Cache.h	/^        size_t Capacity()const$/;"	f	class:LRUCache
 Clear	LRU_Cache.h	/^        void Clear()$/;"	f	class:LRUCache
 Contain	LRU_Cache.h	/^        bool Contain(const KeyType& key )const$/;"	f	class:LRUCache
 DEBUG	log.hpp	/^    DEBUG,$/;"	e	enum:LOG_LEVEL
 Daemonize	Linux_StartProcess.hpp	/^void Daemonize( const char* dir  )$/;"	f
 DateChangeWay	log.hpp	/^    DateChangeWay,$/;"	e	enum:LogSwitchType
-DateTimeFmt	def.h	/^std::string DateTimeFmt( char split='-',bool WithMillSeconds=false )$/;"	f
+DateFmt	def.cpp	/^std::string DateFmt( char split )$/;"	f
+DateTimeFmtBySeconds	def.cpp	/^std::string DateTimeFmtBySeconds(uint64_t millisec, char split,bool WithMillSeconds )$/;"	f
 DefaultLogSize	log.hpp	/^    DefaultLogSize = 1024*1024*50,$/;"	e	enum:LogSwitchType
 ERROR	log.hpp	/^    ERROR,$/;"	e	enum:LOG_LEVEL
 FATAL	log.hpp	/^    FATAL,$/;"	e	enum:LOG_LEVEL
-GetRandomNumber	def.h	/^int32_t GetRandomNumber()$/;"	f
-GetRandomString	def.h	/^std::string GetRandomString()$/;"	f
-GetThreadId	ThreadOper.hpp	/^    static unsigned int GetThreadId()$/;"	f	class:ThreadOper
+FmtLog	log.cpp	/^std::string LogInfo::FmtLog()$/;"	f	class:LogInfo
+GetBeginOfDay	def.cpp	/^uint32_t GetBeginOfDay()$/;"	f
+GetRandomNumber	def.cpp	/^int32_t GetRandomNumber()$/;"	f
+GetRandomString	def.cpp	/^std::string GetRandomString()$/;"	f
+GetThreadId	def.cpp	/^unsigned int GetThreadId()$/;"	f
 GetVal	LRU_Cache.h	/^        bool GetVal( const KeyType& key, ValueType& val  )$/;"	f	class:LRUCache
 INFO	log.hpp	/^    INFO,$/;"	e	enum:LOG_LEVEL
+Init	log.cpp	/^void Logger::Init( const std::string& filename  )$/;"	f	class:Logger
 Insert	LRU_Cache.h	/^        void Insert( const KeyType& key, const ValueType& val  )$/;"	f	class:LRUCache
 Instance	Singleton.hpp	/^        static T& Instance(){$/;"	f	class:Singleton
 IsStoped	ThreadOper.hpp	/^    inline bool IsStoped()const $/;"	f	class:ThreadOper
@@ -55,6 +59,8 @@ JSON_TRY	json.hpp	20396;"	d
 JSON_UNLIKELY	json.hpp	191;"	d
 JSON_UNLIKELY	json.hpp	20398;"	d
 Join	ThreadOper.hpp	/^    void    Join()$/;"	f	class:ThreadOper
+JosnLogInfo	log.hpp	/^struct JosnLogInfo:public LogInfoBase{$/;"	s
+JsonLog	log.hpp	/^struct JsonLog{$/;"	s
 LEVEL_MSG	log.hpp	/^static const char* LEVEL_MSG[]={$/;"	v
 LOG_LEVEL	log.hpp	/^enum LOG_LEVEL {$/;"	g
 LRUCache	LRU_Cache.h	/^        explicit LRUCache( size_t maxCount  ):m_capacity(maxCount)$/;"	f	class:LRUCache
@@ -62,10 +68,12 @@ LRUCache	LRU_Cache.h	/^class LRUCache{$/;"	c
 LRU_Test	LRU_Cache.h	/^void LRU_Test()$/;"	f
 LogFile	log.cpp	/^LogFile::LogFile( const std::string& file_name, LogSwitchType mod, uint64_t LogLimitSize  )$/;"	f	class:LogFile
 LogFile	log.hpp	/^struct LogFile{$/;"	s
-LogInfo	log.hpp	/^struct LogInfo{$/;"	s
+LogInfo	log.hpp	/^struct LogInfo :public LogInfoBase {$/;"	s
+LogInfoBase	log.hpp	/^struct LogInfoBase{$/;"	s
 LogStream	log.hpp	/^struct LogStream:public std::ostringstream{$/;"	s
 LogSwitchType	log.hpp	/^enum LogSwitchType$/;"	g
 Logger	log.hpp	/^class Logger$/;"	c
+LoopRun	log.cpp	/^void Logger::LoopRun()$/;"	f	class:Logger
 MakeFileName	log.cpp	/^std::string LogFile::MakeFileName()$/;"	f	class:LogFile
 NLOHMANN_BASIC_JSON_TPL	json.hpp	20403;"	d
 NLOHMANN_BASIC_JSON_TPL	json.hpp	247;"	d
@@ -78,25 +86,36 @@ NLOHMANN_JSON_VERSION_MAJOR	json.hpp	33;"	d
 NLOHMANN_JSON_VERSION_MINOR	json.hpp	34;"	d
 NLOHMANN_JSON_VERSION_PATCH	json.hpp	35;"	d
 OpenFile	log.cpp	/^void LogFile::OpenFile()$/;"	f	class:LogFile
+Pop	ThreadOper.hpp	/^    std::shared_ptr<std::list<T>>&  Pop()$/;"	f	class:ThreadOper
 Push	ThreadOper.hpp	/^    void    Push( const T& t)$/;"	f	class:ThreadOper
-Random	def.h	/^unsigned int Random(unsigned int max=0,unsigned int min=0 )$/;"	f
+Random	def.cpp	/^unsigned int Random(unsigned int max,unsigned int min )$/;"	f
+SLOG_DEBUG	log.hpp	170;"	d
+SLOG_ERROR	log.hpp	172;"	d
+SLOG_FATAL	log.hpp	174;"	d
+SLOG_INFO	log.hpp	171;"	d
+SLOG_WARNING	log.hpp	173;"	d
 SetCoreFileUnlimit	Linux_StartProcess.hpp	/^void SetCoreFileUnlimit()$/;"	f
+SetLogLevel	log.cpp	/^void  Logger::SetLogLevel( LOG_LEVEL log_level )$/;"	f	class:Logger
 SetProcessStackSize	Linux_StartProcess.hpp	/^void SetProcessStackSize( size_t size=0  )$/;"	f
 SetSocketFileSize	Linux_StartProcess.hpp	/^void SetSocketFileSize(size_t  size=0 )$/;"	f
 SetStdFileDescription	Linux_StartProcess.hpp	/^void SetStdFileDescription( const char*stdoutFile, const char* stderrFile )$/;"	f
+ShouldLog	log.cpp	/^bool Logger::ShouldLog( LOG_LEVEL log_level  )$/;"	f	class:Logger
+SignNameForThread	ThreadOper.hpp	/^    void   SignNameForThread( const std::string threadname )$/;"	f	class:ThreadOper
 Singleton	Singleton.hpp	/^class Singleton{$/;"	c
 Size	LRU_Cache.h	/^        size_t Size()const$/;"	f	class:LRUCache
 SizeChangeWay	log.hpp	/^    SizeChangeWay,$/;"	e	enum:LogSwitchType
+Sleep	ThreadOper.hpp	/^    void    Sleep( uint32_t ms )$/;"	f	class:ThreadOper
 Start	ThreadOper.hpp	/^    void    Start()$/;"	f	class:ThreadOper
 Stop	ThreadOper.hpp	/^    void    Stop()$/;"	f	class:ThreadOper
-Swap	ThreadOper.hpp	/^    void Swap()$/;"	f	class:ThreadOper
-SwitchFileTo	Linux_StartProcess.hpp	/^int SwitchFileTo( int fd ,const char*file = "dev\/null" )$/;"	f
+StreamLog	log.hpp	154;"	d
+SwitchFileTo	Linux_StartProcess.hpp	/^int SwitchFileTo( int fd ,const char*file )$/;"	f
 ThreadOper	ThreadOper.hpp	/^    explicit ThreadOper()$/;"	f	class:ThreadOper
 ThreadOper	ThreadOper.hpp	/^class ThreadOper{$/;"	c
 TryRollFile	log.cpp	/^void LogFile::TryRollFile()$/;"	f	class:LogFile
 UTF8_ACCEPT	json.hpp	/^    static constexpr uint8_t UTF8_ACCEPT = 0;$/;"	m	class:nlohmann::detail::serializer
 UTF8_REJECT	json.hpp	/^    static constexpr uint8_t UTF8_REJECT = 1;$/;"	m	class:nlohmann::detail::serializer
 WARNING	log.hpp	/^    WARNING,$/;"	e	enum:LOG_LEVEL
+WriteFile	log.cpp	/^void LogFile::WriteFile( const std::string& msg  )$/;"	f	class:LogFile
 __DEF_H__	def.h	2;"	d
 __LINUX_STARTPRO__	Linux_StartProcess.hpp	13;"	d
 __LOG_HPP__	log.hpp	6;"	d
@@ -300,6 +319,13 @@ from_ubjson	json.hpp	/^    static basic_json from_ubjson(A1 && a1, A2 && a2,$/;"
 from_ubjson	json.hpp	/^    static basic_json from_ubjson(detail::input_adapter&& i,$/;"	f	class:nlohmann::basic_json
 front	json.hpp	/^    const_reference front() const$/;"	f	class:nlohmann::basic_json
 front	json.hpp	/^    reference front()$/;"	f	class:nlohmann::basic_json
+gLog	log.hpp	116;"	d
+g_jsonlogDebug	log.cpp	/^thread_local   JsonLog<DEBUG>  g_jsonlogDebug; $/;"	v
+g_jsonlogError	log.cpp	/^thread_local   JsonLog<ERROR>  g_jsonlogError; $/;"	v
+g_jsonlogFatal	log.cpp	/^thread_local   JsonLog<FATAL>  g_jsonlogFatal; $/;"	v
+g_jsonlogInfo	log.cpp	/^thread_local   JsonLog<INFO>   g_jsonlogInfo; $/;"	v
+g_jsonlogWaring	log.cpp	/^thread_local   JsonLog<WARNING>g_jsonlogWaring; $/;"	v
+g_log	log.cpp	/^thread_local   LogStream       g_log;$/;"	v
 get	json.hpp	/^    BasicJsonType get() const$/;"	f	class:nlohmann::basic_json
 get	json.hpp	/^    basic_json get() const$/;"	f	class:nlohmann::basic_json
 get	json.hpp	/^    int get()$/;"	f	class:nlohmann::detail::binary_reader
@@ -492,22 +518,23 @@ m_capacity	LRU_Cache.h	/^        size_t              m_capacity;$/;"	m	class:LRU
 m_condition	ThreadOper.hpp	/^        std::condition_variable          m_condition;$/;"	m	class:ThreadOper
 m_file	json.hpp	/^        : m_file(f)$/;"	f	class:nlohmann::detail::file_input_adapter
 m_file	json.hpp	/^    std::FILE* m_file;$/;"	m	class:nlohmann::detail::file_input_adapter
-m_file	log.hpp	/^        LogFile                          m_file;$/;"	m	class:Logger
 m_file	log.hpp	/^        std::ofstream     m_file;$/;"	m	struct:LogFile
+m_file	log.hpp	/^        std::shared_ptr<LogFile>         m_file=nullptr;$/;"	m	class:Logger
 m_filename	log.hpp	/^        std::string       m_filename;$/;"	m	struct:LogFile
-m_filename	log.hpp	/^    const char*   m_filename;$/;"	m	struct:LogInfo
-m_functionname	log.hpp	/^    const char*   m_functionname;$/;"	m	struct:LogInfo
+m_filename	log.hpp	/^    std::string   m_filename;$/;"	m	struct:LogInfo
+m_functionname	log.hpp	/^    std::string   m_functionname;$/;"	m	struct:LogInfo
 m_it	json.hpp	/^        : m_object(other.m_object), m_it(other.m_it) {}$/;"	f	class:nlohmann::detail::iter_impl
 m_it	json.hpp	/^    difference_type m_it = (std::numeric_limits<std::ptrdiff_t>::min)();$/;"	m	class:nlohmann::detail::primitive_iterator_t
 m_it	json.hpp	/^    internal_iterator<typename std::remove_const<BasicJsonType>::type> m_it;$/;"	m	class:nlohmann::detail::iter_impl
-m_json	log.hpp	/^    nlohmann::json    m_json;$/;"	m	struct:LogStream
-m_level	log.hpp	/^        LOG_LEVEL                        m_level;$/;"	m	class:Logger
+m_json	log.hpp	/^    std::unique_ptr<nlohmann::json> m_json;$/;"	m	struct:JosnLogInfo
+m_json	log.hpp	/^    std::unique_ptr<nlohmann::json> m_json;$/;"	m	struct:JsonLog
+m_level	log.hpp	/^        std::atomic<unsigned int>        m_level;$/;"	m	class:Logger
 m_level	log.hpp	/^    LOG_LEVEL     m_level;$/;"	m	struct:LogInfo
 m_lexer	json.hpp	/^    lexer_t m_lexer;$/;"	m	class:nlohmann::detail::parser
 m_line	log.hpp	/^    unsigned int  m_line; $/;"	m	struct:LogInfo
 m_list	LRU_Cache.h	/^        std::list<KeyType>  m_list;$/;"	m	class:LRUCache
-m_listDoing	ThreadOper.hpp	/^        std::unique_ptr<std::list<T>>    m_listDoing;$/;"	m	class:ThreadOper
-m_listWait	ThreadOper.hpp	/^        std::unique_ptr<std::list<T>>    m_listWait;$/;"	m	class:ThreadOper
+m_listDoing	ThreadOper.hpp	/^        std::shared_ptr<std::list<T>>    m_listDoing;$/;"	m	class:ThreadOper
+m_listWait	ThreadOper.hpp	/^        std::shared_ptr<std::list<T>>    m_listWait;$/;"	m	class:ThreadOper
 m_logChangeType	log.hpp	/^        LogSwitchType     m_logChangeType = DateChangeWay;$/;"	m	struct:LogFile
 m_logLimitSize	log.hpp	/^        uint64_t          m_logLimitSize;$/;"	m	struct:LogFile
 m_logSize	log.hpp	/^        uint64_t          m_logSize;$/;"	m	struct:LogFile
@@ -517,11 +544,11 @@ m_msg	log.hpp	/^    std::string   m_msg;$/;"	m	struct:LogInfo
 m_mutex	ThreadOper.hpp	/^        mutable std::mutex               m_mutex;$/;"	m	class:ThreadOper
 m_object	json.hpp	/^    explicit iter_impl(pointer object) noexcept : m_object(object)$/;"	f	class:nlohmann::detail::iter_impl
 m_object	json.hpp	/^    pointer m_object = nullptr;$/;"	m	class:nlohmann::detail::iter_impl
-m_stop	ThreadOper.hpp	/^        std::atomic<bool>                m_stop = false;$/;"	m	class:ThreadOper
+m_stop	ThreadOper.hpp	/^        std::atomic<bool>                m_stop;$/;"	m	class:ThreadOper
 m_thread	ThreadOper.hpp	/^        std::shared_ptr<std::thread>     m_thread;$/;"	m	class:ThreadOper
 m_threadId	log.hpp	/^    unsigned      m_threadId;$/;"	m	struct:LogInfo
 m_time	log.hpp	/^        uint64_t          m_time;$/;"	m	struct:LogFile
-m_time	log.hpp	/^    uint32_t      m_time;$/;"	m	struct:LogInfo
+m_time	log.hpp	/^    uint64_t      m_time;$/;"	m	struct:LogInfo
 m_type	json.hpp	/^    value_t m_type = value_t::null;$/;"	m	class:nlohmann::basic_json
 m_value	json.hpp	/^    json_value m_value = {};$/;"	m	class:nlohmann::basic_json
 main	main.cpp	/^int main( int argc,char**argv )$/;"	f
@@ -549,8 +576,8 @@ noexcept	json.hpp	/^    constexpr diyfp(uint64_t f_, int e_) noexcept : f(f_), e
 noexcept	json.hpp	/^    void swap(reference other) noexcept ($/;"	f	class:nlohmann::basic_json
 noexcept	json.hpp	/^inline void swap<nlohmann::json>(nlohmann::json& j1, nlohmann::json& j2) noexcept($/;"	f	namespace:std
 nonesuch	json.hpp	/^struct nonesuch$/;"	s	namespace:nlohmann::detail
-now_ms	def.h	/^uint64_t now_ms()$/;"	f
-now_sec	def.h	/^uint64_t now_sec()$/;"	f
+now_ms	def.cpp	/^uint64_t now_ms()$/;"	f
+now_sec	def.cpp	/^uint64_t now_sec()$/;"	f
 null	json.hpp	/^    bool null()$/;"	f	class:nlohmann::detail::json_sax_acceptor
 null	json.hpp	/^    bool null()$/;"	f	class:nlohmann::detail::json_sax_dom_callback_parser
 null	json.hpp	/^    bool null()$/;"	f	class:nlohmann::detail::json_sax_dom_parser
@@ -655,6 +682,8 @@ output_string_adapter	json.hpp	/^class output_string_adapter : public output_ada
 output_vector_adapter	json.hpp	/^class output_vector_adapter : public output_adapter_protocol<CharType>$/;"	c	namespace:nlohmann::detail
 override	json.hpp	/^    ~input_buffer_adapter() override = default;$/;"	m	class:nlohmann::detail::input_buffer_adapter
 override	log.hpp	/^        void LoopRun()override;$/;"	m	class:Logger
+override	log.hpp	/^    virtual std::string FmtLog()override;$/;"	m	struct:JosnLogInfo
+override	log.hpp	/^    virtual std::string FmtLog()override;$/;"	m	struct:LogInfo
 owned_value	json.hpp	/^    mutable value_type owned_value = nullptr;$/;"	m	class:nlohmann::detail::json_ref
 parse	json.hpp	/^    static basic_json parse(IteratorType first, IteratorType last,$/;"	f	class:nlohmann::basic_json
 parse	json.hpp	/^    static basic_json parse(detail::input_adapter&& i,$/;"	f	class:nlohmann::basic_json
@@ -839,3 +868,4 @@ write_msgpack	json.hpp	/^    void write_msgpack(const BasicJsonType& j)$/;"	f	cl
 write_number	json.hpp	/^    void write_number(const NumberType n)$/;"	f	class:nlohmann::detail::binary_writer
 write_number_with_ubjson_prefix	json.hpp	/^    void write_number_with_ubjson_prefix(const NumberType n,$/;"	f	class:nlohmann::detail::binary_writer
 write_ubjson	json.hpp	/^    void write_ubjson(const BasicJsonType& j, const bool use_count,$/;"	f	class:nlohmann::detail::binary_writer
+~LogFile	log.cpp	/^LogFile::~LogFile()$/;"	f	class:LogFile

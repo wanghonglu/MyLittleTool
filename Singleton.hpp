@@ -10,8 +10,9 @@ class Singleton{
             static T t;
             return t;
         }
-    private:
         Singleton()=default;
+        ~Singleton()=default;
+    private:
         Singleton( const Singleton& )=delete;
         Singleton& operator = ( const Singleton&  )=delete;
 

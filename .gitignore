@@ -2,4 +2,10 @@
 #摘除某一个!2.o
 a.out
 tags
+stderr
+stdout
+test.c
+test.cpp
+*.log
+TESTBIN
 *.[oa]
