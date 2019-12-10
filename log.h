@@ -115,39 +115,53 @@ class Logger
 #define gLog Logger::Instance()
 
 //可变模板参数展开
+#define LogS(out) static_cast<std::ostream&>(out)
 template<typename T>
 LogStream& operator<<( LogStream& out, const T& t )
 {
-    static_cast<std::ostream&>(out) << t;
+    LogS(out)<< t;
+    return out;
+}
+LogStream& operator<<( LogStream& out,  char const * ptr  )
+{
+    if(  ptr )
+        LogS(out)<<ptr;
+    else
+        LogS(out)<<"nullptr";
+    return out;
+}
+LogStream& operator<<( LogStream& out, char*ptr  )
+{
+    if(  ptr )
+        LogS(out)<<ptr;
+    else
+        LogS(out)<<"nullptr";
     return out;
 }
 template<typename T>
 LogStream& operator<<( LogStream& logstream, const std::vector<T>v )
 {
-    static_cast<std::ostream&>(logstream);
-    logstream<<"[ ";
-    std::for_each( v.begin(),v.end(),[&](const T& e ){ logstream<<e<<" "; });
-    logstream<<"]";
+    LogS(logstream)<<"[ ";
+    std::for_each( v.begin(),v.end(),[&](const T& e ){ LogS(logstream)<<e<<" "; });
+    LogS(logstream)<<"]";
     return logstream;
 }
 template<typename T>
 LogStream& operator<<( LogStream& logstream, const std::set<T>v )
 {
-    static_cast<std::ostream&>(logstream);
-    logstream<<"[ ";
-    std::for_each( v.begin(),v.end(),[&](const T& e ){ logstream<<e<<" "; });
-    logstream<<"]";
+    LogS(logstream)<<"[ ";
+    std::for_each( v.begin(),v.end(),[&](const T& e ){ LogS(logstream)<<e<<" "; });
+    LogS(logstream)<<"]";
     return logstream;
 }
 template<typename T,size_t Size>
-LogStream& operator<<( LogStream& logstream, const  T(&array)[Size] )
+inline LogStream& operator<<( LogStream& out, const  T(&array)[Size] )
 {
-    static_cast<std::ostream&>(logstream);
-    logstream<<"[";
-    for( int i=0;i<Size;++i )
-        logstream<<array[i]<<" ";
-    logstream<<"]";
-    return logstream;
+    static_cast<std::ostream&>(out)<<"[ ";
+    for( size_t i=0;i<Size;++i )
+        LogS(out)<<array[i]<<" ";
+    LogS(out)<<"]";
+    return out;
 }
 #if 0
 template<typename T,typename...Args>

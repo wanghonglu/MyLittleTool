@@ -28,5 +28,5 @@ std::string DateFmt( char split='-');
 uint32_t GetBeginOfDay();
 std::string DateTimeFmtBySeconds(uint64_t millisec, char split='-',bool WithMillSeconds=false );
 unsigned int GetThreadId();
-using namespace std;
+std::string GetProcessName();
 #endif

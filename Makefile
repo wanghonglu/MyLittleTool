@@ -1,7 +1,7 @@
 CC =g++
 FLAG= -g -Wall 
-Lib=-lpthread 
-OBJ=main.o log.o def.o 
+Lib=-lpthread  -ldl
+OBJ=main.o log.o def.o BackTrace.o 
 TARGET=TESTBIN
 ${TARGET}:${OBJ}
 	${CC} ${FLAG}  ${OBJ} ${Lib} -o ${TARGET}

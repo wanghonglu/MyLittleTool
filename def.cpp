@@ -90,5 +90,15 @@ unsigned int GetThreadId()
     if( s_threadId !=0  ) return s_threadId;
     return s_threadId = syscall(SYS_gettid);
 }
+std::string GetProcessName()
+{
+	std::string _exeName = "/proc/self/exe";
+	char exeName[256] = {0};
+	if(readlink("/proc/self/exe" , exeName, sizeof(exeName) ) !=-1 )
+	{
+		_exeName = exeName;
+	}
+	return _exeName;
+}
 
 

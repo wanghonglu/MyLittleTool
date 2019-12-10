@@ -1,4 +1,4 @@
-#include "log.hpp"
+#include "log.h"
 LogFile::LogFile( const std::string& file_name, LogSwitchType mod, uint64_t LogLimitSize  )
     :m_filename(file_name),m_logChangeType(mod),m_logLimitSize(LogLimitSize)
 {
@@ -67,6 +67,7 @@ void Logger::LoopRun()
         std::shared_ptr< std::list< std::shared_ptr<LogInfoBase>> > ptr = Pop();
         if( ptr == nullptr  )
             continue;
+        cout<<"fuck"<<endl;
         while( !ptr->empty() && m_file )
         {
             auto ptrMsg = ptr->front();

@@ -16,20 +16,36 @@
 #include<functional>
 #include<cstring>
 #include "Singleton.hpp"
+#include "def.h"
+#include <dlfcn.h>
+#define safe_abort(n) \
+    do { \
+       kill(getppid(), SIGCONT); \
+       SetSingalHandler(SIGABRT, SIG_DFL, 0); \
+       abort(); \
+    } while (n)
+#define abort_if(cond, msg) \
+   if (cond) { \
+      fwrite(msg, 1, strlen(msg), stderr); \
+      safe_abort(0); \
+   }
+
 /* 考虑到以后可能会实现非linux的版本 这里暂时用基类实现 */
-class TraceBackBase:public Singleton<TraceBackBase> {
+using SignalHandlerType = void(*)(int);
+bool    SetSingalHandler( int sign,  SignalHandlerType, int flag);
+class TraceBackBase{
     public:
     virtual void RegistSighandler()=0;
     void SetCallBack( std::function<void(int)> );
     static std::function<void(int signal )>  m_cb;
+    static std::ofstream                     m_errorfile;
 };
 
 class UnixTraceBack:public TraceBackBase{
+    public:
     UnixTraceBack()=default;
     ~UnixTraceBack();
-    using SignalHandlerType = void(*)(int);
     virtual void RegistSighandler()override;
     static  void SigleHandle(int flag);//静态成员函数才能跟函数指针相互转化
-    bool         SetSingalHandler( int sign,  SignalHandlerType, int flag);
 };
 #endif

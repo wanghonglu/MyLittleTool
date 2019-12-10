@@ -35,7 +35,7 @@ class ThreadOper{
     void    Push( const T& t)
     {
         std::unique_lock< std::mutex > l( m_mutex  );
-//        m_listWait->push_back( t );
+        m_listWait->push_back( t );
         m_condition.notify_one();
     }
 
