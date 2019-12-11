@@ -24,21 +24,9 @@ enum LOG_LEVEL {
     FATAL,
 };
 class LogStream;
-template<size_t log_level>
 class JsonLog; 
 extern thread_local   LogStream       g_log;
-extern thread_local   JsonLog<DEBUG>  g_jsonlogDebug;
-extern thread_local   JsonLog<INFO>   g_jsonlogInfo;
-extern thread_local   JsonLog<WARNING>g_jsonlogWaring;
-extern thread_local   JsonLog<ERROR>  g_jsonlogError;
-extern thread_local   JsonLog<FATAL>  g_jsonlogFatal;
-static const char* LEVEL_MSG[]={
-    "DEBUG",
-    "INFO",
-    "WARNING",
-    "ERROR",
-    "FATAL"
-};
+extern thread_local   JsonLog         g_jsonlog;
 struct LogInfoBase{
     virtual std::string  FmtLog()=0;
 };
@@ -53,8 +41,8 @@ struct LogInfo :public LogInfoBase {
     unsigned      m_threadId;
     virtual std::string FmtLog()override;
 };
-struct JosnLogInfo:public LogInfoBase{
-    std::unique_ptr<nlohmann::json> m_json;
+struct JsonLogInfo:public LogInfoBase{
+    nlohmann::json       m_json;
     virtual std::string FmtLog()override;
 };
 enum LogSwitchType
@@ -84,21 +72,19 @@ struct LogStream:public std::ostringstream{
     template<typename T,typename...Args>
     LogStream& log(const T& t, Args...args);
 };
-template< size_t  log_level>
 struct JsonLog{
-    std::unique_ptr<nlohmann::json> m_json;
+    bool            m_bshouldlog=false;
+    nlohmann::json  m_json;
     /* json日志  */
-    JsonLog& Str( const std::string& key, const std::string& value  );
+    template<typename T>
+    JsonLog& Message( const std::string& key, const T& value  );
     template<typename NumberType>
-    JsonLog& Number( const std::string& key, NumberType value ); 
-    template<typename ArrayType>//vector  array set ... 
-    JsonLog& Array( const std::string& key, const ArrayType& array );
-    template<typename T,size_t Size> // C style array
-    JsonLog& Array( const std::string& key, const T(&array)[Size] );
+    JsonLog& Num( NumberType value ); 
 
     /* json日志由这个函数来处罚 flush */
-    JsonLog& Msg( const std::string& value   );
-    JsonLog& Msg();
+    void Msg( const std::string& value   );
+    void Msg(); 
+    JsonLog& LogBegin( LOG_LEVEL level, const char* filename, const char* functionname, unsigned int line );
 };
 class Logger
     :public Singleton<Logger>,public ThreadOper<std::shared_ptr<LogInfoBase>>
@@ -122,7 +108,7 @@ LogStream& operator<<( LogStream& out, const T& t )
     LogS(out)<< t;
     return out;
 }
-LogStream& operator<<( LogStream& out,  char const * ptr  )
+inline LogStream& operator<<( LogStream& out,char const * ptr  )
 {
     if(  ptr )
         LogS(out)<<ptr;
@@ -130,7 +116,7 @@ LogStream& operator<<( LogStream& out,  char const * ptr  )
         LogS(out)<<"nullptr";
     return out;
 }
-LogStream& operator<<( LogStream& out, char*ptr  )
+inline LogStream& operator<<( LogStream& out, char*ptr  )
 {
     if(  ptr )
         LogS(out)<<ptr;
@@ -193,6 +179,28 @@ LogStream& LogStream::log( const T& t, Args...args )
 #define SLOG_WARNING(...) StreamLog(WARNING, __FILE__, __FUNCTION__, __LINE__,__VA_ARGS__ )
 #define SLOG_FATAL(...)   StreamLog(FATAL, __FILE__, __FUNCTION__, __LINE__,__VA_ARGS__ )
 
+
+
+#define JLOG_DEBUG     g_jsonlog.LogBegin(DEBUG,__FILE__,__FUNCTION__,__LINE__)
+#define JLOG_INFO      g_jsonlog.LogBegin(INFO,__FILE__,__FUNCTION__,__LINE__)
+#define JLOG_ERROR     g_jsonlog.LogBegin(ERROR,__FILE__,__FUNCTION__,__LINE__)
+#define JLOG_WARNING   g_jsonlog.LogBegin(WARNING,__FILE__,__FUNCTION__,__LINE__)
+#define JLOG_FATAL     g_jsonlog.LogBegin(FATAL,__FILE__,__FUNCTION__,__LINE__)
+
+template<typename NumberType>
+JsonLog& JsonLog::Num(NumberType number)
+{
+    if( m_bshouldlog )
+        m_json["Number"]=number;
+    return *this;
+}
+template<typename T>
+JsonLog& JsonLog::Message( const std::string&key, const T& value )
+{
+    if( m_bshouldlog )
+        m_json[key]=value;
+    return *this;
+}
 
 
 

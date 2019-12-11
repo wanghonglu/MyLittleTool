@@ -1,8 +1,15 @@
 #include "log.h"
+static const char* LEVEL_MSG[]={
+     "DEBUG",
+     "INFO",
+     "WARNING",
+     "ERROR",
+     "FATAL"
+};
 LogFile::LogFile( const std::string& file_name, LogSwitchType mod, uint64_t LogLimitSize  )
     :m_filename(file_name),m_logChangeType(mod),m_logLimitSize(LogLimitSize)
 {
-    if( m_logChangeType == SizeChangeWay && m_logLimitSize==-1 )
+    if( m_logChangeType == SizeChangeWay && m_logLimitSize==0 )
         m_logLimitSize = DefaultLogSize;
     OpenFile();
 }
@@ -46,7 +53,7 @@ void LogFile::WriteFile( const std::string& msg  )
     TryRollFile();
     if( !m_file.is_open() )
         OpenFile();
-    m_file<<msg;
+    m_file<<msg<<"\n";
     m_file.flush();
 }
 
@@ -83,11 +90,7 @@ bool Logger::ShouldLog( LOG_LEVEL log_level  )
 
 
 thread_local   LogStream       g_log;
-thread_local   JsonLog<DEBUG>  g_jsonlogDebug; 
-thread_local   JsonLog<INFO>   g_jsonlogInfo; 
-thread_local   JsonLog<WARNING>g_jsonlogWaring; 
-thread_local   JsonLog<ERROR>  g_jsonlogError; 
-thread_local   JsonLog<FATAL>  g_jsonlogFatal; 
+thread_local   JsonLog         g_jsonlog; 
 
 std::string LogInfo::FmtLog()
 {
@@ -97,7 +100,34 @@ std::string LogInfo::FmtLog()
     auto pos = m_functionname.find_last_of("/");
     if( std::string::npos !=pos  )
         m_functionname = m_functionname.substr( pos+1 );
-    ss<<m_functionname<<"-"<<m_line<<"\t";
-    ss<<m_msg<<"\n";
-    return ss.str();
+    ss<<"[  "<<m_filename<<" "<<m_functionname<<"-"<<m_line<<" ]\t";
+    ss<<m_msg;
+    return std::move(ss.str());
+}
+JsonLog& JsonLog::LogBegin(LOG_LEVEL level, const char* filename, const char*functionname, unsigned int line )
+{
+    m_bshouldlog = gLog.ShouldLog(level);
+    if( m_bshouldlog  )
+        m_json={{"file",filename},{"level",LEVEL_MSG[level] },{"func", functionname}, {"line", line}};
+    return *this;
+}
+void JsonLog::Msg( const std::string&value )
+{
+    if(!m_bshouldlog)
+        return ;
+    if( !value.empty() )
+        m_json["Msg"]=value;
+    std::shared_ptr<JsonLogInfo> log_ptr =std::make_shared<JsonLogInfo>();
+    log_ptr->m_json.swap(m_json);
+    gLog.Push(log_ptr);
+}
+void JsonLog::Msg()
+{
+    if( !m_bshouldlog )
+        return;
+    Msg("");
+}
+std::string JsonLogInfo::FmtLog()
+{
+    return std::move( m_json.dump() );
 }

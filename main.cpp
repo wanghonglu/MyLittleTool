@@ -32,6 +32,8 @@ int main( int argc,char**argv )
     SLOG_ERROR("AGDD"<<9000<<"  FASDFSD");
     SLOG_ERROR( 100 );
 
+    JLOG_INFO.Num(109).Message("info","this is a test ").Msg("ceshi ");
+
     gLog.Join();
     while(1)
       ;

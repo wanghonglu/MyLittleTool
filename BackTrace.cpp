@@ -118,6 +118,7 @@ void UnixTraceBack::SigleHandle(int signal )
             break;
         }
     } while (0);
+#if 0
     void* addrs[4096]={NULL};// last 4k
      int nframes = backtrace(addrs, 128);
      fprintf( stderr, "nframes %d\n", nframes );
@@ -168,7 +169,7 @@ void UnixTraceBack::SigleHandle(int signal )
      else 
          cerr<<"error1111111"<<endl;
      cerr<<errmsg.str()<<endl;
-
+#endif
      kill(getppid(), SIGCONT);//让父进程继续执行
      _Exit(EXIT_SUCCESS);
 

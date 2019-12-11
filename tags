@@ -64,7 +64,7 @@ JSON_UNLIKELY	json.hpp	20398;"	d
 Join	ThreadOper.hpp	/^    void    Join()$/;"	f	class:ThreadOper
 JosnLogInfo	log.h	/^struct JosnLogInfo:public LogInfoBase{$/;"	s
 JsonLog	log.h	/^struct JsonLog{$/;"	s
-LEVEL_MSG	log.h	/^static const char* LEVEL_MSG[]={$/;"	v
+LEVEL_MSG	log.cpp	/^static const char* LEVEL_MSG[]={$/;"	v	file:
 LOG_LEVEL	log.h	/^enum LOG_LEVEL {$/;"	g
 LRUCache	LRU_Cache.h	/^        explicit LRUCache( size_t maxCount  ):m_capacity(maxCount)$/;"	f	class:LRUCache
 LRUCache	LRU_Cache.h	/^class LRUCache{$/;"	c
@@ -74,6 +74,7 @@ LogFile	log.cpp	/^LogFile::LogFile( const std::string& file_name, LogSwitchType 
 LogFile	log.h	/^struct LogFile{$/;"	s
 LogInfo	log.h	/^struct LogInfo :public LogInfoBase {$/;"	s
 LogInfoBase	log.h	/^struct LogInfoBase{$/;"	s
+LogS	log.h	111;"	d
 LogStream	log.h	/^struct LogStream:public std::ostringstream{$/;"	s
 LogSwitchType	log.h	/^enum LogSwitchType$/;"	g
 Logger	log.h	/^class Logger$/;"	c
@@ -95,11 +96,11 @@ Pop	ThreadOper.hpp	/^    std::shared_ptr<std::list<T>>&  Pop()$/;"	f	class:Threa
 Push	ThreadOper.hpp	/^    void    Push( const T& t)$/;"	f	class:ThreadOper
 Random	def.cpp	/^unsigned int Random(unsigned int max,unsigned int min )$/;"	f
 RegistSighandler	BackTrace.cpp	/^void UnixTraceBack::RegistSighandler()$/;"	f	class:UnixTraceBack
-SLOG_DEBUG	log.h	176;"	d
-SLOG_ERROR	log.h	178;"	d
-SLOG_FATAL	log.h	180;"	d
-SLOG_INFO	log.h	177;"	d
-SLOG_WARNING	log.h	179;"	d
+SLOG_DEBUG	log.h	183;"	d
+SLOG_ERROR	log.h	185;"	d
+SLOG_FATAL	log.h	187;"	d
+SLOG_INFO	log.h	184;"	d
+SLOG_WARNING	log.h	186;"	d
 SetCallBack	BackTrace.cpp	/^void TraceBackBase::SetCallBack(std::function<void(int)> cb )$/;"	f	class:TraceBackBase
 SetCoreFileUnlimit	Linux_StartProcess.hpp	/^void SetCoreFileUnlimit()$/;"	f
 SetLogLevel	log.cpp	/^void  Logger::SetLogLevel( LOG_LEVEL log_level )$/;"	f	class:Logger
@@ -116,7 +117,7 @@ SizeChangeWay	log.h	/^    SizeChangeWay,$/;"	e	enum:LogSwitchType
 Sleep	ThreadOper.hpp	/^    void    Sleep( uint32_t ms )$/;"	f	class:ThreadOper
 Start	ThreadOper.hpp	/^    void    Start()$/;"	f	class:ThreadOper
 Stop	ThreadOper.hpp	/^    void    Stop()$/;"	f	class:ThreadOper
-StreamLog	log.h	160;"	d
+StreamLog	log.h	167;"	d
 SwitchFileTo	Linux_StartProcess.hpp	/^int SwitchFileTo( int fd ,const char*file )$/;"	f
 TARGET	Makefile	/^TARGET=TESTBIN$/;"	m
 ThreadOper	ThreadOper.hpp	/^    explicit ThreadOper()$/;"	f	class:ThreadOper
@@ -137,7 +138,8 @@ __SINGLETON_HPP__	Singleton.hpp	5;"	d
 __ThreadOper_HPP__	ThreadOper.hpp	5;"	d
 _json	json.hpp	/^inline nlohmann::json operator "" _json(const char* s, std::size_t n)$/;"	f
 _json_pointer	json.hpp	/^inline nlohmann::json::json_pointer operator "" _json_pointer(const char* s, std::size_t n)$/;"	f
-abort_if	BackTrace.cpp	43;"	d	file:
+abort_if	BackTrace.cpp	44;"	d	file:
+abort_if	BackTrace.h	27;"	d
 accept	json.hpp	/^    bool accept(const bool strict = true)$/;"	f	class:nlohmann::detail::parser
 accept	json.hpp	/^    static bool accept(IteratorType first, IteratorType last)$/;"	f	class:nlohmann::basic_json
 accept	json.hpp	/^    static bool accept(detail::input_adapter&& i)$/;"	f	class:nlohmann::basic_json
@@ -220,6 +222,7 @@ construct	json.hpp	/^    static void construct(BasicJsonType& j, typename BasicJ
 construct	json.hpp	/^    static void construct(BasicJsonType& j, typename BasicJsonType::string_t&& s)$/;"	f	struct:nlohmann::detail::external_constructor
 container	json.hpp	/^        : container(cont) {}$/;"	f	class:nlohmann::detail::iteration_proxy
 container	json.hpp	/^    typename IteratorType::reference container;$/;"	m	class:nlohmann::detail::iteration_proxy
+corefun	test.cpp	/^void corefun()$/;"	f
 count	json.hpp	/^    size_type count(KeyT&& key) const$/;"	f	class:nlohmann::basic_json
 create	json.hpp	/^    static T* create(Args&& ... args)$/;"	f	class:nlohmann::basic_json
 create	json.hpp	/^    static invalid_iterator create(int id_, const std::string& what_arg)$/;"	f	class:nlohmann::detail::invalid_iterator
@@ -334,7 +337,7 @@ from_ubjson	json.hpp	/^    static basic_json from_ubjson(A1 && a1, A2 && a2,$/;"
 from_ubjson	json.hpp	/^    static basic_json from_ubjson(detail::input_adapter&& i,$/;"	f	class:nlohmann::basic_json
 front	json.hpp	/^    const_reference front() const$/;"	f	class:nlohmann::basic_json
 front	json.hpp	/^    reference front()$/;"	f	class:nlohmann::basic_json
-gLog	log.h	115;"	d
+gLog	log.h	108;"	d
 g_jsonlogDebug	log.cpp	/^thread_local   JsonLog<DEBUG>  g_jsonlogDebug; $/;"	v
 g_jsonlogError	log.cpp	/^thread_local   JsonLog<ERROR>  g_jsonlogError; $/;"	v
 g_jsonlogFatal	log.cpp	/^thread_local   JsonLog<FATAL>  g_jsonlogFatal; $/;"	v
@@ -532,6 +535,8 @@ m_capacity	LRU_Cache.h	/^        size_t              m_capacity;$/;"	m	class:LRU
 m_cb	BackTrace.cpp	/^std::function<void(int)>  TraceBackBase::m_cb = nullptr;$/;"	m	class:TraceBackBase	file:
 m_cb	BackTrace.h	/^    static std::function<void(int signal )>  m_cb;$/;"	m	class:TraceBackBase
 m_condition	ThreadOper.hpp	/^        std::condition_variable          m_condition;$/;"	m	class:ThreadOper
+m_errorfile	BackTrace.cpp	/^std::ofstream  TraceBackBase::m_errorfile;$/;"	m	class:TraceBackBase	file:
+m_errorfile	BackTrace.h	/^    static std::ofstream                     m_errorfile;$/;"	m	class:TraceBackBase
 m_file	json.hpp	/^        : m_file(f)$/;"	f	class:nlohmann::detail::file_input_adapter
 m_file	json.hpp	/^    std::FILE* m_file;$/;"	m	class:nlohmann::detail::file_input_adapter
 m_file	log.h	/^        std::ofstream     m_file;$/;"	m	struct:LogFile
@@ -567,6 +572,7 @@ m_time	log.h	/^    uint64_t      m_time;$/;"	m	struct:LogInfo
 m_type	json.hpp	/^    value_t m_type = value_t::null;$/;"	m	class:nlohmann::basic_json
 m_value	json.hpp	/^    json_value m_value = {};$/;"	m	class:nlohmann::basic_json
 main	main.cpp	/^int main( int argc,char**argv )$/;"	f
+main	test.cpp	/^int main()$/;"	f
 make_index_sequence	json.hpp	/^struct make_index_sequence$/;"	s	namespace:nlohmann::detail
 make_index_sequence	json.hpp	/^template<> struct make_index_sequence<0> : index_sequence<> {};$/;"	s	namespace:nlohmann::detail
 make_index_sequence	json.hpp	/^template<> struct make_index_sequence<1> : index_sequence<0> {};$/;"	s	namespace:nlohmann::detail
@@ -658,10 +664,12 @@ operator ->	json.hpp	/^    value_type const* operator->() const$/;"	f	class:nloh
 operator <	json.hpp	/^    bool operator<(const iter_impl& other) const$/;"	f	class:nlohmann::detail::iter_impl
 operator <<	json.hpp	/^    friend std::istream& operator<<(basic_json& j, std::istream& i)$/;"	f	class:nlohmann::basic_json
 operator <<	json.hpp	/^    friend std::ostream& operator<<(std::ostream& o, const basic_json& j)$/;"	f	class:nlohmann::basic_json
-operator <<	log.h	/^LogStream& operator<<( LogStream& logstream, const  T(&array)[Size] )$/;"	f
 operator <<	log.h	/^LogStream& operator<<( LogStream& logstream, const std::set<T>v )$/;"	f
 operator <<	log.h	/^LogStream& operator<<( LogStream& logstream, const std::vector<T>v )$/;"	f
 operator <<	log.h	/^LogStream& operator<<( LogStream& out, const T& t )$/;"	f
+operator <<	log.h	/^inline LogStream& operator<<( LogStream& out, char*ptr  )$/;"	f
+operator <<	log.h	/^inline LogStream& operator<<( LogStream& out, const  T(&array)[Size] )$/;"	f
+operator <<	log.h	/^inline LogStream& operator<<( LogStream& out,char const * ptr  )$/;"	f
 operator <=	json.hpp	/^    bool operator<=(const iter_impl& other) const$/;"	f	class:nlohmann::detail::iter_impl
 operator ==	json.hpp	/^    bool operator==(const iter_impl& other) const$/;"	f	class:nlohmann::detail::iter_impl
 operator >	json.hpp	/^    bool operator>(const iter_impl& other) const$/;"	f	class:nlohmann::detail::iter_impl
@@ -741,7 +749,8 @@ replace	json.hpp	/^    replace, \/\/\/< replace invalid UTF-8 sequences with U+F
 replace_substring	json.hpp	/^    static void replace_substring(std::string& s, const std::string& f,$/;"	f	class:nlohmann::json_pointer
 root	json.hpp	/^    BasicJsonType& root;$/;"	m	class:nlohmann::detail::json_sax_dom_callback_parser
 root	json.hpp	/^    BasicJsonType& root;$/;"	m	class:nlohmann::detail::json_sax_dom_parser
-safe_abort	BackTrace.cpp	36;"	d	file:
+safe_abort	BackTrace.cpp	37;"	d	file:
+safe_abort	BackTrace.h	21;"	d
 sax	json.hpp	/^    json_sax_t* sax = nullptr;$/;"	m	class:nlohmann::detail::binary_reader
 sax_parse	json.hpp	/^    bool sax_parse(SAX* sax, const bool strict = true)$/;"	f	class:nlohmann::detail::parser
 sax_parse	json.hpp	/^    bool sax_parse(const input_format_t format,$/;"	f	class:nlohmann::detail::binary_reader
