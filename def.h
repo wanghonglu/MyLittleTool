@@ -15,8 +15,10 @@
 #include<algorithm>
 #include<sys/time.h>
 #include<sstream>
- #include<sys/syscall.h>
- #include<unistd.h>
+#include<sys/syscall.h>
+#include<unistd.h>
+#include <boost/thread/locks.hpp>
+#include <boost/thread/shared_mutex.hpp>
 unsigned int Random(unsigned int max=0,unsigned int min=0 );
 int32_t GetRandomNumber();
 std::string GetRandomString();
@@ -29,4 +31,9 @@ uint32_t GetBeginOfDay();
 std::string DateTimeFmtBySeconds(uint64_t millisec, char split='-',bool WithMillSeconds=false );
 unsigned int GetThreadId();
 std::string GetProcessName();
+
+
+using WRMUTEX=boost::shared_mutex;
+using W_LOCK=boost::unique_lock< WRMUTEX >;
+using R_LOCK=boost::shared_lock< WRMUTEX >;
 #endif
