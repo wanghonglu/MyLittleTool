@@ -6,19 +6,13 @@
 using namespace std;
 #include "json.hpp"
 #include "Linux_StartProcess.hpp"
-#include "BackTrace.h"
+#include "ConsulClient.h"
 int main( int argc,char**argv )
 {
 #ifdef LRU_TEST
     LRU_Test();
 #endif
-    std::unique_ptr<TraceBackBase> g_traceBack=nullptr ;
-#ifdef __linux__
-    g_traceBack.reset( new UnixTraceBack() );
-#endif
-    if(g_traceBack)
-        g_traceBack->RegistSighandler();
-  //  BeforStartProcess( "./stdout", "./stderr" );
+    BeforStartProcess( "./stdout", "./stderr" );
     cerr<<GetRandomNumber()<<endl;
     cout<<GetRandomString()<<endl;
     nlohmann::json j;
@@ -34,7 +28,11 @@ int main( int argc,char**argv )
 
     JLOG_INFO.Num(109).Message("info","this is a test ").Msg("ceshi ");
 
+    //consul test
+    gConsul.Init( "192.168.199.233", 8500 );
+    RegistConsul("LearnToConsul/SimpleConfig/this_is_a_test", ConfigTest );
+
     gLog.Join();
     while(1)
-      ;
+        ;
 }

@@ -173,6 +173,7 @@ LogStream& LogStream::log( const T& t, Args...args )
      gLog.Push( log_info );        \
  }while(0)
 
+#define LVAL(v) " "<<#v<<" = "<<v
 #define SLOG_DEBUG(...)   StreamLog(DEBUG, __FILE__, __FUNCTION__, __LINE__,__VA_ARGS__ )
 #define SLOG_INFO(...)    StreamLog(INFO, __FILE__, __FUNCTION__, __LINE__,__VA_ARGS__ )
 #define SLOG_ERROR(...)   StreamLog(ERROR, __FILE__, __FUNCTION__, __LINE__,__VA_ARGS__ )

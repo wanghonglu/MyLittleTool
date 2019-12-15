@@ -46,8 +46,10 @@ namespace SimpleWeb {
       result.reserve(value.size()); // Minimum size of result
 
       for(auto &chr : value) {
-        if(!((chr >= '0' && chr <= '9') || (chr >= 'A' && chr <= 'Z') || (chr >= 'a' && chr <= 'z') || chr == '-' || chr == '.' || chr == '_' || chr == '~'))
-          result += std::string("%") + hex_chars[static_cast<unsigned char>(chr) >> 4] + hex_chars[static_cast<unsigned char>(chr) & 15];
+        if(chr == ' ')
+          result += '+';
+        else if(chr == '!' || chr == '#' || chr == '$' || (chr >= '&' && chr <= ',') || (chr >= '/' && chr <= ';') || chr == '=' || chr == '?' || chr == '@' || chr == '[' || chr == ']')
+          result += std::string("%") + hex_chars[chr >> 4] + hex_chars[chr & 15];
         else
           result += chr;
       }
@@ -142,10 +144,12 @@ namespace SimpleWeb {
       std::size_t param_end;
       while((param_end = line.find(':')) != std::string::npos) {
         std::size_t value_start = param_end + 1;
-        while(value_start + 1 < line.size() && line[value_start] == ' ')
-          ++value_start;
-        if(value_start < line.size())
-          result.emplace(line.substr(0, param_end), line.substr(value_start, line.size() - value_start - 1));
+        if(value_start < line.size()) {
+          if(line[value_start] == ' ')
+            value_start++;
+          if(value_start < line.size())
+            result.emplace(line.substr(0, param_end), line.substr(value_start, line.size() - value_start - 1));
+        }
 
         getline(stream, line);
       }

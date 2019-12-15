@@ -5,34 +5,71 @@
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
 Add	LRU_Cache.h	/^        void Add(const KeyType& key,const ValueType& val )$/;"	f	class:LRUCache
+Base64	include/crypto.hpp	/^    class Base64 {$/;"	c	class:SimpleWeb::Crypto
 BeforStartProcess	Linux_StartProcess.hpp	/^void BeforStartProcess( const char*stdoutFile="dev\/null", const char*stderrFile="dev\/null" )$/;"	f
 CC	Makefile	/^CC =g++$/;"	m
+CLIENT_HTTPS_HPP	include/client_https.hpp	2;"	d
+CLIENT_HTTP_HPP	include/client_http.hpp	2;"	d
 C_now_ms	def.cpp	/^uint64_t C_now_ms()$/;"	f
 C_now_sec	def.cpp	/^uint64_t C_now_sec()$/;"	f
 Capacity	LRU_Cache.h	/^        size_t Capacity()const$/;"	f	class:LRUCache
+CaseInsensitiveEqual	include/utility.hpp	/^  class CaseInsensitiveEqual {$/;"	c	namespace:SimpleWeb
+CaseInsensitiveHash	include/utility.hpp	/^  class CaseInsensitiveHash {$/;"	c	namespace:SimpleWeb
 Clear	LRU_Cache.h	/^        void Clear()$/;"	f	class:LRUCache
+Client	include/client_http.hpp	/^  class Client : public ClientBase<socket_type> {};$/;"	c	namespace:SimpleWeb
+Client	include/client_http.hpp	/^  class Client<HTTP> : public ClientBase<HTTP> {$/;"	c	namespace:SimpleWeb
+Client	include/client_https.hpp	/^    Client(const std::string &server_port_path, bool verify_certificate = true, const std::string &cert_file = std::string(),$/;"	f	class:SimpleWeb::Client
+Client	include/client_https.hpp	/^  class Client<HTTPS> : public ClientBase<HTTPS> {$/;"	c	namespace:SimpleWeb
+ClientBase	include/client_http.hpp	/^    Client(const std::string &server_port_path) noexcept : ClientBase<HTTP>::ClientBase(server_port_path, 80) {}$/;"	f	class:SimpleWeb::Client::ClientBase
+ClientBase	include/client_http.hpp	/^  class ClientBase {$/;"	c	namespace:SimpleWeb
+Config	include/client_http.hpp	/^    class Config {$/;"	c	class:SimpleWeb::ClientBase
+Config	include/server_http.hpp	/^    class Config {$/;"	c	class:SimpleWeb::ServerBase
+ConfigBase	ConsulClient.h	/^   explicit ConfigBase( const std::string& key ):m_key(key){}$/;"	f	class:ConfigBase
+ConfigBase	ConsulClient.h	/^class ConfigBase{$/;"	c
+ConfigTest	ConsulClient.h	/^    ConfigTest( const std::string& key  ):ConfigBase(key){}$/;"	f	class:ConfigTest
+ConfigTest	ConsulClient.h	/^class ConfigTest:public ConfigBase{$/;"	c
+Connection	include/client_http.hpp	/^    class Connection : public std::enable_shared_from_this<Connection> {$/;"	c	class:SimpleWeb::ClientBase
+Connection	include/server_http.hpp	/^    class Connection : public std::enable_shared_from_this<Connection> {$/;"	c	class:SimpleWeb::ServerBase
+ConsulClient	ConsulClient.cpp	/^ConsulClinet::ConsulClient()$/;"	f	class:ConsulClinet
+ConsulClient	ConsulClient.h	/^class ConsulClient:public Singleton<ConsulClient>{$/;"	c
 Contain	LRU_Cache.h	/^        bool Contain(const KeyType& key )const$/;"	f	class:LRUCache
+Content	include/client_http.hpp	/^    class Content : public std::istream {$/;"	c	class:SimpleWeb::ClientBase
+Content	include/server_http.hpp	/^    class Content : public std::istream {$/;"	c	class:SimpleWeb::ServerBase
+Crypto	include/crypto.hpp	/^  class Crypto {$/;"	c	namespace:SimpleWeb
 DEBUG	log.h	/^    DEBUG,$/;"	e	enum:LOG_LEVEL
 Daemonize	Linux_StartProcess.hpp	/^void Daemonize( const char* dir  )$/;"	f
 DateChangeWay	log.h	/^    DateChangeWay,$/;"	e	enum:LogSwitchType
 DateFmt	def.cpp	/^std::string DateFmt( char split )$/;"	f
 DateTimeFmtBySeconds	def.cpp	/^std::string DateTimeFmtBySeconds(uint64_t millisec, char split,bool WithMillSeconds )$/;"	f
 DefaultLogSize	log.h	/^    DefaultLogSize = 1024*1024*50,$/;"	e	enum:LogSwitchType
+DoRealQuestConfig	ConsulClient.cpp	/^void ConsulClient::DoRealQuestConfig(HttpClientPtr httpclient, const std::string& key , int modify_index )$/;"	f	class:ConsulClient
 ERROR	log.h	/^    ERROR,$/;"	e	enum:LOG_LEVEL
 FATAL	log.h	/^    FATAL,$/;"	e	enum:LOG_LEVEL
 FLAG	Makefile	/^FLAG= -g -Wall $/;"	m
+FieldValue	include/utility.hpp	/^    class FieldValue {$/;"	c	class:SimpleWeb::HttpHeader
+FmtLog	log.cpp	/^std::string JsonLogInfo::FmtLog()$/;"	f	class:JsonLogInfo
 FmtLog	log.cpp	/^std::string LogInfo::FmtLog()$/;"	f	class:LogInfo
 GetBeginOfDay	def.cpp	/^uint32_t GetBeginOfDay()$/;"	f
+GetConfigByKey	ConsulClient.cpp	/^std::shared_ptr<ConfigBase> ConsulClient::GetConfigByKey( const std::string& key  )$/;"	f	class:ConsulClient
+GetIoService	ConsulClient.cpp	/^std::shared_ptr<boost::asio::io_service>& ConsulClient::GetIoService()$/;"	f	class:ConsulClient
+GetKeyValueJson_All	ConsulClient.cpp	/^void ConsulClient::GetKeyValueJson_All()$/;"	f	class:ConsulClient
 GetProcessName	def.cpp	/^std::string GetProcessName()$/;"	f
 GetRandomNumber	def.cpp	/^int32_t GetRandomNumber()$/;"	f
 GetRandomString	def.cpp	/^std::string GetRandomString()$/;"	f
 GetThreadId	def.cpp	/^unsigned int GetThreadId()$/;"	f
 GetVal	LRU_Cache.h	/^        bool GetVal( const KeyType& key, ValueType& val  )$/;"	f	class:LRUCache
+HttpHeader	include/utility.hpp	/^  class HttpHeader {$/;"	c	namespace:SimpleWeb
 INFO	log.h	/^    INFO,$/;"	e	enum:LOG_LEVEL
+Init	ConsulClient.cpp	/^void ConsulClient::Init( const std::string& _ip, unsigned int port  )$/;"	f	class:ConsulClient
 Init	log.cpp	/^void Logger::Init( const std::string& filename  )$/;"	f	class:Logger
 Insert	LRU_Cache.h	/^        void Insert( const KeyType& key, const ValueType& val  )$/;"	f	class:LRUCache
 Instance	Singleton.hpp	/^        static T& Instance(){$/;"	f	class:Singleton
 IsStoped	ThreadOper.hpp	/^    inline bool IsStoped()const $/;"	f	class:ThreadOper
+JLOG_DEBUG	log.h	185;"	d
+JLOG_ERROR	log.h	187;"	d
+JLOG_FATAL	log.h	189;"	d
+JLOG_INFO	log.h	186;"	d
+JLOG_WARNING	log.h	188;"	d
 JSON_CATCH	json.hpp	159;"	d
 JSON_CATCH	json.hpp	178;"	d
 JSON_CATCH	json.hpp	179;"	d
@@ -62,24 +99,29 @@ JSON_TRY	json.hpp	20396;"	d
 JSON_UNLIKELY	json.hpp	191;"	d
 JSON_UNLIKELY	json.hpp	20398;"	d
 Join	ThreadOper.hpp	/^    void    Join()$/;"	f	class:ThreadOper
-JosnLogInfo	log.h	/^struct JosnLogInfo:public LogInfoBase{$/;"	s
 JsonLog	log.h	/^struct JsonLog{$/;"	s
+JsonLogInfo	log.h	/^struct JsonLogInfo:public LogInfoBase{$/;"	s
 LEVEL_MSG	log.cpp	/^static const char* LEVEL_MSG[]={$/;"	v	file:
 LOG_LEVEL	log.h	/^enum LOG_LEVEL {$/;"	g
 LRUCache	LRU_Cache.h	/^        explicit LRUCache( size_t maxCount  ):m_capacity(maxCount)$/;"	f	class:LRUCache
 LRUCache	LRU_Cache.h	/^class LRUCache{$/;"	c
 LRU_Test	LRU_Cache.h	/^void LRU_Test()$/;"	f
-Lib	Makefile	/^Lib=-lpthread  -ldl$/;"	m
+LVAL	log.h	176;"	d
+Lib	Makefile	/^Lib=-lpthread  -ldl -lboost_thread$/;"	m
+LogBegin	log.cpp	/^JsonLog& JsonLog::LogBegin(LOG_LEVEL level, const char* filename, const char*functionname, unsigned int line )$/;"	f	class:JsonLog
 LogFile	log.cpp	/^LogFile::LogFile( const std::string& file_name, LogSwitchType mod, uint64_t LogLimitSize  )$/;"	f	class:LogFile
 LogFile	log.h	/^struct LogFile{$/;"	s
 LogInfo	log.h	/^struct LogInfo :public LogInfoBase {$/;"	s
 LogInfoBase	log.h	/^struct LogInfoBase{$/;"	s
-LogS	log.h	111;"	d
+LogS	log.h	104;"	d
 LogStream	log.h	/^struct LogStream:public std::ostringstream{$/;"	s
 LogSwitchType	log.h	/^enum LogSwitchType$/;"	g
 Logger	log.h	/^class Logger$/;"	c
 LoopRun	log.cpp	/^void Logger::LoopRun()$/;"	f	class:Logger
 MakeFileName	log.cpp	/^std::string LogFile::MakeFileName()$/;"	f	class:LogFile
+Message	log.h	/^JsonLog& JsonLog::Message( const std::string&key, const T& value )$/;"	f	class:JsonLog
+Msg	log.cpp	/^void JsonLog::Msg( const std::string&value )$/;"	f	class:JsonLog
+Msg	log.cpp	/^void JsonLog::Msg()$/;"	f	class:JsonLog
 NLOHMANN_BASIC_JSON_TPL	json.hpp	20403;"	d
 NLOHMANN_BASIC_JSON_TPL	json.hpp	247;"	d
 NLOHMANN_BASIC_JSON_TPL_DECLARATION	json.hpp	20402;"	d
@@ -90,17 +132,44 @@ NLOHMANN_JSON_SERIALIZE_ENUM	json.hpp	210;"	d
 NLOHMANN_JSON_VERSION_MAJOR	json.hpp	33;"	d
 NLOHMANN_JSON_VERSION_MINOR	json.hpp	34;"	d
 NLOHMANN_JSON_VERSION_PATCH	json.hpp	35;"	d
-OBJ	Makefile	/^OBJ=main.o log.o def.o BackTrace.o $/;"	m
+NewHttpClient	ConsulClient.cpp	/^HttpClientPtr ConsulClient::NewHttpClient()$/;"	f	class:ConsulClient
+Num	log.h	/^JsonLog& JsonLog::Num(NumberType number)$/;"	f	class:JsonLog
+OBJ	Makefile	/^OBJ=main.o log.o def.o  ConsulClient.o $/;"	m
 OpenFile	log.cpp	/^void LogFile::OpenFile()$/;"	f	class:LogFile
+Percent	include/utility.hpp	/^  class Percent {$/;"	c	namespace:SimpleWeb
 Pop	ThreadOper.hpp	/^    std::shared_ptr<std::list<T>>&  Pop()$/;"	f	class:ThreadOper
+Print	ConsulClient.h	/^        void Print()$/;"	f	struct:ConfigTest::data_
 Push	ThreadOper.hpp	/^    void    Push( const T& t)$/;"	f	class:ThreadOper
+QueryString	include/utility.hpp	/^  class QueryString {$/;"	c	namespace:SimpleWeb
 Random	def.cpp	/^unsigned int Random(unsigned int max,unsigned int min )$/;"	f
+RegistConsul	ConsulClient.h	59;"	d
+RegistConsul	test.cpp	4;"	d	file:
+RegistKeyValue	ConsulClient.cpp	/^void ConsulClient::RegistKeyValue(std::string& key,  std::shared_ptr<ConfigBase> config)$/;"	f	class:ConsulClient
 RegistSighandler	BackTrace.cpp	/^void UnixTraceBack::RegistSighandler()$/;"	f	class:UnixTraceBack
-SLOG_DEBUG	log.h	183;"	d
-SLOG_ERROR	log.h	185;"	d
-SLOG_FATAL	log.h	187;"	d
-SLOG_INFO	log.h	184;"	d
-SLOG_WARNING	log.h	186;"	d
+Request	include/server_http.hpp	/^    class Request {$/;"	c	class:SimpleWeb::ServerBase
+RequestMessage	include/utility.hpp	/^  class RequestMessage {$/;"	c	namespace:SimpleWeb
+Response	include/client_http.hpp	/^    class Response {$/;"	c	class:SimpleWeb::ClientBase
+Response	include/server_http.hpp	/^    class Response : public std::enable_shared_from_this<Response>, public std::ostream {$/;"	c	class:SimpleWeb::ServerBase
+ResponseMessage	include/utility.hpp	/^  class ResponseMessage {$/;"	c	namespace:SimpleWeb
+SERVER_HTTPS_HPP	include/server_https.hpp	2;"	d
+SERVER_HTTP_HPP	include/server_http.hpp	2;"	d
+SIMPLE_WEB_CRYPTO_HPP	include/crypto.hpp	2;"	d
+SIMPLE_WEB_STATUS_CODE_HPP	include/status_code.hpp	2;"	d
+SIMPLE_WEB_UTILITY_HPP	include/utility.hpp	2;"	d
+SLOG_DEBUG	log.h	177;"	d
+SLOG_ERROR	log.h	179;"	d
+SLOG_FATAL	log.h	181;"	d
+SLOG_INFO	log.h	178;"	d
+SLOG_WARNING	log.h	180;"	d
+ScopeRunner	include/utility.hpp	/^  class ScopeRunner {$/;"	c	namespace:SimpleWeb
+SemicolonSeparatedAttributes	include/utility.hpp	/^      class SemicolonSeparatedAttributes {$/;"	c	class:SimpleWeb::HttpHeader::FieldValue
+Server	include/server_http.hpp	/^  class Server : public ServerBase<socket_type> {};$/;"	c	namespace:SimpleWeb
+Server	include/server_http.hpp	/^  class Server<HTTP> : public ServerBase<HTTP> {$/;"	c	namespace:SimpleWeb
+Server	include/server_https.hpp	/^    Server(const std::string &cert_file, const std::string &private_key_file, const std::string &verify_file = std::string())$/;"	f	class:SimpleWeb::Server
+Server	include/server_https.hpp	/^  class Server<HTTPS> : public ServerBase<HTTPS> {$/;"	c	namespace:SimpleWeb
+ServerBase	include/server_http.hpp	/^  class ServerBase {$/;"	c	namespace:SimpleWeb
+Session	include/client_http.hpp	/^    class Session {$/;"	c	class:SimpleWeb::ClientBase
+Session	include/server_http.hpp	/^    class Session {$/;"	c	class:SimpleWeb::ServerBase
 SetCallBack	BackTrace.cpp	/^void TraceBackBase::SetCallBack(std::function<void(int)> cb )$/;"	f	class:TraceBackBase
 SetCoreFileUnlimit	Linux_StartProcess.hpp	/^void SetCoreFileUnlimit()$/;"	f
 SetLogLevel	log.cpp	/^void  Logger::SetLogLevel( LOG_LEVEL log_level )$/;"	f	class:Logger
@@ -108,16 +177,26 @@ SetProcessStackSize	Linux_StartProcess.hpp	/^void SetProcessStackSize( size_t si
 SetSingalHandler	BackTrace.cpp	/^bool SetSingalHandler( int signal, SignalHandlerType handler, int flag  )$/;"	f
 SetSocketFileSize	Linux_StartProcess.hpp	/^void SetSocketFileSize(size_t  size=0 )$/;"	f
 SetStdFileDescription	Linux_StartProcess.hpp	/^void SetStdFileDescription( const char*stdoutFile, const char* stderrFile )$/;"	f
+SharedLock	include/utility.hpp	/^    class SharedLock {$/;"	c	class:SimpleWeb::ScopeRunner
 ShouldLog	log.cpp	/^bool Logger::ShouldLog( LOG_LEVEL log_level  )$/;"	f	class:Logger
 SigleHandle	BackTrace.cpp	/^void UnixTraceBack::SigleHandle(int signal )$/;"	f	class:UnixTraceBack
 SignNameForThread	ThreadOper.hpp	/^    void   SignNameForThread( const std::string threadname )$/;"	f	class:ThreadOper
+SimpleWeb	include/client_http.hpp	/^namespace SimpleWeb {$/;"	n
+SimpleWeb	include/client_https.hpp	/^namespace SimpleWeb {$/;"	n
+SimpleWeb	include/crypto.hpp	/^namespace SimpleWeb {$/;"	n
+SimpleWeb	include/server_http.hpp	/^namespace SimpleWeb {$/;"	n
+SimpleWeb	include/server_https.hpp	/^namespace SimpleWeb {$/;"	n
+SimpleWeb	include/status_code.hpp	/^namespace SimpleWeb {$/;"	n
+SimpleWeb	include/utility.hpp	/^namespace SimpleWeb {$/;"	n
 Singleton	Singleton.hpp	/^class Singleton{$/;"	c
 Size	LRU_Cache.h	/^        size_t Size()const$/;"	f	class:LRUCache
 SizeChangeWay	log.h	/^    SizeChangeWay,$/;"	e	enum:LogSwitchType
 Sleep	ThreadOper.hpp	/^    void    Sleep( uint32_t ms )$/;"	f	class:ThreadOper
 Start	ThreadOper.hpp	/^    void    Start()$/;"	f	class:ThreadOper
+StatusCode	include/status_code.hpp	/^  enum class StatusCode {$/;"	c	namespace:SimpleWeb
+Stop	ConsulClient.cpp	/^void ConsulClient::Stop()$/;"	f	class:ConsulClient
 Stop	ThreadOper.hpp	/^    void    Stop()$/;"	f	class:ThreadOper
-StreamLog	log.h	167;"	d
+StreamLog	log.h	160;"	d
 SwitchFileTo	Linux_StartProcess.hpp	/^int SwitchFileTo( int fd ,const char*file )$/;"	f
 TARGET	Makefile	/^TARGET=TESTBIN$/;"	m
 ThreadOper	ThreadOper.hpp	/^    explicit ThreadOper()$/;"	f	class:ThreadOper
@@ -129,7 +208,9 @@ UTF8_REJECT	json.hpp	/^    static constexpr uint8_t UTF8_REJECT = 1;$/;"	m	class
 UnixTraceBack	BackTrace.h	/^class UnixTraceBack:public TraceBackBase{$/;"	c
 WARNING	log.h	/^    WARNING,$/;"	e	enum:LOG_LEVEL
 WriteFile	log.cpp	/^void LogFile::WriteFile( const std::string& msg  )$/;"	f	class:LogFile
+_SWS_ALL_H_	include/sws_all.hpp	2;"	d
 __BACKTRACE__	BackTrace.h	9;"	d
+__CONSULCLT_H__	ConsulClient.h	2;"	d
 __DEF_H__	def.h	2;"	d
 __LINUX_STARTPRO__	Linux_StartProcess.hpp	13;"	d
 __LOG_HPP__	log.h	6;"	d
@@ -143,8 +224,11 @@ abort_if	BackTrace.h	27;"	d
 accept	json.hpp	/^    bool accept(const bool strict = true)$/;"	f	class:nlohmann::detail::parser
 accept	json.hpp	/^    static bool accept(IteratorType first, IteratorType last)$/;"	f	class:nlohmann::basic_json
 accept	json.hpp	/^    static bool accept(detail::input_adapter&& i)$/;"	f	class:nlohmann::basic_json
+acceptor	include/server_http.hpp	/^    std::unique_ptr<asio::ip::tcp::acceptor> acceptor;$/;"	m	class:SimpleWeb::ServerBase
 add	json.hpp	/^    void add(int c)$/;"	f	class:nlohmann::detail::lexer
 addr2line	BackTrace.cpp	/^ static std::string addr2line(const char* exe, const char* addr ) {$/;"	f	file:
+addr_	ConsulClient.h	/^        std::string  addr_;$/;"	m	struct:ConfigTest::data_
+address	include/server_http.hpp	/^      std::string address;$/;"	m	class:SimpleWeb::ServerBase::Config
 adl_serializer	json.hpp	/^struct adl_serializer$/;"	s	namespace:nlohmann
 allow_exceptions	json.hpp	/^    const bool allow_exceptions = true;$/;"	m	class:nlohmann::detail::json_sax_dom_callback_parser
 allow_exceptions	json.hpp	/^    const bool allow_exceptions = true;$/;"	m	class:nlohmann::detail::json_sax_dom_parser
@@ -167,6 +251,7 @@ at	json.hpp	/^    const_reference at(size_type idx) const$/;"	f	class:nlohmann::
 at	json.hpp	/^    reference at(const json_pointer& ptr)$/;"	f	class:nlohmann::basic_json
 at	json.hpp	/^    reference at(const typename object_t::key_type& key)$/;"	f	class:nlohmann::basic_json
 at	json.hpp	/^    reference at(size_type idx)$/;"	f	class:nlohmann::basic_json
+attempt_reconnect	include/client_http.hpp	/^      bool attempt_reconnect = true;$/;"	m	class:SimpleWeb::ClientBase::Connection
 back	json.hpp	/^    const_reference back() const$/;"	f	class:nlohmann::basic_json
 back	json.hpp	/^    reference back()$/;"	f	class:nlohmann::basic_json
 base_iterator	json.hpp	/^        : base_iterator(it) {}$/;"	f	class:nlohmann::detail::json_reverse_iterator
@@ -194,6 +279,7 @@ boolean	json.hpp	/^    bool boolean(bool val)$/;"	f	class:nlohmann::detail::json
 boolean	json.hpp	/^    bool boolean(bool val)$/;"	f	class:nlohmann::detail::json_sax_dom_parser
 boolean	json.hpp	/^    boolean,          \/\/\/< boolean value$/;"	m	class:nlohmann::detail::value_t
 boundaries	json.hpp	/^struct boundaries$/;"	s	namespace:nlohmann::detail::dtoa_impl
+buffer_size	include/crypto.hpp	/^    const static std::size_t buffer_size = 131072;$/;"	m	class:SimpleWeb::Crypto
 byte	json.hpp	/^    const std::size_t byte;$/;"	m	class:nlohmann::detail::parse_error
 cached_power	json.hpp	/^struct cached_power \/\/ c = f * 2^e ~= 10^k$/;"	s	namespace:nlohmann::detail::dtoa_impl
 calc_bson_array_size	json.hpp	/^    static std::size_t calc_bson_array_size(const typename BasicJsonType::array_t& value)$/;"	f	class:nlohmann::detail::binary_writer
@@ -202,13 +288,53 @@ calc_bson_entry_header_size	json.hpp	/^    static std::size_t calc_bson_entry_he
 calc_bson_integer_size	json.hpp	/^    static std::size_t calc_bson_integer_size(const std::int64_t value)$/;"	f	class:nlohmann::detail::binary_writer
 calc_bson_object_size	json.hpp	/^    static std::size_t calc_bson_object_size(const typename BasicJsonType::object_t& value)$/;"	f	class:nlohmann::detail::binary_writer
 calc_bson_string_size	json.hpp	/^    static std::size_t calc_bson_string_size(const string_t& value)$/;"	f	class:nlohmann::detail::binary_writer
+callback	include/client_http.hpp	/^      std::function<void(const std::shared_ptr<Connection> &, const error_code &)> callback;$/;"	m	class:SimpleWeb::ClientBase::Session
 callback	json.hpp	/^    const parser_callback_t callback = nullptr;$/;"	m	class:nlohmann::detail::json_sax_dom_callback_parser
 callback	json.hpp	/^    const parser_callback_t callback = nullptr;$/;"	m	class:nlohmann::detail::parser
 cbor	json.hpp	/^enum class input_format_t { json, cbor, msgpack, ubjson, bson };$/;"	m	class:nlohmann::detail::input_format_t
 chars_read	json.hpp	/^    std::size_t chars_read = 0;$/;"	m	class:nlohmann::detail::binary_reader
 chars_read_current_line	json.hpp	/^    std::size_t chars_read_current_line = 0;$/;"	m	struct:nlohmann::detail::position_t
 chars_read_total	json.hpp	/^    std::size_t chars_read_total = 0;$/;"	m	struct:nlohmann::detail::position_t
+client_error_bad_request	include/status_code.hpp	/^    client_error_bad_request = 400,$/;"	m	class:SimpleWeb::StatusCode
+client_error_conflict	include/status_code.hpp	/^    client_error_conflict,$/;"	m	class:SimpleWeb::StatusCode
+client_error_expectation_failed	include/status_code.hpp	/^    client_error_expectation_failed,$/;"	m	class:SimpleWeb::StatusCode
+client_error_failed_dependency	include/status_code.hpp	/^    client_error_failed_dependency,$/;"	m	class:SimpleWeb::StatusCode
+client_error_forbidden	include/status_code.hpp	/^    client_error_forbidden,$/;"	m	class:SimpleWeb::StatusCode
+client_error_gone	include/status_code.hpp	/^    client_error_gone,$/;"	m	class:SimpleWeb::StatusCode
+client_error_im_a_teapot	include/status_code.hpp	/^    client_error_im_a_teapot,$/;"	m	class:SimpleWeb::StatusCode
+client_error_length_required	include/status_code.hpp	/^    client_error_length_required,$/;"	m	class:SimpleWeb::StatusCode
+client_error_locked	include/status_code.hpp	/^    client_error_locked,$/;"	m	class:SimpleWeb::StatusCode
+client_error_method_not_allowed	include/status_code.hpp	/^    client_error_method_not_allowed,$/;"	m	class:SimpleWeb::StatusCode
+client_error_misdirection_required	include/status_code.hpp	/^    client_error_misdirection_required = 421,$/;"	m	class:SimpleWeb::StatusCode
+client_error_not_acceptable	include/status_code.hpp	/^    client_error_not_acceptable,$/;"	m	class:SimpleWeb::StatusCode
+client_error_not_found	include/status_code.hpp	/^    client_error_not_found,$/;"	m	class:SimpleWeb::StatusCode
+client_error_payload_too_large	include/status_code.hpp	/^    client_error_payload_too_large,$/;"	m	class:SimpleWeb::StatusCode
+client_error_payment_required	include/status_code.hpp	/^    client_error_payment_required,$/;"	m	class:SimpleWeb::StatusCode
+client_error_precondition_failed	include/status_code.hpp	/^    client_error_precondition_failed,$/;"	m	class:SimpleWeb::StatusCode
+client_error_precondition_required	include/status_code.hpp	/^    client_error_precondition_required = 428,$/;"	m	class:SimpleWeb::StatusCode
+client_error_proxy_authentication_required	include/status_code.hpp	/^    client_error_proxy_authentication_required,$/;"	m	class:SimpleWeb::StatusCode
+client_error_range_not_satisfiable	include/status_code.hpp	/^    client_error_range_not_satisfiable,$/;"	m	class:SimpleWeb::StatusCode
+client_error_request_header_fields_too_large	include/status_code.hpp	/^    client_error_request_header_fields_too_large = 431,$/;"	m	class:SimpleWeb::StatusCode
+client_error_request_timeout	include/status_code.hpp	/^    client_error_request_timeout,$/;"	m	class:SimpleWeb::StatusCode
+client_error_too_many_requests	include/status_code.hpp	/^    client_error_too_many_requests,$/;"	m	class:SimpleWeb::StatusCode
+client_error_unauthorized	include/status_code.hpp	/^    client_error_unauthorized,$/;"	m	class:SimpleWeb::StatusCode
+client_error_unavailable_for_legal_reasons	include/status_code.hpp	/^    client_error_unavailable_for_legal_reasons = 451,$/;"	m	class:SimpleWeb::StatusCode
+client_error_unprocessable_entity	include/status_code.hpp	/^    client_error_unprocessable_entity,$/;"	m	class:SimpleWeb::StatusCode
+client_error_unsupported_media_type	include/status_code.hpp	/^    client_error_unsupported_media_type,$/;"	m	class:SimpleWeb::StatusCode
+client_error_upgrade_required	include/status_code.hpp	/^    client_error_upgrade_required = 426,$/;"	m	class:SimpleWeb::StatusCode
+client_error_uri_too_long	include/status_code.hpp	/^    client_error_uri_too_long,$/;"	m	class:SimpleWeb::StatusCode
+close_connection_after_response	include/server_http.hpp	/^      bool close_connection_after_response = false;$/;"	m	class:SimpleWeb::ServerBase::Response
 compute_boundaries	json.hpp	/^boundaries compute_boundaries(FloatType value)$/;"	f	namespace:nlohmann::detail::dtoa_impl
+concurrent_synchronous_requests	include/client_http.hpp	/^    std::size_t concurrent_synchronous_requests = 0;$/;"	m	class:SimpleWeb::ClientBase
+concurrent_synchronous_requests_mutex	include/client_http.hpp	/^    std::mutex concurrent_synchronous_requests_mutex;$/;"	m	class:SimpleWeb::ClientBase
+config	include/client_http.hpp	/^    Config config;$/;"	m	class:SimpleWeb::ClientBase
+config	include/server_http.hpp	/^    Config config;$/;"	m	class:SimpleWeb::ServerBase
+connection	include/client_http.hpp	/^      std::shared_ptr<Connection> connection;$/;"	m	class:SimpleWeb::ClientBase::Session
+connection	include/server_http.hpp	/^      std::shared_ptr<Connection> connection;$/;"	m	class:SimpleWeb::ServerBase::Session
+connections	include/client_http.hpp	/^    std::unordered_set<std::shared_ptr<Connection>> connections;$/;"	m	class:SimpleWeb::ClientBase
+connections	include/server_http.hpp	/^    std::shared_ptr<std::unordered_set<Connection *>> connections;$/;"	m	class:SimpleWeb::ServerBase
+connections_mutex	include/client_http.hpp	/^    std::mutex connections_mutex;$/;"	m	class:SimpleWeb::ClientBase
+connections_mutex	include/server_http.hpp	/^    std::shared_ptr<std::mutex> connections_mutex;$/;"	m	class:SimpleWeb::ServerBase
 construct	json.hpp	/^    static void construct(BasicJsonType& j, const CompatibleArrayType& arr)$/;"	f	struct:nlohmann::detail::external_constructor
 construct	json.hpp	/^    static void construct(BasicJsonType& j, const CompatibleObjectType& obj)$/;"	f	struct:nlohmann::detail::external_constructor
 construct	json.hpp	/^    static void construct(BasicJsonType& j, const CompatibleStringType& str)$/;"	f	struct:nlohmann::detail::external_constructor
@@ -222,8 +348,16 @@ construct	json.hpp	/^    static void construct(BasicJsonType& j, typename BasicJ
 construct	json.hpp	/^    static void construct(BasicJsonType& j, typename BasicJsonType::string_t&& s)$/;"	f	struct:nlohmann::detail::external_constructor
 container	json.hpp	/^        : container(cont) {}$/;"	f	class:nlohmann::detail::iteration_proxy
 container	json.hpp	/^    typename IteratorType::reference container;$/;"	m	class:nlohmann::detail::iteration_proxy
-corefun	test.cpp	/^void corefun()$/;"	f
+content	include/client_http.hpp	/^      Content content;$/;"	m	class:SimpleWeb::ClientBase::Response
+content	include/client_http.hpp	/^      Response(std::size_t max_response_streambuf_size) noexcept : streambuf(max_response_streambuf_size), content(streambuf) {}$/;"	f	class:SimpleWeb::ClientBase::Response
+content	include/server_http.hpp	/^      Content content;$/;"	m	class:SimpleWeb::ServerBase::Request
+context	include/client_https.hpp	/^    asio::ssl::context context;$/;"	m	class:SimpleWeb::Client
+context	include/server_https.hpp	/^    asio::ssl::context context;$/;"	m	class:SimpleWeb::Server
+count	include/utility.hpp	/^      SharedLock(std::atomic<long> &count) noexcept : count(count) {}$/;"	f	class:SimpleWeb::ScopeRunner::SharedLock
+count	include/utility.hpp	/^      std::atomic<long> &count;$/;"	m	class:SimpleWeb::ScopeRunner::SharedLock
+count	include/utility.hpp	/^    std::atomic<long> count;$/;"	m	class:SimpleWeb::ScopeRunner
 count	json.hpp	/^    size_type count(KeyT&& key) const$/;"	f	class:nlohmann::basic_json
+count_	ConsulClient.h	/^        unsigned int count_;$/;"	m	struct:ConfigTest::data_
 create	json.hpp	/^    static T* create(Args&& ... args)$/;"	f	class:nlohmann::basic_json
 create	json.hpp	/^    static invalid_iterator create(int id_, const std::string& what_arg)$/;"	f	class:nlohmann::detail::invalid_iterator
 create	json.hpp	/^    static other_error create(int id_, const std::string& what_arg)$/;"	f	class:nlohmann::detail::other_error
@@ -231,10 +365,12 @@ create	json.hpp	/^    static out_of_range create(int id_, const std::string& wha
 create	json.hpp	/^    static parse_error create(int id_, const position_t& pos, const std::string& what_arg)$/;"	f	class:nlohmann::detail::parse_error
 create	json.hpp	/^    static parse_error create(int id_, std::size_t byte_, const std::string& what_arg)$/;"	f	class:nlohmann::detail::parse_error
 create	json.hpp	/^    static type_error create(int id_, const std::string& what_arg)$/;"	f	class:nlohmann::detail::type_error
+create_request_header	include/client_http.hpp	/^    std::unique_ptr<asio::streambuf> create_request_header(const std::string &method, const std::string &path, const CaseInsensitiveMultimap &header) const {$/;"	f	class:SimpleWeb::ClientBase
 current	json.hpp	/^    int current = std::char_traits<char>::eof();$/;"	m	class:nlohmann::detail::binary_reader
 current	json.hpp	/^    std::char_traits<char>::int_type current = std::char_traits<char>::eof();$/;"	m	class:nlohmann::detail::lexer
 current_wchar	json.hpp	/^    std::size_t current_wchar = 0;$/;"	m	class:nlohmann::detail::wide_string_input_adapter
 cursor	json.hpp	/^    const char* cursor;$/;"	m	class:nlohmann::detail::input_buffer_adapter
+data_	ConsulClient.h	/^    struct data_{$/;"	s	class:ConfigTest
 decimal_point	json.hpp	/^    const char decimal_point = '\\0';$/;"	m	class:nlohmann::detail::serializer
 decimal_point_char	json.hpp	/^    const char decimal_point_char = '.';$/;"	m	class:nlohmann::detail::lexer
 decltype	json.hpp	/^-> decltype($/;"	f	namespace:nlohmann::detail
@@ -243,6 +379,8 @@ decltype	json.hpp	/^auto get(const nlohmann::detail::iteration_proxy_value<Itera
 decltype	json.hpp	/^auto get(const nlohmann::detail::iteration_proxy_value<IteratorType>& i) -> decltype(i.value())$/;"	f	namespace:nlohmann::detail
 declval	json.hpp	/^    auto get_ptr() noexcept -> decltype(std::declval<basic_json_t&>().get_impl_ptr(std::declval<PointerType>()))$/;"	f	class:nlohmann::basic_json
 declval	json.hpp	/^    constexpr auto get_ptr() const noexcept -> decltype(std::declval<const basic_json_t&>().get_impl_ptr(std::declval<PointerType>()))$/;"	f	class:nlohmann::basic_json
+default_port	include/client_http.hpp	/^    unsigned short default_port;$/;"	m	class:SimpleWeb::ClientBase
+default_resource	include/server_http.hpp	/^    std::map<std::string, std::function<void(std::shared_ptr<typename ServerBase<socket_type>::Response>, std::shared_ptr<typename ServerBase<socket_type>::Request>)>> default_resource;$/;"	m	class:SimpleWeb::ServerBase
 detail	json.hpp	/^namespace detail$/;"	n	namespace:nlohmann
 detector	json.hpp	/^struct detector$/;"	s	namespace:nlohmann::detail
 detector	json.hpp	/^struct detector<Default, void_t<Op<Args...>>, Op, Args...>$/;"	s	namespace:nlohmann::detail
@@ -303,6 +441,8 @@ fill_buffer	json.hpp	/^    void fill_buffer()$/;"	f	class:nlohmann::detail::wide
 find	json.hpp	/^    const_iterator find(KeyT&& key) const$/;"	f	class:nlohmann::basic_json
 find	json.hpp	/^    iterator find(KeyT&& key)$/;"	f	class:nlohmann::basic_json
 find_largest_pow10	json.hpp	/^inline int find_largest_pow10(const uint32_t n, uint32_t& pow10)$/;"	f	namespace:nlohmann::detail::dtoa_impl
+find_resource	include/server_http.hpp	/^    void find_resource(const std::shared_ptr<Session> &session) {$/;"	f	class:SimpleWeb::ServerBase
+flags_	ConsulClient.h	/^        std::vector<int> flags_;$/;"	m	struct:ConfigTest::data_
 flatten	json.hpp	/^    basic_json flatten() const$/;"	f	class:nlohmann::basic_json
 flatten	json.hpp	/^    static void flatten(const std::string& reference_string,$/;"	f	class:nlohmann::json_pointer
 format_buffer	json.hpp	/^inline char* format_buffer(char* buf, int len, int decimal_exponent,$/;"	f	namespace:nlohmann::detail::dtoa_impl
@@ -337,12 +477,13 @@ from_ubjson	json.hpp	/^    static basic_json from_ubjson(A1 && a1, A2 && a2,$/;"
 from_ubjson	json.hpp	/^    static basic_json from_ubjson(detail::input_adapter&& i,$/;"	f	class:nlohmann::basic_json
 front	json.hpp	/^    const_reference front() const$/;"	f	class:nlohmann::basic_json
 front	json.hpp	/^    reference front()$/;"	f	class:nlohmann::basic_json
-gLog	log.h	108;"	d
-g_jsonlogDebug	log.cpp	/^thread_local   JsonLog<DEBUG>  g_jsonlogDebug; $/;"	v
-g_jsonlogError	log.cpp	/^thread_local   JsonLog<ERROR>  g_jsonlogError; $/;"	v
-g_jsonlogFatal	log.cpp	/^thread_local   JsonLog<FATAL>  g_jsonlogFatal; $/;"	v
-g_jsonlogInfo	log.cpp	/^thread_local   JsonLog<INFO>   g_jsonlogInfo; $/;"	v
-g_jsonlogWaring	log.cpp	/^thread_local   JsonLog<WARNING>g_jsonlogWaring; $/;"	v
+gConsul	ConsulClient.h	58;"	d
+gConsul	test.cpp	3;"	d	file:
+gLog	log.h	101;"	d
+g_consul_index	ConsulClient.h	/^    static const std::string g_consul_index="X-Consul-Index";\/\/在http头里会返回 同上次比较不一致就说明改变了$/;"	v
+g_consul_kvprefix	ConsulClient.h	/^    static const std::string g_consul_kvprefix="\/kv\/";$/;"	v
+g_consul_version	ConsulClient.h	/^    static const std::string g_consul_version="\/v1";$/;"	v
+g_jsonlog	log.cpp	/^thread_local   JsonLog         g_jsonlog; $/;"	v
 g_log	log.cpp	/^thread_local   LogStream       g_log;$/;"	v
 get	json.hpp	/^    BasicJsonType get() const$/;"	f	class:nlohmann::basic_json
 get	json.hpp	/^    basic_json get() const$/;"	f	class:nlohmann::basic_json
@@ -396,6 +537,13 @@ grisu2_digit_gen	json.hpp	/^inline void grisu2_digit_gen(char* buffer, int& leng
 grisu2_round	json.hpp	/^inline void grisu2_round(char* buf, int len, uint64_t dist, uint64_t delta,$/;"	f	namespace:nlohmann::detail::dtoa_impl
 handle_value	json.hpp	/^    BasicJsonType* handle_value(Value&& v)$/;"	f	class:nlohmann::detail::json_sax_dom_parser
 handle_value	json.hpp	/^    std::pair<bool, BasicJsonType*> handle_value(Value&& v, const bool skip_callback = false)$/;"	f	class:nlohmann::detail::json_sax_dom_callback_parser
+handler_runner	include/client_http.hpp	/^      std::shared_ptr<ScopeRunner> handler_runner;$/;"	m	class:SimpleWeb::ClientBase::Connection
+handler_runner	include/client_http.hpp	/^    ClientBase(const std::string &host_port, unsigned short default_port) noexcept : default_port(default_port), handler_runner(new ScopeRunner()) {$/;"	f	class:SimpleWeb::ClientBase
+handler_runner	include/client_http.hpp	/^    std::shared_ptr<ScopeRunner> handler_runner;$/;"	m	class:SimpleWeb::ClientBase
+handler_runner	include/server_http.hpp	/^      std::shared_ptr<ScopeRunner> handler_runner;$/;"	m	class:SimpleWeb::ServerBase::Connection
+handler_runner	include/server_http.hpp	/^    ServerBase(unsigned short port) noexcept : config(port), connections(new std::unordered_set<Connection *>()), connections_mutex(new std::mutex()), handler_runner(new ScopeRunner()) {}$/;"	f	class:SimpleWeb::ServerBase
+handler_runner	include/server_http.hpp	/^    std::shared_ptr<ScopeRunner> handler_runner;$/;"	m	class:SimpleWeb::ServerBase
+handshake	include/client_https.hpp	/^    void handshake(const std::shared_ptr<Session> &session) {$/;"	f	class:SimpleWeb::Client
 has_from_json	json.hpp	/^struct has_from_json : std::false_type {};$/;"	s	namespace:nlohmann::detail
 has_from_json	json.hpp	/^struct has_from_json<BasicJsonType, T,$/;"	s	namespace:nlohmann::detail
 has_non_default_from_json	json.hpp	/^struct has_non_default_from_json : std::false_type {};$/;"	s	namespace:nlohmann::detail
@@ -403,13 +551,23 @@ has_non_default_from_json	json.hpp	/^struct has_non_default_from_json<BasicJsonT
 has_to_json	json.hpp	/^struct has_to_json : std::false_type {};$/;"	s	namespace:nlohmann::detail
 has_to_json	json.hpp	/^struct has_to_json<BasicJsonType, T, enable_if_t<not is_basic_json<T>::value>>$/;"	s	namespace:nlohmann::detail
 hash	json.hpp	/^struct hash<nlohmann::json>$/;"	s	namespace:std
+header	include/client_http.hpp	/^      CaseInsensitiveMultimap header;$/;"	m	class:SimpleWeb::ClientBase::Response
+header	include/server_http.hpp	/^      CaseInsensitiveMultimap header;$/;"	m	class:SimpleWeb::ServerBase::Request
+header_read_time	include/server_http.hpp	/^      std::chrono::system_clock::time_point header_read_time;$/;"	m	class:SimpleWeb::ServerBase::Request
+host	include/client_http.hpp	/^    std::string host;$/;"	m	class:SimpleWeb::ClientBase
+http_version	include/client_http.hpp	/^      std::string http_version, status_code;$/;"	m	class:SimpleWeb::ClientBase::Response
+http_version	include/server_http.hpp	/^      std::string method, path, query_string, http_version;$/;"	m	class:SimpleWeb::ServerBase::Request
 ia	json.hpp	/^    detail::input_adapter_t ia = nullptr;$/;"	m	class:nlohmann::detail::lexer
 ia	json.hpp	/^    input_adapter_t ia = nullptr;$/;"	m	class:nlohmann::detail::binary_reader
 ia	json.hpp	/^    input_adapter_t ia = nullptr;$/;"	m	class:nlohmann::detail::input_adapter
 id	json.hpp	/^    const int id;$/;"	m	class:nlohmann::detail::exception
+in_use	include/client_http.hpp	/^      bool in_use = false;$/;"	m	class:SimpleWeb::ClientBase::Connection
 indent_char	json.hpp	/^    const char indent_char;$/;"	m	class:nlohmann::detail::serializer
 indent_string	json.hpp	/^    string_t indent_string;$/;"	m	class:nlohmann::detail::serializer
 index_sequence	json.hpp	/^struct index_sequence$/;"	s	namespace:nlohmann::detail
+information_continue	include/status_code.hpp	/^    information_continue = 100,$/;"	m	class:SimpleWeb::StatusCode
+information_processing	include/status_code.hpp	/^    information_processing,$/;"	m	class:SimpleWeb::StatusCode
+information_switching_protocols	include/status_code.hpp	/^    information_switching_protocols,$/;"	m	class:SimpleWeb::StatusCode
 input_adapter	json.hpp	/^    input_adapter(CharT b)$/;"	f	class:nlohmann::detail::input_adapter
 input_adapter	json.hpp	/^    input_adapter(CharT b, std::size_t l)$/;"	f	class:nlohmann::detail::input_adapter
 input_adapter	json.hpp	/^    input_adapter(IteratorType first, IteratorType last)$/;"	f	class:nlohmann::detail::input_adapter
@@ -433,9 +591,14 @@ insert	json.hpp	/^    iterator insert(const_iterator pos, initializer_list_t ili
 insert	json.hpp	/^    iterator insert(const_iterator pos, size_type cnt, const basic_json& val)$/;"	f	class:nlohmann::basic_json
 insert	json.hpp	/^    void insert(const_iterator first, const_iterator last)$/;"	f	class:nlohmann::basic_json
 insert_iterator	json.hpp	/^    iterator insert_iterator(const_iterator pos, Args&& ... args)$/;"	f	class:nlohmann::basic_json
+internal_io_service	include/client_http.hpp	/^    bool internal_io_service = false;$/;"	m	class:SimpleWeb::ClientBase
+internal_io_service	include/server_http.hpp	/^    bool internal_io_service = false;$/;"	m	class:SimpleWeb::ServerBase
 internal_iterator	json.hpp	/^template<typename BasicJsonType> struct internal_iterator$/;"	s	namespace:nlohmann::detail
 invalid_iterator	json.hpp	/^    invalid_iterator(int id_, const char* what_arg)$/;"	f	class:nlohmann::detail::invalid_iterator
 invalid_iterator	json.hpp	/^class invalid_iterator : public exception$/;"	c	namespace:nlohmann::detail
+io_service	include/client_http.hpp	/^    std::shared_ptr<asio::io_service> io_service;$/;"	m	class:SimpleWeb::ClientBase
+io_service	include/server_http.hpp	/^    std::shared_ptr<asio::io_service> io_service;$/;"	m	class:SimpleWeb::ServerBase
+ip_	ConsulClient.h	/^        std::string  ip_;$/;"	m	struct:ConfigTest::data_
 is	json.hpp	/^    std::istream& is;$/;"	m	class:nlohmann::detail::input_stream_adapter
 is_basic_json	json.hpp	/^struct is_basic_json<NLOHMANN_BASIC_JSON_TPL> : std::true_type {};$/;"	s	namespace:nlohmann::detail
 is_basic_json	json.hpp	/^template<typename> struct is_basic_json : std::false_type {};$/;"	s	namespace:nlohmann::detail
@@ -531,10 +694,14 @@ literal_null	json.hpp	/^        literal_null,     \/\/\/< the `null` literal$/;"
 literal_true	json.hpp	/^        literal_true,     \/\/\/< the `true` literal$/;"	m	class:nlohmann::detail::lexer::token_type
 loc	json.hpp	/^    const std::lconv* loc = nullptr;$/;"	m	class:nlohmann::detail::serializer
 m	json.hpp	/^    std::runtime_error m;$/;"	m	class:nlohmann::detail::exception
+m_address	ConsulClient.h	/^    std::string     m_address;$/;"	m	class:ConsulClient
+m_bshouldlog	log.h	/^    bool            m_bshouldlog=false;$/;"	m	struct:JsonLog
 m_capacity	LRU_Cache.h	/^        size_t              m_capacity;$/;"	m	class:LRUCache
 m_cb	BackTrace.cpp	/^std::function<void(int)>  TraceBackBase::m_cb = nullptr;$/;"	m	class:TraceBackBase	file:
 m_cb	BackTrace.h	/^    static std::function<void(int signal )>  m_cb;$/;"	m	class:TraceBackBase
 m_condition	ThreadOper.hpp	/^        std::condition_variable          m_condition;$/;"	m	class:ThreadOper
+m_configs	ConsulClient.h	/^    std::unordered_map< std::string, std::shared_ptr<ConfigBase>> m_configs;$/;"	m	class:ConsulClient
+m_data	ConsulClient.h	/^    data_  m_data;$/;"	m	class:ConfigTest
 m_errorfile	BackTrace.cpp	/^std::ofstream  TraceBackBase::m_errorfile;$/;"	m	class:TraceBackBase	file:
 m_errorfile	BackTrace.h	/^    static std::ofstream                     m_errorfile;$/;"	m	class:TraceBackBase
 m_file	json.hpp	/^        : m_file(f)$/;"	f	class:nlohmann::detail::file_input_adapter
@@ -544,11 +711,14 @@ m_file	log.h	/^        std::shared_ptr<LogFile>         m_file=nullptr;$/;"	m	cl
 m_filename	log.h	/^        std::string       m_filename;$/;"	m	struct:LogFile
 m_filename	log.h	/^    std::string   m_filename;$/;"	m	struct:LogInfo
 m_functionname	log.h	/^    std::string   m_functionname;$/;"	m	struct:LogInfo
+m_ioservice	ConsulClient.h	/^    std::shared_ptr<boost::asio::io_service>  m_ioservice;$/;"	m	class:ConsulClient
+m_ip	ConsulClient.h	/^    std::string     m_ip;$/;"	m	class:ConsulClient
 m_it	json.hpp	/^        : m_object(other.m_object), m_it(other.m_it) {}$/;"	f	class:nlohmann::detail::iter_impl
 m_it	json.hpp	/^    difference_type m_it = (std::numeric_limits<std::ptrdiff_t>::min)();$/;"	m	class:nlohmann::detail::primitive_iterator_t
 m_it	json.hpp	/^    internal_iterator<typename std::remove_const<BasicJsonType>::type> m_it;$/;"	m	class:nlohmann::detail::iter_impl
-m_json	log.h	/^    std::unique_ptr<nlohmann::json> m_json;$/;"	m	struct:JosnLogInfo
-m_json	log.h	/^    std::unique_ptr<nlohmann::json> m_json;$/;"	m	struct:JsonLog
+m_json	log.h	/^    nlohmann::json       m_json;$/;"	m	struct:JsonLogInfo
+m_json	log.h	/^    nlohmann::json  m_json;$/;"	m	struct:JsonLog
+m_key	ConsulClient.h	/^   std::string       m_key;$/;"	m	class:ConfigBase
 m_level	log.h	/^        std::atomic<unsigned int>        m_level;$/;"	m	class:Logger
 m_level	log.h	/^    LOG_LEVEL     m_level;$/;"	m	struct:LogInfo
 m_lexer	json.hpp	/^    lexer_t m_lexer;$/;"	m	class:nlohmann::detail::parser
@@ -560,27 +730,39 @@ m_logChangeType	log.h	/^        LogSwitchType     m_logChangeType = DateChangeWa
 m_logLimitSize	log.h	/^        uint64_t          m_logLimitSize;$/;"	m	struct:LogFile
 m_logSize	log.h	/^        uint64_t          m_logSize;$/;"	m	struct:LogFile
 m_map	LRU_Cache.h	/^        MapKeyVal           m_map;$/;"	m	class:LRUCache
+m_modifyIndex	ConsulClient.h	/^   std::string       m_modifyIndex;$/;"	m	class:ConfigBase
 m_msg	log.h	/^    std::string   m_msg;$/;"	m	struct:LogInfo
+m_mutex	ConsulClient.h	/^   mutable WRMUTEX   m_mutex;\/\/读写锁$/;"	m	class:ConfigBase
 m_mutex	ThreadOper.hpp	/^        mutable std::mutex               m_mutex;$/;"	m	class:ThreadOper
 m_object	json.hpp	/^    explicit iter_impl(pointer object) noexcept : m_object(object)$/;"	f	class:nlohmann::detail::iter_impl
 m_object	json.hpp	/^    pointer m_object = nullptr;$/;"	m	class:nlohmann::detail::iter_impl
+m_port	ConsulClient.h	/^    unsigned int    m_port=8500;$/;"	m	class:ConsulClient
+m_retryTime	ConsulClient.h	/^   unsigned int      m_retryTime=30;\/\/失败重试时间 单位s$/;"	m	class:ConfigBase
 m_stop	ThreadOper.hpp	/^        std::atomic<bool>                m_stop;$/;"	m	class:ThreadOper
+m_thread	ConsulClient.h	/^    std::shared_ptr<std::thread>              m_thread;$/;"	m	class:ConsulClient
 m_thread	ThreadOper.hpp	/^        std::shared_ptr<std::thread>     m_thread;$/;"	m	class:ThreadOper
 m_threadId	log.h	/^    unsigned      m_threadId;$/;"	m	struct:LogInfo
 m_time	log.h	/^        uint64_t          m_time;$/;"	m	struct:LogFile
 m_time	log.h	/^    uint64_t      m_time;$/;"	m	struct:LogInfo
 m_type	json.hpp	/^    value_t m_type = value_t::null;$/;"	m	class:nlohmann::basic_json
 m_value	json.hpp	/^    json_value m_value = {};$/;"	m	class:nlohmann::basic_json
+m_work	ConsulClient.h	/^    std::shared_ptr<boost::asio::io_service::work> m_work;$/;"	m	class:ConsulClient
+main	boost_test.cpp	/^int main()$/;"	f
 main	main.cpp	/^int main( int argc,char**argv )$/;"	f
 main	test.cpp	/^int main()$/;"	f
 make_index_sequence	json.hpp	/^struct make_index_sequence$/;"	s	namespace:nlohmann::detail
 make_index_sequence	json.hpp	/^template<> struct make_index_sequence<0> : index_sequence<> {};$/;"	s	namespace:nlohmann::detail
 make_index_sequence	json.hpp	/^template<> struct make_index_sequence<1> : index_sequence<0> {};$/;"	s	namespace:nlohmann::detail
 make_void	json.hpp	/^template <typename ...Ts> struct make_void$/;"	s	namespace:nlohmann::detail
+max_request_streambuf_size	include/server_http.hpp	/^      std::size_t max_request_streambuf_size = std::numeric_limits<std::size_t>::max();$/;"	m	class:SimpleWeb::ServerBase::Config
+max_response_streambuf_size	include/client_http.hpp	/^      std::size_t max_response_streambuf_size = std::numeric_limits<std::size_t>::max();$/;"	m	class:SimpleWeb::ClientBase::Config
 merge_and_renumber	json.hpp	/^struct merge_and_renumber<index_sequence<I1...>, index_sequence<I2...>>$/;"	s	namespace:nlohmann::detail
 merge_patch	json.hpp	/^    void merge_patch(const basic_json& apply_patch)$/;"	f	class:nlohmann::basic_json
 meta	json.hpp	/^    static basic_json meta()$/;"	f	class:nlohmann::basic_json
+method	include/server_http.hpp	/^      std::string method, path, query_string, http_version;$/;"	m	class:SimpleWeb::ServerBase::Request
 minus	json.hpp	/^    diyfp minus;$/;"	m	struct:nlohmann::detail::dtoa_impl::boundaries
+move	include/server_http.hpp	/^          : streambuf(max_request_streambuf_size), content(streambuf), remote_endpoint(std::move(remote_endpoint)) {}$/;"	f	class:SimpleWeb::ServerBase::Request
+move	include/server_http.hpp	/^      Session(std::size_t max_request_streambuf_size, std::shared_ptr<Connection> connection) noexcept : connection(std::move(connection)) {$/;"	f	class:SimpleWeb::ServerBase::Session
 move	json.hpp	/^          m_value(std::move(other.m_value))$/;"	f	class:nlohmann::basic_json
 moved_or_copied	json.hpp	/^    value_type moved_or_copied() const$/;"	f	class:nlohmann::detail::json_ref
 msgpack	json.hpp	/^enum class input_format_t { json, cbor, msgpack, ubjson, bson };$/;"	m	class:nlohmann::detail::input_format_t
@@ -589,6 +771,7 @@ name_separator	json.hpp	/^        name_separator,   \/\/\/< the name separator `
 next_byte_in_range	json.hpp	/^    bool next_byte_in_range(std::initializer_list<int> ranges)$/;"	f	class:nlohmann::detail::lexer
 next_unget	json.hpp	/^    bool next_unget = false;$/;"	m	class:nlohmann::detail::lexer
 nlohmann	json.hpp	/^namespace nlohmann$/;"	n
+noexcept	include/client_http.hpp	/^    virtual std::shared_ptr<Connection> create_connection() noexcept = 0;$/;"	m	class:SimpleWeb::ClientBase
 noexcept	json.hpp	/^    ValueType & get_to(ValueType& v) const noexcept(noexcept($/;"	f	class:nlohmann::basic_json
 noexcept	json.hpp	/^    ValueType get() const noexcept(noexcept($/;"	f	class:nlohmann::basic_json
 noexcept	json.hpp	/^    basic_json& operator=(basic_json other) noexcept ($/;"	f	class:nlohmann::basic_json
@@ -631,6 +814,8 @@ object_element	json.hpp	/^    BasicJsonType* object_element = nullptr;$/;"	m	cla
 object_element	json.hpp	/^    BasicJsonType* object_element = nullptr;$/;"	m	class:nlohmann::detail::json_sax_dom_parser
 object_end	json.hpp	/^        object_end,$/;"	m	class:nlohmann::detail::parser::parse_event_t
 object_start	json.hpp	/^        object_start,$/;"	m	class:nlohmann::detail::parser::parse_event_t
+on_error	include/server_http.hpp	/^    std::function<void(std::shared_ptr<typename ServerBase<socket_type>::Request>, const error_code &)> on_error;$/;"	m	class:SimpleWeb::ServerBase
+on_upgrade	include/server_http.hpp	/^    std::function<void(std::unique_ptr<socket_type> &, std::shared_ptr<typename ServerBase<socket_type>::Request>)> on_upgrade;$/;"	m	class:SimpleWeb::ServerBase
 operator !=	json.hpp	/^    bool operator!=(const iter_impl& other) const$/;"	f	class:nlohmann::detail::iter_impl
 operator ()	json.hpp	/^    std::size_t operator()(const nlohmann::json& j) const$/;"	f	struct:std::hash
 operator *	json.hpp	/^    iteration_proxy_value& operator*()$/;"	f	class:nlohmann::detail::iteration_proxy_value
@@ -706,9 +891,10 @@ output_vector_adapter	json.hpp	/^class output_vector_adapter : public output_ada
 override	BackTrace.h	/^    virtual void RegistSighandler()override;$/;"	m	class:UnixTraceBack
 override	json.hpp	/^    ~input_buffer_adapter() override = default;$/;"	m	class:nlohmann::detail::input_buffer_adapter
 override	log.h	/^        void LoopRun()override;$/;"	m	class:Logger
-override	log.h	/^    virtual std::string FmtLog()override;$/;"	m	struct:JosnLogInfo
+override	log.h	/^    virtual std::string FmtLog()override;$/;"	m	struct:JsonLogInfo
 override	log.h	/^    virtual std::string FmtLog()override;$/;"	m	struct:LogInfo
 owned_value	json.hpp	/^    mutable value_type owned_value = nullptr;$/;"	m	class:nlohmann::detail::json_ref
+parse	include/utility.hpp	/^        static CaseInsensitiveMultimap parse(const std::string &str) {$/;"	f	class:SimpleWeb::HttpHeader::FieldValue::SemicolonSeparatedAttributes
 parse	json.hpp	/^    static basic_json parse(IteratorType first, IteratorType last,$/;"	f	class:nlohmann::basic_json
 parse	json.hpp	/^    static basic_json parse(detail::input_adapter&& i,$/;"	f	class:nlohmann::basic_json
 parse	json.hpp	/^    void parse(const bool strict, BasicJsonType& result)$/;"	f	class:nlohmann::detail::parser
@@ -729,24 +915,67 @@ parse_ubjson_internal	json.hpp	/^    bool parse_ubjson_internal(const bool get_c
 parser	json.hpp	/^    explicit parser(detail::input_adapter_t&& adapter,$/;"	f	class:nlohmann::detail::parser
 parser	json.hpp	/^class parser$/;"	c	namespace:nlohmann::detail
 patch	json.hpp	/^    basic_json patch(const basic_json& json_patch) const$/;"	f	class:nlohmann::basic_json
+path	include/server_http.hpp	/^      std::string method, path, query_string, http_version;$/;"	m	class:SimpleWeb::ServerBase::Request
+path_match	include/server_http.hpp	/^      regex::smatch path_match;$/;"	m	class:SimpleWeb::ServerBase::Request
 plus	json.hpp	/^    diyfp plus;$/;"	m	struct:nlohmann::detail::dtoa_impl::boundaries
 pop_back	json.hpp	/^    std::string pop_back()$/;"	f	class:nlohmann::json_pointer
+port	include/client_http.hpp	/^    unsigned short port;$/;"	m	class:SimpleWeb::ClientBase
+port	include/server_http.hpp	/^      Config(unsigned short port) noexcept : port(port) {}$/;"	f	class:SimpleWeb::ServerBase::Config
+port	include/server_http.hpp	/^      unsigned short port;$/;"	m	class:SimpleWeb::ServerBase::Config
+port_	ConsulClient.h	/^        unsigned int port_;$/;"	m	struct:ConfigTest::data_
 position	json.hpp	/^    position_t position;$/;"	m	class:nlohmann::detail::lexer
 position_string	json.hpp	/^    static std::string position_string(const position_t& pos)$/;"	f	class:nlohmann::detail::parse_error
 position_t	json.hpp	/^struct position_t$/;"	s	namespace:nlohmann::detail
 primitive_iterator_t	json.hpp	/^class primitive_iterator_t$/;"	c	namespace:nlohmann::detail
 priority_tag	json.hpp	/^template<> struct priority_tag<0> {};$/;"	s	namespace:nlohmann::detail
 priority_tag	json.hpp	/^template<unsigned N> struct priority_tag : priority_tag < N - 1 > {};$/;"	s	namespace:nlohmann::detail
+proxy_server	include/client_http.hpp	/^      std::string proxy_server;$/;"	m	class:SimpleWeb::ClientBase::Config
 push_back	json.hpp	/^    void push_back(basic_json&& val)$/;"	f	class:nlohmann::basic_json
 push_back	json.hpp	/^    void push_back(const basic_json& val)$/;"	f	class:nlohmann::basic_json
 push_back	json.hpp	/^    void push_back(const typename object_t::value_type& val)$/;"	f	class:nlohmann::basic_json
 push_back	json.hpp	/^    void push_back(initializer_list_t init)$/;"	f	class:nlohmann::basic_json
+query	include/client_http.hpp	/^    std::unique_ptr<asio::ip::tcp::resolver::query> query;$/;"	m	class:SimpleWeb::ClientBase
+query_string	include/server_http.hpp	/^      std::string method, path, query_string, http_version;$/;"	m	class:SimpleWeb::ServerBase::Request
+read	include/client_http.hpp	/^    void read(const std::shared_ptr<Session> &session) {$/;"	f	class:SimpleWeb::ClientBase
+read	include/server_http.hpp	/^    void read(const std::shared_ptr<Session> &session) {$/;"	f	class:SimpleWeb::ServerBase
+read_chunked_transfer_encoded	include/client_http.hpp	/^    void read_chunked_transfer_encoded(const std::shared_ptr<Session> &session, const std::shared_ptr<asio::streambuf> &chunks_streambuf) {$/;"	f	class:SimpleWeb::ClientBase
+read_chunked_transfer_encoded	include/server_http.hpp	/^    void read_chunked_transfer_encoded(const std::shared_ptr<Session> &session, const std::shared_ptr<asio::streambuf> &chunks_streambuf) {$/;"	f	class:SimpleWeb::ServerBase
+read_chunked_transfer_encoded_chunk	include/client_http.hpp	/^    void read_chunked_transfer_encoded_chunk(const std::shared_ptr<Session> &session, const std::shared_ptr<asio::streambuf> &chunks_streambuf, unsigned long length) {$/;"	f	class:SimpleWeb::ClientBase
+read_chunked_transfer_encoded_chunk	include/server_http.hpp	/^    void read_chunked_transfer_encoded_chunk(const std::shared_ptr<Session> &session, const std::shared_ptr<asio::streambuf> &chunks_streambuf, unsigned long length) {$/;"	f	class:SimpleWeb::ServerBase
+redirection_found	include/status_code.hpp	/^    redirection_found,$/;"	m	class:SimpleWeb::StatusCode
+redirection_moved_permanently	include/status_code.hpp	/^    redirection_moved_permanently,$/;"	m	class:SimpleWeb::StatusCode
+redirection_multiple_choices	include/status_code.hpp	/^    redirection_multiple_choices = 300,$/;"	m	class:SimpleWeb::StatusCode
+redirection_not_modified	include/status_code.hpp	/^    redirection_not_modified,$/;"	m	class:SimpleWeb::StatusCode
+redirection_permanent_redirect	include/status_code.hpp	/^    redirection_permanent_redirect,$/;"	m	class:SimpleWeb::StatusCode
+redirection_see_other	include/status_code.hpp	/^    redirection_see_other,$/;"	m	class:SimpleWeb::StatusCode
+redirection_switch_proxy	include/status_code.hpp	/^    redirection_switch_proxy,$/;"	m	class:SimpleWeb::StatusCode
+redirection_temporary_redirect	include/status_code.hpp	/^    redirection_temporary_redirect,$/;"	m	class:SimpleWeb::StatusCode
+redirection_use_proxy	include/status_code.hpp	/^    redirection_use_proxy,$/;"	m	class:SimpleWeb::StatusCode
 ref_stack	json.hpp	/^    std::vector<BasicJsonType*> ref_stack;$/;"	m	class:nlohmann::detail::json_sax_dom_callback_parser
 ref_stack	json.hpp	/^    std::vector<BasicJsonType*> ref_stack;$/;"	m	class:nlohmann::detail::json_sax_dom_parser
 reference_tokens	json.hpp	/^    std::vector<std::string> reference_tokens;$/;"	m	class:nlohmann::json_pointer
+regex_orderable	include/server_http.hpp	/^      regex_orderable(const char *regex_cstr) : regex::regex(regex_cstr), str(regex_cstr) {}$/;"	f	class:SimpleWeb::ServerBase::regex_orderable
+regex_orderable	include/server_http.hpp	/^      regex_orderable(std::string regex_str) : regex::regex(regex_str), str(std::move(regex_str)) {}$/;"	f	class:SimpleWeb::ServerBase::regex_orderable
+regex_orderable	include/server_http.hpp	/^    class regex_orderable : public regex::regex {$/;"	c	class:SimpleWeb::ServerBase
 reinterpret_bits	json.hpp	/^Target reinterpret_bits(const Source source)$/;"	f	namespace:nlohmann::detail::dtoa_impl
+remote_endpoint	include/server_http.hpp	/^      std::shared_ptr<asio::ip::tcp::endpoint> remote_endpoint;$/;"	m	class:SimpleWeb::ServerBase::Connection
+remote_endpoint	include/server_http.hpp	/^      std::shared_ptr<asio::ip::tcp::endpoint> remote_endpoint;$/;"	m	class:SimpleWeb::ServerBase::Request
 replace	json.hpp	/^    replace, \/\/\/< replace invalid UTF-8 sequences with U+FFFD$/;"	m	class:nlohmann::detail::error_handler_t
 replace_substring	json.hpp	/^    static void replace_substring(std::string& s, const std::string& f,$/;"	f	class:nlohmann::json_pointer
+request	include/client_http.hpp	/^    std::shared_ptr<Response> request(const std::string &method, const std::string &path = std::string("\/"),$/;"	f	class:SimpleWeb::ClientBase
+request	include/client_http.hpp	/^    std::shared_ptr<Response> request(const std::string &method, const std::string &path, std::istream &content,$/;"	f	class:SimpleWeb::ClientBase
+request	include/client_http.hpp	/^    void request(const std::string &method, const std::string &path, std::istream &content, const CaseInsensitiveMultimap &header,$/;"	f	class:SimpleWeb::ClientBase
+request	include/client_http.hpp	/^    void request(const std::string &method, const std::string &path, std::istream &content,$/;"	f	class:SimpleWeb::ClientBase
+request	include/client_http.hpp	/^    void request(const std::string &method, const std::string &path, string_view content, const CaseInsensitiveMultimap &header,$/;"	f	class:SimpleWeb::ClientBase
+request	include/client_http.hpp	/^    void request(const std::string &method, const std::string &path, string_view content,$/;"	f	class:SimpleWeb::ClientBase
+request	include/client_http.hpp	/^    void request(const std::string &method, const std::string &path,$/;"	f	class:SimpleWeb::ClientBase
+request	include/client_http.hpp	/^    void request(const std::string &method, std::function<void(std::shared_ptr<Response>, const error_code &)> &&request_callback) {$/;"	f	class:SimpleWeb::ClientBase
+request	include/server_http.hpp	/^      std::shared_ptr<Request> request;$/;"	m	class:SimpleWeb::ServerBase::Session
+request_streambuf	include/client_http.hpp	/^      std::unique_ptr<asio::streambuf> request_streambuf;$/;"	m	class:SimpleWeb::ClientBase::Session
+resource	include/server_http.hpp	/^    std::map<regex_orderable, std::map<std::string, std::function<void(std::shared_ptr<typename ServerBase<socket_type>::Response>, std::shared_ptr<typename ServerBase<socket_type>::Request>)>>> resource;$/;"	m	class:SimpleWeb::ServerBase
+response	include/client_http.hpp	/^          : connection(std::move(connection)), request_streambuf(std::move(request_streambuf)), response(new Response(max_response_streambuf_size)) {}$/;"	f	class:SimpleWeb::ClientBase::Session
+response	include/client_http.hpp	/^      std::shared_ptr<Response> response;$/;"	m	class:SimpleWeb::ClientBase::Session
+reuse_address	include/server_http.hpp	/^      bool reuse_address = true;$/;"	m	class:SimpleWeb::ServerBase::Config
 root	json.hpp	/^    BasicJsonType& root;$/;"	m	class:nlohmann::detail::json_sax_dom_callback_parser
 root	json.hpp	/^    BasicJsonType& root;$/;"	m	class:nlohmann::detail::json_sax_dom_parser
 safe_abort	BackTrace.cpp	37;"	d	file:
@@ -764,8 +993,27 @@ scan_number	json.hpp	/^    token_type scan_number()  \/\/ lgtm [cpp\/use-of-goto
 scan_string	json.hpp	/^    token_type scan_string()$/;"	f	class:nlohmann::detail::lexer
 serializer	json.hpp	/^    serializer(output_adapter_t<char> s, const char ichar,$/;"	f	class:nlohmann::detail::serializer
 serializer	json.hpp	/^class serializer$/;"	c	namespace:nlohmann::detail
+server_error_bad_gateway	include/status_code.hpp	/^    server_error_bad_gateway,$/;"	m	class:SimpleWeb::StatusCode
+server_error_gateway_timeout	include/status_code.hpp	/^    server_error_gateway_timeout,$/;"	m	class:SimpleWeb::StatusCode
+server_error_http_version_not_supported	include/status_code.hpp	/^    server_error_http_version_not_supported,$/;"	m	class:SimpleWeb::StatusCode
+server_error_insufficient_storage	include/status_code.hpp	/^    server_error_insufficient_storage,$/;"	m	class:SimpleWeb::StatusCode
+server_error_internal_server_error	include/status_code.hpp	/^    server_error_internal_server_error = 500,$/;"	m	class:SimpleWeb::StatusCode
+server_error_loop_detected	include/status_code.hpp	/^    server_error_loop_detected,$/;"	m	class:SimpleWeb::StatusCode
+server_error_not_extended	include/status_code.hpp	/^    server_error_not_extended = 510,$/;"	m	class:SimpleWeb::StatusCode
+server_error_not_implemented	include/status_code.hpp	/^    server_error_not_implemented,$/;"	m	class:SimpleWeb::StatusCode
+server_error_service_unavailable	include/status_code.hpp	/^    server_error_service_unavailable,$/;"	m	class:SimpleWeb::StatusCode
+server_error_variant_also_negotiates	include/status_code.hpp	/^    server_error_variant_also_negotiates,$/;"	m	class:SimpleWeb::StatusCode
+session	include/server_http.hpp	/^      std::shared_ptr<Session> session;$/;"	m	class:SimpleWeb::ServerBase::Response
+session_id_context	include/server_https.hpp	/^    std::string session_id_context;$/;"	m	class:SimpleWeb::Server
+set_session_id_context	include/server_https.hpp	/^    bool set_session_id_context = false;$/;"	m	class:SimpleWeb::Server
 skip_bom	json.hpp	/^    bool skip_bom()$/;"	f	class:nlohmann::detail::lexer
+socket	include/client_http.hpp	/^          : handler_runner(std::move(handler_runner)), timeout(timeout), socket(new socket_type(std::forward<Args>(args)...)) {}$/;"	f	class:SimpleWeb::ClientBase::Connection
+socket	include/client_http.hpp	/^      std::unique_ptr<socket_type> socket; \/\/ Socket must be unique_ptr since asio::ssl::stream<asio::ip::tcp::socket> is not movable$/;"	m	class:SimpleWeb::ClientBase::Connection
+socket	include/server_http.hpp	/^      Connection(std::shared_ptr<ScopeRunner> handler_runner, Args &&... args) noexcept : handler_runner(std::move(handler_runner)), socket(new socket_type(std::forward<Args>(args)...)) {}$/;"	f	class:SimpleWeb::ServerBase::Connection
+socket	include/server_http.hpp	/^      std::unique_ptr<socket_type> socket; \/\/ Socket must be unique_ptr since asio::ssl::stream<asio::ip::tcp::socket> is not movable$/;"	m	class:SimpleWeb::ServerBase::Connection
+socket_close_mutex	include/server_http.hpp	/^      std::mutex socket_close_mutex;$/;"	m	class:SimpleWeb::ServerBase::Connection
 split	json.hpp	/^    static std::vector<std::string> split(const std::string& reference_string)$/;"	f	class:nlohmann::json_pointer
+start	include/server_http.hpp	/^    virtual void start() {$/;"	f	class:SimpleWeb::ServerBase
 start_array	json.hpp	/^    bool start_array(std::size_t  \/*unused*\/ = std::size_t(-1))$/;"	f	class:nlohmann::detail::json_sax_acceptor
 start_array	json.hpp	/^    bool start_array(std::size_t len)$/;"	f	class:nlohmann::detail::json_sax_dom_callback_parser
 start_array	json.hpp	/^    bool start_array(std::size_t len)$/;"	f	class:nlohmann::detail::json_sax_dom_parser
@@ -773,23 +1021,57 @@ start_object	json.hpp	/^    bool start_object(std::size_t  \/*unused*\/ = std::s
 start_object	json.hpp	/^    bool start_object(std::size_t len)$/;"	f	class:nlohmann::detail::json_sax_dom_callback_parser
 start_object	json.hpp	/^    bool start_object(std::size_t len)$/;"	f	class:nlohmann::detail::json_sax_dom_parser
 static_const	json.hpp	/^struct static_const$/;"	s	namespace:nlohmann::detail
+status_code	include/client_http.hpp	/^      std::string http_version, status_code;$/;"	m	class:SimpleWeb::ClientBase::Response
+status_code_strings	include/status_code.hpp	/^  inline const std::map<StatusCode, std::string> &status_code_strings() {$/;"	f	namespace:SimpleWeb
 std	json.hpp	/^namespace std$/;"	n
+str	include/server_http.hpp	/^      std::string str;$/;"	m	class:SimpleWeb::ServerBase::regex_orderable
 str	json.hpp	/^        : str(s)$/;"	f	class:nlohmann::detail::output_string_adapter
 str	json.hpp	/^        : str(w)$/;"	f	class:nlohmann::detail::wide_string_input_adapter
 str	json.hpp	/^    StringType& str;$/;"	m	class:nlohmann::detail::output_string_adapter
 str	json.hpp	/^    const WideStringType& str;$/;"	m	class:nlohmann::detail::wide_string_input_adapter
 stream	json.hpp	/^        : stream(s)$/;"	f	class:nlohmann::detail::output_stream_adapter
 stream	json.hpp	/^    std::basic_ostream<CharType>& stream;$/;"	m	class:nlohmann::detail::output_stream_adapter
+streambuf	include/client_http.hpp	/^      Content(asio::streambuf &streambuf) noexcept : std::istream(&streambuf), streambuf(streambuf) {}$/;"	f	class:SimpleWeb::ClientBase::Content
+streambuf	include/client_http.hpp	/^      Content(asio::streambuf &streambuf) noexcept : std::istream(&streambuf), streambuf(streambuf) {}$/;"	m	class:SimpleWeb::ClientBase::Content::std
+streambuf	include/client_http.hpp	/^      asio::streambuf &streambuf;$/;"	m	class:SimpleWeb::ClientBase::Content
+streambuf	include/client_http.hpp	/^      asio::streambuf streambuf;$/;"	m	class:SimpleWeb::ClientBase::Response
+streambuf	include/server_http.hpp	/^      Content(asio::streambuf &streambuf) noexcept : std::istream(&streambuf), streambuf(streambuf) {}$/;"	f	class:SimpleWeb::ServerBase::Content
+streambuf	include/server_http.hpp	/^      Content(asio::streambuf &streambuf) noexcept : std::istream(&streambuf), streambuf(streambuf) {}$/;"	m	class:SimpleWeb::ServerBase::Content::std
+streambuf	include/server_http.hpp	/^      Response(std::shared_ptr<Session> session, long timeout_content) noexcept : std::ostream(&streambuf), session(std::move(session)), timeout_content(timeout_content) {}$/;"	m	class:SimpleWeb::ServerBase::Response::std
+streambuf	include/server_http.hpp	/^      asio::streambuf &streambuf;$/;"	m	class:SimpleWeb::ServerBase::Content
+streambuf	include/server_http.hpp	/^      asio::streambuf streambuf;$/;"	m	class:SimpleWeb::ServerBase::Request
+streambuf	include/server_http.hpp	/^      asio::streambuf streambuf;$/;"	m	class:SimpleWeb::ServerBase::Response
 strict	json.hpp	/^    strict,  \/\/\/< throw a type_error exception in case of invalid UTF-8$/;"	m	class:nlohmann::detail::error_handler_t
 string	json.hpp	/^        string_t* string;$/;"	m	union:nlohmann::basic_json::json_value
 string	json.hpp	/^    bool string(string_t& \/*unused*\/)$/;"	f	class:nlohmann::detail::json_sax_acceptor
 string	json.hpp	/^    bool string(string_t& val)$/;"	f	class:nlohmann::detail::json_sax_dom_callback_parser
 string	json.hpp	/^    bool string(string_t& val)$/;"	f	class:nlohmann::detail::json_sax_dom_parser
 string	json.hpp	/^    string,           \/\/\/< string value$/;"	m	class:nlohmann::detail::value_t
+success_accepted	include/status_code.hpp	/^    success_accepted,$/;"	m	class:SimpleWeb::StatusCode
+success_already_reported	include/status_code.hpp	/^    success_already_reported,$/;"	m	class:SimpleWeb::StatusCode
+success_created	include/status_code.hpp	/^    success_created,$/;"	m	class:SimpleWeb::StatusCode
+success_im_used	include/status_code.hpp	/^    success_im_used = 226,$/;"	m	class:SimpleWeb::StatusCode
+success_multi_status	include/status_code.hpp	/^    success_multi_status,$/;"	m	class:SimpleWeb::StatusCode
+success_no_content	include/status_code.hpp	/^    success_no_content,$/;"	m	class:SimpleWeb::StatusCode
+success_non_authoritative_information	include/status_code.hpp	/^    success_non_authoritative_information,$/;"	m	class:SimpleWeb::StatusCode
+success_ok	include/status_code.hpp	/^    success_ok = 200,$/;"	m	class:SimpleWeb::StatusCode
+success_partial_content	include/status_code.hpp	/^    success_partial_content,$/;"	m	class:SimpleWeb::StatusCode
+success_reset_content	include/status_code.hpp	/^    success_reset_content,$/;"	m	class:SimpleWeb::StatusCode
 swap	json.hpp	/^    void swap(array_t& other)$/;"	f	class:nlohmann::basic_json
 swap	json.hpp	/^    void swap(object_t& other)$/;"	f	class:nlohmann::basic_json
 swap	json.hpp	/^    void swap(string_t& other)$/;"	f	class:nlohmann::basic_json
 thousands_sep	json.hpp	/^    const char thousands_sep = '\\0';$/;"	m	class:nlohmann::detail::serializer
+thread_pool_size	include/server_http.hpp	/^      std::size_t thread_pool_size = 1;$/;"	m	class:SimpleWeb::ServerBase::Config
+threads	include/server_http.hpp	/^    std::vector<std::thread> threads;$/;"	m	class:SimpleWeb::ServerBase
+timeout	include/client_http.hpp	/^      long timeout = 0;$/;"	m	class:SimpleWeb::ClientBase::Config
+timeout	include/client_http.hpp	/^      long timeout;$/;"	m	class:SimpleWeb::ClientBase::Connection
+timeout_connect	include/client_http.hpp	/^      long timeout_connect = 0;$/;"	m	class:SimpleWeb::ClientBase::Config
+timeout_content	include/server_http.hpp	/^      Response(std::shared_ptr<Session> session, long timeout_content) noexcept : std::ostream(&streambuf), session(std::move(session)), timeout_content(timeout_content) {}$/;"	f	class:SimpleWeb::ServerBase::Response
+timeout_content	include/server_http.hpp	/^      long timeout_content = 300;$/;"	m	class:SimpleWeb::ServerBase::Config
+timeout_content	include/server_http.hpp	/^      long timeout_content;$/;"	m	class:SimpleWeb::ServerBase::Response
+timeout_request	include/server_http.hpp	/^      long timeout_request = 5;$/;"	m	class:SimpleWeb::ServerBase::Config
+timer	include/client_http.hpp	/^      std::unique_ptr<asio::steady_timer> timer;$/;"	m	class:SimpleWeb::ClientBase::Connection
+timer	include/server_http.hpp	/^      std::unique_ptr<asio::steady_timer> timer;$/;"	m	class:SimpleWeb::ServerBase::Connection
 to_bson	json.hpp	/^    static std::vector<uint8_t> to_bson(const basic_json& j)$/;"	f	class:nlohmann::basic_json
 to_bson	json.hpp	/^    static void to_bson(const basic_json& j, detail::output_adapter<char> o)$/;"	f	class:nlohmann::basic_json
 to_bson	json.hpp	/^    static void to_bson(const basic_json& j, detail::output_adapter<uint8_t> o)$/;"	f	class:nlohmann::basic_json
@@ -832,6 +1114,7 @@ unflatten	json.hpp	/^    basic_json unflatten() const$/;"	f	class:nlohmann::basi
 unflatten	json.hpp	/^    unflatten(const BasicJsonType& value)$/;"	f	class:nlohmann::json_pointer
 unget	json.hpp	/^    void unget()$/;"	f	class:nlohmann::detail::lexer
 uninitialized	json.hpp	/^        uninitialized,    \/\/\/< indicating the scanner is uninitialized$/;"	m	class:nlohmann::detail::lexer::token_type
+unknown	include/status_code.hpp	/^    unknown = 0,$/;"	m	class:SimpleWeb::StatusCode
 unlikely	def.h	4;"	d
 unlikely	def.h	7;"	d
 update	json.hpp	/^    void update(const_iterator first, const_iterator last)$/;"	f	class:nlohmann::basic_json
@@ -877,6 +1160,15 @@ w	json.hpp	/^    diyfp w;$/;"	m	struct:nlohmann::detail::dtoa_impl::boundaries
 wide_string_input_adapter	json.hpp	/^class wide_string_input_adapter : public input_adapter_protocol$/;"	c	namespace:nlohmann::detail
 wide_string_input_helper	json.hpp	/^struct wide_string_input_helper$/;"	s	namespace:nlohmann::detail
 wide_string_input_helper	json.hpp	/^struct wide_string_input_helper<WideStringType, 2>$/;"	s	namespace:nlohmann::detail
+write	include/client_http.hpp	/^    void write(const std::shared_ptr<Session> &session) {$/;"	f	class:SimpleWeb::ClientBase
+write	include/server_http.hpp	/^      void write(StatusCode status_code = StatusCode::success_ok, const CaseInsensitiveMultimap &header = CaseInsensitiveMultimap()) {$/;"	f	class:SimpleWeb::ServerBase::Response
+write	include/server_http.hpp	/^      void write(StatusCode status_code, const std::string &content, const CaseInsensitiveMultimap &header = CaseInsensitiveMultimap()) {$/;"	f	class:SimpleWeb::ServerBase::Response
+write	include/server_http.hpp	/^      void write(StatusCode status_code, std::istream &content, const CaseInsensitiveMultimap &header = CaseInsensitiveMultimap()) {$/;"	f	class:SimpleWeb::ServerBase::Response
+write	include/server_http.hpp	/^      void write(const CaseInsensitiveMultimap &header) {$/;"	f	class:SimpleWeb::ServerBase::Response
+write	include/server_http.hpp	/^      void write(const char_type *ptr, std::streamsize n) {$/;"	f	class:SimpleWeb::ServerBase::Response
+write	include/server_http.hpp	/^      void write(const std::string &content, const CaseInsensitiveMultimap &header = CaseInsensitiveMultimap()) {$/;"	f	class:SimpleWeb::ServerBase::Response
+write	include/server_http.hpp	/^      void write(std::istream &content, const CaseInsensitiveMultimap &header = CaseInsensitiveMultimap()) {$/;"	f	class:SimpleWeb::ServerBase::Response
+write	include/server_http.hpp	/^    void write(const std::shared_ptr<Session> &session,$/;"	f	class:SimpleWeb::ServerBase
 write_bson	json.hpp	/^    void write_bson(const BasicJsonType& j)$/;"	f	class:nlohmann::detail::binary_writer
 write_bson_array	json.hpp	/^    void write_bson_array(const string_t& name,$/;"	f	class:nlohmann::detail::binary_writer
 write_bson_boolean	json.hpp	/^    void write_bson_boolean(const string_t& name,$/;"	f	class:nlohmann::detail::binary_writer
@@ -890,6 +1182,7 @@ write_bson_object_entry	json.hpp	/^    void write_bson_object_entry(const string
 write_bson_string	json.hpp	/^    void write_bson_string(const string_t& name,$/;"	f	class:nlohmann::detail::binary_writer
 write_bson_unsigned	json.hpp	/^    void write_bson_unsigned(const string_t& name,$/;"	f	class:nlohmann::detail::binary_writer
 write_cbor	json.hpp	/^    void write_cbor(const BasicJsonType& j)$/;"	f	class:nlohmann::detail::binary_writer
+write_header	include/server_http.hpp	/^      void write_header(const CaseInsensitiveMultimap &header, size_type size) {$/;"	f	class:SimpleWeb::ServerBase::Response
 write_msgpack	json.hpp	/^    void write_msgpack(const BasicJsonType& j)$/;"	f	class:nlohmann::detail::binary_writer
 write_number	json.hpp	/^    void write_number(const NumberType n)$/;"	f	class:nlohmann::detail::binary_writer
 write_number_with_ubjson_prefix	json.hpp	/^    void write_number_with_ubjson_prefix(const NumberType n,$/;"	f	class:nlohmann::detail::binary_writer
