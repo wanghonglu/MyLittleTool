@@ -1,9 +1,9 @@
 #include "ConsulClient.h"
-ConsulClinet::ConsulClient()
+ConsulClient::ConsulClient()
 {
-    m_ioservice.reset(nullptr);
-    m_work.reset(nullptr);
-    m_thread.reset(nullptr);
+    m_ioservice.reset();
+    m_work.reset();
+    m_thread.reset();
     m_configs.clear();
 }
 std::shared_ptr<boost::asio::io_service>& ConsulClient::GetIoService()
@@ -27,7 +27,7 @@ void ConsulClient::Stop()
 {
     m_ioservice->stop();
 }
-void ConsulClient::RegistKeyValue(std::string& key,  std::shared_ptr<ConfigBase> config)
+void ConsulClient::RegistKeyValue(const std::string& key,  std::shared_ptr<ConfigBase> config)
 {
     m_configs[key]=config;
 }
@@ -38,13 +38,13 @@ void ConsulClient::GetKeyValueJson_All()
     auto client = NewHttpClient();
     for( auto& each_config:m_configs )
     {
-        DoRealQuest( client, each_config.first );
+        DoRealQuestConfig( client, each_config.first );
     }
 }
 /* consul的阻塞查询默认是保持5分钟 所以这里的超时就不配置了 */
 HttpClientPtr ConsulClient::NewHttpClient()
 {
-    HttpClientPtr ptr = std::make_shared<SimpleWeb::Client<HTTP> >( m_address );
+    HttpClientPtr ptr = std::make_shared<SimpleWeb::Client<SimpleWeb::HTTP> >( m_address );
     ptr->io_service = m_ioservice;
     return ptr;
 }
@@ -63,7 +63,7 @@ void ConsulClient::DoRealQuestConfig(HttpClientPtr httpclient, const std::string
     if( !m_configs.count(key) )
         return ;
     std::stringstream ss;
-    ss<<g_consul_version<<g_consul_kvprefix<<key
+    ss<<g_consul_version<<g_consul_kvprefix<<key;
     if( modify_index !=-1  )
         ss<<"?index="<<m_configs[key]->m_modifyIndex
     auto callBack = [key ,this]( std::shared_ptr<SimpleWeb::Response> response, const SimpleWeb::error_code err, HttpClientPtr clt ){
@@ -73,7 +73,7 @@ void ConsulClient::DoRealQuestConfig(HttpClientPtr httpclient, const std::string
             //如果请求出现异常报错了，不要立即请求，防止出现异常，不停的请求，毕竟只是配置，出现异常延时调用就可以了
             SLOG_ERROR("Consul callback error "<<err.string())
             auto new_http_client = NewHttpClient();
-            std::shared_ptr<boost::asio::stready_timer> timer = std::make_shared< boost::asio::stready_timer >( *(GetIoService()) );
+            std::shared_ptr<boost::asio::steady_timer> timer = std::make_shared< boost::asio::steady_timer >( *(GetIoService()) );
             auto config = GetConfigByKey(key);
             if( !config || !timer )
                 return ;
@@ -87,8 +87,8 @@ void ConsulClient::DoRealQuestConfig(HttpClientPtr httpclient, const std::string
         }
         else 
         {
-            const std::string& content = response->Content; 
-            std::string  modify_index = response[g_consul_index]
+            const std::string& content = response->content.string(); 
+            std::string  modify_index = response->header[g_consul_index];
             auto config = GetConfigByKey(key); 
             if( !config  )
                 return;
