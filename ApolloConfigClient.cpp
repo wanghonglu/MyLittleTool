@@ -6,6 +6,7 @@ ApolloConfigClient::ApolloConfigClient()
 	m_work.reset();
 	m_timer.clear();
 	m_thread.reset();
+	m_totalConfigs.store(0);
 }
 void ApolloConfigClient::Init(const std::string& _ip, uint32_t delaytime)
 {
@@ -15,7 +16,8 @@ void ApolloConfigClient::Init(const std::string& _ip, uint32_t delaytime)
 	m_delaytime = delaytime;
 	m_ioservice = std::make_shared<boost::asio::io_service>();
 	m_work = std::make_shared<boost::asio::io_service::work>(*m_ioservice);
-	assert(m_ioservice != nullptr && m_work != nullptr);
+	m_thread.reset(new std::thread([this]() {m_ioservice->run(); }));
+	assert(m_ioservice != nullptr && m_work != nullptr && m_thread != nullptr);
 	m_localIP = GetLocalIp();
 }
 void ApolloConfigClient::Join()
@@ -27,16 +29,6 @@ void ApolloConfigClient::Stop()
 {
 	if (m_ioservice)
 		m_ioservice->stop();
-}
-void ApolloConfigClient::Start()
-{
-	if (m_thread)
-		return;
-	if (!m_ioservice)
-		return;
-	m_thread.reset(new std::thread([this]() {m_ioservice->run(); }));
-	assert(m_thread != nullptr);
-	m_ioservice->post([this]() {BeginWatching(); });
 }
 //cluster 貌似我们目前用的都是default
 void ApolloConfigClient::RegistConfig(const std::string& appId, const std::string& cluster, const std::string& ns,\
@@ -63,16 +55,41 @@ void ApolloConfigClient::RegistConfig(const std::string& appId, const std::strin
 	之所以不直接用不带缓存的接口是因为 感知配置更新接口一分钟如果无返回会返回304 如果发生变化返回200
 	内存中会保存一份 notificationId的map, 只有获取的相应的配置之后才会更新否则不更新
 */
+/*
+	这个函数会阻塞调用线程，直到加载配置全部完成，每次启动的时候调用就可以
+*/
+void ApolloConfigClient::WaitGetAllConfigAndBeginWatching()
+{
+	static  bool s_firstLoadConfig = true;
+	m_totalConfigs.store(m_configParseHandler.size());
+	BeginWatching();
+	if (s_firstLoadConfig)
+	{
+		s_firstLoadConfig = false;
+		uint32_t  expected = 0;
+		while (!m_totalConfigs.compare_exchange_weak(expected, 0))//阻塞等待所有配置加载完
+		{	
+			std::this_thread::sleep_for(std::chrono::seconds(1));
+			SLOG_INFO(" ApolloWaitGetAllConfig  Left "<< expected <<" Load.......");
+			expected = 0;
+		}
+		SLOG_INFO("ApolloConfig All Load Success ");
+	}
+}
 void ApolloConfigClient::BeginWatching()
 {
-	SLOG_ERROR(" Apool Regist Key "<< m_configParseHandler.size() );
-	for (const auto& appIdCluset : m_appIdAndCluster)
-	{
-		if (!appIdCluset.second.empty())
+	SLOG_ERROR(" Apool Regist Key  "<< m_configParseHandler.size() );
+	if (!m_ioservice)
+		return;
+	m_ioservice->post([this]() {
+		for (const auto& appIdCluset : m_appIdAndCluster)
 		{
-			WatchConfig(appIdCluset.first);
+			if (!appIdCluset.second.empty())
+			{
+				WatchConfig(appIdCluset.first);
+			}
 		}
-	}
+	});
 }
 //感知配置更新接口 
 //url : {config_server_url} / notifications / v2 ? appId = { appId }&cluster = { clusterName }&notifications = { notifications }
@@ -117,7 +134,7 @@ void ApolloConfigClient::WatchConfig(AppIdClusterPairPtr appIdCluster, HttpClien
 	try
 	{
 		httpclt->request("GET", ss.str(), "", SimpleWeb::CaseInsensitiveMultimap{},\
-			[httpclt, appIdCluster, this](Response resp, const ErrorCode&err) {
+			[httpclt, appIdCluster, this](Response resp, const boost::system::error_code&err) {
 			WatchCallBack(resp, err, httpclt, appIdCluster);
 		    });
 	}
@@ -132,11 +149,12 @@ void ApolloConfigClient::WatchConfig(AppIdClusterPairPtr appIdCluster, HttpClien
 HttpClientPtr ApolloConfigClient::MakeHttpClient()
 {
 	HttpClientPtr http = std::make_shared<SimpleWeb::Client<SimpleWeb::HTTP>>(m_address);
-	http->config.timeout = 70;//如果配置无变化 watch接口1分钟后返回 httpcode 304, 所以这个超时要大于60 也不建议不设，Apollo出异常了
+	//如果配置无变化 watch接口1分钟后返回 httpcode 304, 所以这个超时要大于60 也不建议不设，Apollo出异常了
+	http->config.timeout = 80;
 	http->io_service = m_ioservice;
 	return http;
 }
-void ApolloConfigClient::WatchCallBack(Response resp, const ErrorCode& err, HttpClientPtr httpclt,\
+void ApolloConfigClient::WatchCallBack(Response resp, const boost::system::error_code& err, HttpClientPtr httpclt,\
 	AppIdClusterPairPtr appIdCluster)
 {
 	try
@@ -196,7 +214,7 @@ void ApolloConfigClient::GetOneConfig(AppIdClusterPairPtr appIdCluster, const st
 	try
 	{
 		http_client->request("GET", ss.str(), "", SimpleWeb::CaseInsensitiveMultimap{}, \
-			[http_client, this](Response resp, const ErrorCode&err) {
+			[http_client, this](Response resp, const boost::system::error_code&err) {
 			GetConfigCallBack(resp, err, http_client);
 		});
 	}
@@ -211,7 +229,7 @@ void ApolloConfigClient::GetOneConfig(AppIdClusterPairPtr appIdCluster, const st
 		return;
 	}
 }
-void ApolloConfigClient::GetConfigCallBack(Response resp, const ErrorCode&err, HttpClientPtr httpclt)
+void ApolloConfigClient::GetConfigCallBack(Response resp, const boost::system::error_code&err, HttpClientPtr httpclt)
 {
 	try
 	{
@@ -234,11 +252,13 @@ void ApolloConfigClient::GetConfigCallBack(Response resp, const ErrorCode&err, H
 		else
 			values.reset(new std::string(configurations.dump()));
 		auto handler = m_configParseHandler[appId + cluster + ns];
-		if (handler != nullptr && m_ioservice)
-			m_ioservice->post([handler, values,ns]() { 
+		if (handler != nullptr )
 			try
 			{
 				handler(values);//调用具体的config实现的解析
+				SLOG_INFO("ApolloUpdataConfig Success "<< LVAL(appId)<< LVAL(cluster)<< LVAL(ns) );
+				if (m_totalConfigs.load() > 0)
+					m_totalConfigs.fetch_sub(1);
 			}
 			catch (const std::exception& err)
 			{
@@ -248,7 +268,6 @@ void ApolloConfigClient::GetConfigCallBack(Response resp, const ErrorCode&err, H
 			{
 				SLOG_ERROR("ParseConfigError " << ns );
 			}	
-		});
 		else//新加了配置但是没有加入具体的handler 提示下
 			throw std::runtime_error("new config added but no handler " + appId + cluster + ns);
 	}
