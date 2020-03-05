@@ -13,10 +13,14 @@
 #include<random>
 #include<chrono>
 #include<algorithm>
-#include<sys/time.h>
 #include<sstream>
+#ifdef __linux__ 
+#include<sys/time.h>
 #include<sys/syscall.h>
 #include<unistd.h>
+#elf defined(WIN32)
+#include<windows.h>
+#endif
 #include <boost/thread/locks.hpp>
 #include <boost/thread/shared_mutex.hpp>
 unsigned int Random(unsigned int max=0,unsigned int min=0 );

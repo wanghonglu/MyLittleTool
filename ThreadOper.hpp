@@ -10,8 +10,10 @@
 #include<vector>
 #include<atomic>
 #include<cassert>
+#ifdef __linux__ 
 #include<unistd.h>
 #include <sys/prctl.h>
+#endif
 #include<chrono>
 template< typename T>
 class ThreadOper{
