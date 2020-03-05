@@ -1,20 +1,17 @@
-#ifndef __APOLLOCONFIGCLIENT__H
+﻿#ifndef __APOLLOCONFIGCLIENT__H
 #define __APOLLOCONFIGCLIENT__H
 /*	阿波罗github地址 https://github.com/ctripcorp/apollo
 	octans下面有一个Apollo客户端的实现，但实现过于复杂，而且有点问题
 	1: 阿波罗的namespace 创建的时候可以根据配置文件的类型选择不同的类型 json xml等等
 	好处是在修改的时候会做相应的校验，保证配置的正确，如果是默认的properties 即使配置文件写错了，也不会有报错，挺严重
-	而且设置了类型后 不用再额外设置key namespace就是key 
+	而且设置了类型后 不用再额外设置key namespace就是key  当namespace的key是非properties get到的结果在content里面
 	2: 阿波罗的接口如果配置没变化 1分钟后会返回304 有配置200 这个需要判断下，解析失败和http报错目前都会不停的调用
 	不太好
 	3: 用起来麻烦，原则上，只需要暴露出一个接口，接收string参数，然后解析出需要的内容就可以了
 	4: 不支持多个appid cluster的情况
-	5: 如果配置太多，异步获取、解析耗时，可能进程起来了 但是配置还没有加载到内存里，容易出现bug
+	5: 如果配置太多，异步获取、解析耗时，可能进程起来了 但是配置还没有加载到内存里，容易出现bug,在程序启动第一次加载配置的时候
+	适当等待一下比较好，配置如果配错了，最好启动的时候不要起来，中途修改配置如果配置配错解析失败，则不会交换内存中的数据
 	6: 写的太复杂
-*/
-/*
-windows下用boost1.60的版本要有这个宏
-#define  _WIN32_WINNT  0x0600
 */
 #include "LSingleton.h"
 #include<string>
@@ -61,7 +58,7 @@ namespace apolloconfig {
 	};
 	using HttpClientPtr = std::shared_ptr<SimpleWeb::Client<SimpleWeb::HTTP>>;
 	using Response = std::shared_ptr<SimpleWeb::Client<SimpleWeb::HTTP>::Response>;
-	using ParseConfigHandler = std::function<void(std::shared_ptr<std::string>)>;
+	using ParseConfigHandler = std::function<bool(std::shared_ptr<std::string>)>;
 	using AppIdClusterPairPtr = std::shared_ptr<std::pair<std::string, std::string>>;
 	class ApolloConfigClient :public LSingleton<ApolloConfigClient>{
 	public:
@@ -78,6 +75,7 @@ namespace apolloconfig {
 		// 所以提供两个版本 一个是直接watch，加载在异步回调里，第二个同步阻塞等待异步加载完成，保证后续操作正常
 		void BeginWatching();
 		void WaitGetAllConfigAndBeginWatching();
+		//
 	private:
 
 		void WatchConfig(AppIdClusterPairPtr appIdCluster, HttpClientPtr http = nullptr );
@@ -116,7 +114,7 @@ namespace apolloconfig {
 	*/
 	class ApolloConfigBase {
 	public:
-		virtual void ParseConfig(std::shared_ptr<std::string>) = 0;//具体的配置只需要实现这一个接口就行，解析具体配置
+		virtual bool ParseConfig(std::shared_ptr<std::string>) = 0;//具体的配置只需要实现这一个接口就行，解析具体配置
 	};
 
 	template<typename FunctionType>

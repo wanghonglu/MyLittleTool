@@ -1,4 +1,4 @@
-#include "ApolloConfigClient.h"
+﻿#include "ApolloConfigClient.h"
 using namespace apolloconfig;
 ApolloConfigClient::ApolloConfigClient()
 {
@@ -49,9 +49,8 @@ void ApolloConfigClient::RegistConfig(const std::string& appId, const std::strin
 /*
 	带缓存会有一定延迟 不用
 	不带缓存的 url URL: {config_server_url}/configs/{appId}/{clusterName}/{namespaceName}?releaseKey={releaseKey}&ip={clientIp}
-	后面那个Ip是用来灰度发布的  以后说不定有用 releaseKey是感知接口返回的 
+	后面那个Ip是用来灰度发布的  以后说不定有用 releaseKey是把这个接口当做轮循操作的时候用的，也不用，这里只为获取配置 releaseKey=-1
 	就是检测到发生变化的namesapce 然后调用不带缓存读取 releaseKey设置为-1 就会返回正常数据
-	releasekey如果跟服务器版本一致就
 	之所以不直接用不带缓存的接口是因为 感知配置更新接口一分钟如果无返回会返回304 如果发生变化返回200
 	内存中会保存一份 notificationId的map, 只有获取的相应的配置之后才会更新否则不更新
 */
@@ -78,7 +77,7 @@ void ApolloConfigClient::WaitGetAllConfigAndBeginWatching()
 }
 void ApolloConfigClient::BeginWatching()
 {
-	SLOG_ERROR(" Apool Regist Key  "<< m_configParseHandler.size() );
+	SLOG_INFO(" Apool Regist Key  "<< m_configParseHandler.size() );
 	if (!m_ioservice)
 		return;
 	m_ioservice->post([this]() {
@@ -102,8 +101,13 @@ void ApolloConfigClient::WatchConfig(AppIdClusterPairPtr appIdCluster, HttpClien
 	std::vector<std::string>& namespaces = m_appIdAndCluster[appIdCluster];
 	if (namespaces.empty())
 		return;
+#ifdef _DEBUG
+	static uint64_t s_WatchCounts = 0;
+	SLOG_DEBUG("ApolloWatchTest  WatchIng :" << ++s_WatchCounts << (httpclt ? " sucess " : " false try again "));
+#endif // _DEBUG
 	if (httpclt == nullptr)
 		httpclt = MakeHttpClient();
+
 	std::string& appID = appIdCluster->first;
 	std::string& cluster = appIdCluster->second;
 	std::stringstream ss;
@@ -255,9 +259,12 @@ void ApolloConfigClient::GetConfigCallBack(Response resp, const boost::system::e
 		if (handler != nullptr )
 			try
 			{
-				handler(values);//调用具体的config实现的解析
-				SLOG_INFO("ApolloUpdataConfig Success "<< LVAL(appId)<< LVAL(cluster)<< LVAL(ns) );
-				if (m_totalConfigs.load() > 0)
+				bool b_success = handler(values);//调用具体的config实现的解析
+				if( b_success )
+					SLOG_INFO("ApolloUpdataConfig Success " << LVAL(appId) << LVAL(cluster) << LVAL(ns));
+				else
+					SLOG_FATAL("ApolloUpdataConfig Fail " << LVAL(appId) << LVAL(cluster) << LVAL(ns));
+				if (m_totalConfigs.load() > 0 && b_success )
 					m_totalConfigs.fetch_sub(1);
 			}
 			catch (const std::exception& err)
@@ -289,12 +296,18 @@ void ApolloConfigClient::DelTimer(uint32_t id)
 std::string ApolloConfigClient::GetLocalIp()noexcept
 {
 	std::string ip;
-	boost::asio::ip::tcp::resolver  resolver(*m_ioservice);
-	boost::asio::ip::tcp::resolver::query query(boost::asio::ip::host_name(), "");
-	auto  iter = resolver.resolve(query);
-	decltype(iter) end;
-	if (iter != end)
-		ip= iter->endpoint().address().to_string();
+	try
+	{
+		boost::asio::ip::tcp::resolver  resolver(*m_ioservice);
+		boost::asio::ip::tcp::resolver::query query(boost::asio::ip::host_name(), "");
+		auto  iter = resolver.resolve(query);
+		decltype(iter) end;
+		if (iter != end)
+			ip = iter->endpoint().address().to_string();
+	}
+	catch (...)
+	{
+	}
 	return ip;
 }
 std::string ApolloConfigClient::httpurlencode(const std::string &value)
