@@ -44,7 +44,8 @@ class ThreadOper{
 
     void    Stop()
     {
-        m_stop.store(true);
+        m_stop.store(true);//stop后 条件变量导致那个锁一致会阻塞，所以这里还得唤醒那个锁
+		m_condition.notify_one();
     }
 
     void    Join()
