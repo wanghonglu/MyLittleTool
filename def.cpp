@@ -114,12 +114,29 @@ uint32_t GetBeginOfDay()
 }
 unsigned int GetThreadId()
 {
-    static thread_local  unsigned int s_threadId=0;
-    if( s_threadId !=0  ) return s_threadId;
-#if defined(__linux__)
-    return s_threadId = syscall(SYS_gettid);
-	#elf defined(WIN32)
-		return s_threadId = ::GetCurrentThreadId();
+#if defined(_MSC_VER) && (_MSC_VER < 1900) || defined(__clang__) && !__has_feature(cxx_thread_local)
+    return _thread_id();
+#else
+    static thread_local const size_t tid = _thread_id();
+    return tid;
+#endif
+}
+inline size_t _thread_id()
+{
+#ifdef _WIN32
+    return  static_cast<size_t>(::GetCurrentThreadId());
+#elif __linux__
+    return  static_cast<size_t>(syscall(SYS_gettid));
+#elif __FreeBSD__
+    long tid;
+    thr_self(&tid);
+    return static_cast<size_t>(tid);
+#elif __APPLE__
+    uint64_t tid;
+    pthread_threadid_np(nullptr, &tid);
+    return static_cast<size_t>(tid);
+#else //Default to standard C++11 (other Unix)
+    return static_cast<size_t>(std::hash<std::thread::id>()(std::this_thread::get_id()));
 #endif
 }
 std::string GetProcessName()

@@ -7,6 +7,7 @@ using namespace std;
 #include "json.hpp"
 #include "Linux_StartProcess.hpp"
 #include "ConsulClient.h"
+#include "ThreadSignle.hpp"
 int main( int argc,char**argv )
 {
 #ifdef LRU_TEST
