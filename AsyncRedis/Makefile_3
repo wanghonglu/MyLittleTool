@@ -1,0 +1,13 @@
+CC=gcc
+Define=-DHASH_TABLE_TEST
+all:hash_test
+hash_test:hash_table.o simple_str.o tool.o
+	$(CC) $(Define) -o $@ $^
+hash_table.o:hash_table.c
+	$(CC) -c  $(Define) -o $@ $^	
+simple_str.o:simple_str.c
+	$(CC) -c  -o $@ $^  
+tool.o:tool.c
+	$(CC) -c -o $@ $^
+clean:
+	@rm -rf *.o hash_test

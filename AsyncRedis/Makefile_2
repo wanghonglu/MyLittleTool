@@ -1,0 +1,11 @@
+all:hash_test
+hash_test:hash_table.o simple_str.o tool.o
+	gcc -DHASH_TABLE_TEST -o hash_test hash_table.o simple_str.o tool.o
+hash_table.o:hash_table.c
+	gcc -c -DHASH_TABLE_TEST  hash_table.c
+simple_str.o:simple_str.c
+	gcc -c simple_str.c
+tool.o:tool.c
+	gcc -c tool.c
+clean:
+	rm -rf *.o hash_test

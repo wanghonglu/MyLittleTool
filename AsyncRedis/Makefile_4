@@ -1,0 +1,14 @@
+CC=gcc
+Define=-DHASH_TABLE_TEST
+OBJ=$(patsubst %.c, %.o, $(wildcard *.c))
+all:hash_test
+hash_test:$(OBJ)
+	$(CC) $(Define) -o $@ $^
+hash_table.o:hash_table.c
+	$(CC) -c  $(Define) -o $@ $^	
+simple_str.o:simple_str.c
+	$(CC) -c  -o $@ $^  
+tool.o:tool.c
+	$(CC) -c -o $@ $^
+clean:
+	@rm -rf *.o hash_test

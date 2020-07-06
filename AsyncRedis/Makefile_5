@@ -1,0 +1,11 @@
+CC=gcc
+Define=-DHASH_TABLE_TEST
+OBJ=$(patsubst %.c, %.o, $(wildcard *.c))
+.PHONY:clean
+#target:hash_test
+hash_test:$(OBJ)
+	$(CC) $(Define) -o $@ $^
+$(OBJ):%.o:%.c
+	$(CC) -c $(Define) -o $@ $^
+clean:
+	@rm -rf *.o

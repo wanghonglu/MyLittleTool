@@ -6,6 +6,7 @@ now_micsec()
     gettimeofday(&now, NULL);
     return now.tv_sec*1e6+now.tv_usec;
 }
+
 uint64_t
 now_sec()
 {

@@ -1,0 +1,4 @@
+all:
+	gcc -DHASH_TABLE_TEST hash_table.c simple_str.c tool.c
+clean:
+	rm -rf a.out simple_str.o tool.o
