@@ -63,6 +63,7 @@ _quick_sort2(int*ptr, int left, int right )
     }
 
     int privote = ptr[right];
+    //printf("%d\n", privote );
     int start1 = left, start2=right;
     //基准值在右边 空位在右边 先找左边
     while(start1<start2)
@@ -76,8 +77,7 @@ _quick_sort2(int*ptr, int left, int right )
 
         while( start1<start2 && ptr[start2]>=privote )
             start2--;
-
-        //空位在左边 用右边的值替换左边的空位 空位转移到右边
+    //空位在左边 用右边的值替换左边的空位 空位转移到右边
         if( start1<start2 )
             ptr[start1++] = ptr[start2];
     }
@@ -88,4 +88,163 @@ _quick_sort2(int*ptr, int left, int right )
    _quick_sort2(ptr, start2+1, right );
    return;
 }
+//三数取中法
+//即从left  mid right三个数中挑选一个中间的 
+//然后swap到left或者right的位置,回到上面的情况
+void
+better_quick_sort( int*ptr, int len )
+{
+    assert( NULL != ptr && len>0 );
+    _better_quick_sort( ptr, 0, len-1 );
+} 
+//三个数中选择中间那个数
+//取中间那个数 放在right-1的位置当作基准值 这样right 位置的数比right 大 符合基准值的定义
+void 
+choose_right(int *ptr, int left, int right )
+{
+    //跟冒泡差不多的思路
+    int mid = left+(right-left)/2;
+    if( ptr[mid]<ptr[left] )
+    {
+        Swap(ptr[left], ptr[mid] );
+    }
+
+    if( ptr[right]<ptr[mid] )
+    {
+        Swap(ptr[right], ptr[mid] );
+        if( ptr[mid]<ptr[left] )
+            Swap(ptr[mid], ptr[left] );
+    }
+
+    Swap( ptr[mid], ptr[right]);//这里把选好的基准值 放在了right-1的位置 这里right已经比基准值大了 就没必要再排序了
+    return;
+}
+void
+_better_quick_sort(int *ptr, int left, int right )
+{
+    if( right-left<=1 )
+    {
+        if( (1 == right - left) && ptr[left]>ptr[right] )
+            Swap( ptr[left], ptr[right] );
+        return;
+    }
+
+    //三数取中 调整后 基准值在right的位置
+    choose_right(ptr, left, right );
+    int pivot = ptr[right];
+    int start1 = left, start2 = right;
+    while( start1<start2 )
+    {
+        //基准值在右边 空位在右边 先遍历左边
+        while( start1<start2 && ptr[start1]<=pivot )
+            ++start1;
+        if(start1<start2)
+            ptr[start2--] = ptr[start1];//空位转移到左边 
+        while( start1<start2 && ptr[start2]>=pivot )
+            --start2;
+        if(start1<start2)
+            ptr[start1++] = ptr[start2];//空位转移到右边
+    }
+    ptr[start1] = pivot;
+    _better_quick_sort(ptr, left, start1-1);
+    _better_quick_sort(ptr,start1+1, right);
+}
+//去重版的快排
+void
+better_quick_sort2(int*ptr, int len)
+{
+    assert( ptr!=NULL && len>0 );
+    _better_quick_sort2( ptr, 0, len-1 );
+    return;
+}
+void
+_better_quick_sort2( int *ptr, int left, int right )
+{
+    if( right - left <=1 )
+    {
+        if( 1 == right-left && ptr[left]>ptr[right] )
+            Swap(ptr[left], ptr[right]);
+        return;
+    }
+    //三数选中 此时中间的数位于 right位置
+    choose_right(ptr, left, right );
+    int pivot = ptr[right];
+    int start1 = left, start2 = right;
+
+    while( start1<start2 )
+    {
+        //空位在右边
+        while( start1<start2 && ptr[start1]<=pivot )
+            ++start1;
+        //左边有一个数大于基准值 填到空位上,空位转移到左边
+        if( start1<start2 )
+            ptr[start2--] = ptr[start1];
+        
+        while( start1<start2 && ptr[start2]>=pivot )
+            --start2;
+        //右边有一个值小于基准值 填到左边的空位上,空位转移到右边
+        if( start1<start2 )
+            ptr[start1++] = ptr[start2];
+    }
+
+    ptr[start1] = pivot;
+    //这时 start1左边的值都小于等于它 右边的值都大于等于它
+    // 针对其中重复的,可以挑出来放到它两边 保证这部分重复的数据不再进行排序
+    int left_idx=start1-1, right_idx=start1+1;
+    deal_repeat( ptr, left, start1, right, &left_idx, &right_idx );
+
+    printf("left:%d right:%d start1:%d left_idx:%d right_idx:%d \n", left, right, start1, left_idx, right_idx );
+
+    if( left_idx>left )
+        _better_quick_sort2(ptr, left, left_idx );
+    
+    if( right>right_idx )
+        _better_quick_sort2(ptr, right_idx, right );
+}
+void
+deal_repeat(int *ptr, int left, int pos, int right, int*pos_left, int*pos_right )
+{
+    *pos_left = pos - 1;
+    *pos_right = pos + 1; 
+
+
+    int i=0;
+    for( i=pos-1;i>=left;i-- )
+    {
+        if( ptr[pos] == ptr[i] )
+        {
+            if( *pos_left != i )
+            {
+                Swap( ptr[i], ptr[*pos_left] );
+            }
+            *pos_left -=1;
+        }
+    }
+
+    for( i = pos+1;i<=right;i++ )
+    {
+        if( ptr[pos] == ptr[i] )
+        {
+            if( *pos_right != i )
+            {
+                Swap( ptr[i], ptr[*pos_right] );
+            }
+            *pos_right +=1;
+        }
+    }
+
+    return;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -10,17 +10,19 @@
  *  卡了好几天 网上终于找到一个易懂的说法了
  *
  *  选取某个基准数，先缓存下这个数，然后这个位置就相当于空着了
- *  然后先从右边开始遍历(因为空位最开始在左边）
+ *  如果选择的基准数是left 然后先从右边开始遍历(因为空位最开始在左边）
  *  找到一个小于基准数的数字 塞到这个空位上 然后最右边的地方又空着了
  *  然后再从左边开始便利，找到大于基准数的数塞到右边空位上
  *  然后左边又有空位了。。。。。
- *  即循环开始的时候都是左边有空位，所以最后把原来的基准数反填进去的时候
- *  要填在左边那个空位上
+ *  最终遍历结束 start1idx 和start2idx是相等的 这个地方也是空位 把最开始缓存的数填进去即可
  *  如果左边空位填上右边有空位
  *  然后遍历左边都没有满足条件的值 左边会累加直到等于右值 即替换两者皆可
  *  最坏的情况就是原来就是有序的 拆分开来的两个数组分别是1 和n-1个元素 这样时间复杂度会被替换成n^2
  *  所以有三数取中法来优化
+ *  切记 
+ *      下面的函数里面 left right千万别用size_t 存 因为size_t 无符号 0-1 得到的是一个巨大的整数 会导致循环退不出去 切记切记  size_t 不要滥用!!!!!
  *
+ *  这里我采用的都是枢纽变动的  还有枢纽不变的(这种后面可以实现一个)
  *  todo:
  *      快排的尾递归修改  啥叫尾递归？？？
  *      快排划分出三部分 大于 等于 小于 这样对于有大量重复元素的情况会好很多 ，，，，
@@ -50,6 +52,17 @@ void
 better_quick_sort(int*ptr, int len );
 void
 _better_quick_sort( int*ptr, int left, int right );
+void
+choose_right( int*ptr, int left, int right );
+// 快排的去重 针对重复元素过多的情况优化
+// 将待排序数组划分为三部分 小于 等于 大于 三部分
+void
+better_quick_sort2( int*ptr, int len );
+void
+_better_quick_sort2( int*ptr, int left, int right );
+// 查找跟pos 重复的元素
+void
+deal_repeat( int*ptr, int left, int pos, int right, int *pos_left, int* pos_right );
 
 
 
