@@ -28,6 +28,12 @@
  *      快排划分出三部分 大于 等于 小于 这样对于有大量重复元素的情况会好很多 ，，，，
  *      内容真多啊
  *
+ *      尾递归: stackoverflow上这个回答比较好:https://stackoverflow.com/questions/33923/what-is-tail-recursion/37010#37010
+ *      尾递归: https://blog.csdn.net/qq_38289815/article/details/105487879
+ *
+ *      快排为什么比堆排序快: http://mindhacks.cn/2008/06/13/why-is-quicksort-so-quick/
+ *      堆排每次拿堆顶跟堆底比较 两者其实差异很大 因为cpu的cashe的原因 数组中相距很远的两个值不容易命中cashe 得从内存中取 比较耗时
+ *
  * */
 #ifndef __QUICK_SORT__H
 #define __QUICK_SORT__H
@@ -63,6 +69,16 @@ _better_quick_sort2( int*ptr, int left, int right );
 // 查找跟pos 重复的元素
 void
 deal_repeat( int*ptr, int left, int pos, int right, int *pos_left, int* pos_right );
+
+//快排的尾递归优化
+//其实还是不太明白 为什么把第二次递归放在循环里面就能实现尾递归优化.... 试试看能不能快吧
+
+void 
+better_quick_sort3( int*ptr, int len );
+void
+_better_quick_sort3(int*ptr, int left, int right );
+int
+partition(int*ptr, int left, int right );
 
 
 
