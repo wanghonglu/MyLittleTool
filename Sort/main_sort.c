@@ -12,6 +12,7 @@
 #include "bubble_sort.h"
 #include "select_sort.h"
 #include "heap_sort.h"
+#include "radix_sort.h"
 /*
  *  十大排序算法
  *  https://www.runoob.com/w3cnote/selection-sort.html
@@ -179,15 +180,16 @@ int main(int argc ,char**argv)
         {"三数取中法快排", better_quick_sort},//数组如果本来就有序 复杂度将达到n^2
         {"带去重的三数取中法快排", better_quick_sort2},//数组如果本来就有序 复杂度将达到n^2
         {"尾递归优化的快排", better_quick_sort3},//数组如果本来就有序 复杂度将达到n^2
-        {"插入排序", insert_sort},
+        //{"插入排序", insert_sort},
         {"希尔折半增量排序", shell_insert_sort},
         {"希尔质数增量排序", shell_insert_sort_partitionbyprime},
-        {"冒泡排序", bubble_sort},
-        {"选择排序", select_sort},
+        //{"冒泡排序", bubble_sort},
+        //{"选择排序", select_sort},
         {"堆排序", heap_sort},
+        {"基数排序LSD", radix_sort_LSD},
         {"", NULL}
     };
-    int a[]={3,3,1,3,3,199,90,0,-1,-2,10000,892,3,2,3,3,3,7,0};
+    int a[]={3,3,1,3,3,199,90,0,10000,892,3,2,3,3,3,7,0};
 
     int *ptr = NULL;
     if(count > 0 )
@@ -229,10 +231,10 @@ int main(int argc ,char**argv)
         if( ptr == a )
         {
             PrintArray( "排序后", ptr, count );
-            printf("\n\n");
         }
         tmp->m_cost_millseconds = (double)(now_mic()-t1)/1000;
         tmp->m_right = Check(ptr, count);
+        printf("%s end\n", tmp->m_msg);
     }
     std_quick_sort_SortTest(arry, sizeof(arry)/sizeof(SortTest) - 1 );
     sort_idx=0;
@@ -240,7 +242,9 @@ int main(int argc ,char**argv)
     {
         fprintf( stdout, "%-20s%-10s 耗时:%.2lf毫秒\n", tmp->m_msg, tmp->m_right?"":"错误!!!!!!!", tmp->m_cost_millseconds );
     }
-
+    fprintf( stderr, " 待排序数组个数:%d,待排序数组为:%s\n", count, 
+    ptr == a?" 给定数组 ":ptr==orderredNumber?" 绝大部分有序数组 ":ptr == mutipleNumberArray?" 绝大部分重复数组":" 随机产生数组" );
+    
     if( ptr!=a )
         free(ptr);
     free(b);
