@@ -187,9 +187,10 @@ int main(int argc ,char**argv)
         //{"选择排序", select_sort},
         {"堆排序", heap_sort},
         {"基数排序LSD", radix_sort_LSD},
+        {"基数排序MSD", radix_sort_MSD},
         {"", NULL}
     };
-    int a[]={3,3,1,3,3,199,90,0,10000,892,3,2,3,3,3,7,0};
+    int a[]={3,3,1,34,-123,223,523,-19,992,1002,4,5,3,3,199,90,0,10000,892,3,2,3,3,3,7,0};
 
     int *ptr = NULL;
     if(count > 0 )
