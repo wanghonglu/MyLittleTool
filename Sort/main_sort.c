@@ -13,6 +13,7 @@
 #include "select_sort.h"
 #include "heap_sort.h"
 #include "radix_sort.h"
+#include "count_sort.h"
 /*
  *  十大排序算法
  *  https://www.runoob.com/w3cnote/selection-sort.html
@@ -30,7 +31,7 @@ int *ProduceRandomArray(int len)
     assert(ptr != NULL );
     int i=0;
     for(;i<len;++i)
-        ptr[i]=random();
+        ptr[i]=random()%10000000;
     return ptr;
 }
 long
@@ -188,9 +189,10 @@ int main(int argc ,char**argv)
         {"堆排序", heap_sort},
         {"基数排序LSD", radix_sort_LSD},
         {"基数排序MSD", radix_sort_MSD},
+        {"计数排序", count_sort},
         {"", NULL}
     };
-    int a[]={3,3,1,34,-123,223,523,-19,992,1002,4,5,3,3,199,90,0,10000,892,3,2,3,3,3,7,0};
+    int a[]={3,3,1,34,-123,223,18,118,34,57,100,-19,3,3,199,90,0,3,2,3,3,3,7,0};
 
     int *ptr = NULL;
     if(count > 0 )
@@ -235,7 +237,7 @@ int main(int argc ,char**argv)
         }
         tmp->m_cost_millseconds = (double)(now_mic()-t1)/1000;
         tmp->m_right = Check(ptr, count);
-        printf("%s end\n", tmp->m_msg);
+        printf("%s end\n\n", tmp->m_msg);
     }
     std_quick_sort_SortTest(arry, sizeof(arry)/sizeof(SortTest) - 1 );
     sort_idx=0;
