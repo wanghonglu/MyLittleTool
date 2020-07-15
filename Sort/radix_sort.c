@@ -1,5 +1,6 @@
 #include "radix_sort.h"
-#define bucketSize 10
+//基数
+#define RadixSize 10
 #define Swap(a,b ) do{\
     int tmp = a;    \
     a =b;           \
@@ -29,7 +30,7 @@ radix_sort_LSD(int*ptr, int len )
    }
 
    long  n=1;
-   int count[bucketSize]={0};
+   int count[RadixSize]={0};
    int *result = (int*)malloc(sizeof(int)*len );
    int *a = ptr;
    assert(result);
@@ -39,17 +40,17 @@ radix_sort_LSD(int*ptr, int len )
    {
        memset( count, 0x00, sizeof(count));
        for( int i=0;i<len;i++ )
-            count[(a[i]/n)%bucketSize]++;//n位1 统计各位各个数的次数
+            count[(a[i]/n)%RadixSize]++;//n位1 统计各位各个数的次数
 
        //这里累加是为了计算出每个数在结果数组的具体下标
        //比如count[0]=5 count[1]=2 那么就是说个位为1的数的下标应该是6 7
        //所以需要count[1]+=count[0]  即到时候往数组里面安排的时候就是:count[1]-1
-       for( int i=1;i<bucketSize;i++ )
+       for( int i=1;i<RadixSize;i++ )
           count[i]+=count[i-1];
 
        /*
         *   如果是从大到小排序 这里就应该是倒着安排
-        for( int i=bucketSize-2;i>=0;i-- )
+        for( int i=RadixSize-2;i>=0;i-- )
            count[i] +=count[i+1];//即安排个位最大的放在最前,后面的都不需要改 注意这里的i条件是>=0
         * */
 
@@ -59,7 +60,7 @@ radix_sort_LSD(int*ptr, int len )
        //而count[1]=7 代表十位为1的数是要放在 6 5两个位置上, 先放的6 后放的5 所以6位置先放一个个位较大的,5位置放一个个位较小的,这样就能保证整个数组从小到达排序
        for( int i=len-1;i>=0;i-- )
        {
-            result[--count[(a[i]/n)%bucketSize]] = a[i];
+            result[--count[(a[i]/n)%RadixSize]] = a[i];
        }
        //用result数组覆盖原数组
        int *tmp = a;
@@ -126,36 +127,36 @@ _radix_sort_MSD_recursive(int*ptr, int start, int end, int exp )
     int* bucket = (int*)malloc(sizeof(int)*(end-start+1));
     assert( NULL != bucket );
 
-    int count[bucketSize]={0};
+    int count[RadixSize]={0};
 
-    //此时count数组里是每个高为为0-9的数量 也可能是0-99 取决于bucketSize
+    //此时count数组里是每个高为为0-9的数量 也可能是0-99 取决于RadixSize
     for( int i=start;i<=end;i++ )
-        count[ (ptr[i]/exp)%bucketSize ]++;
+        count[ (ptr[i]/exp)%RadixSize ]++;
 
     //计算出该桶内数据真正该存放的地址
-    //如果是倒序 这里应该是倒着安排 i=bucketSize-2;i>0;i--
+    //如果是倒序 这里应该是倒着安排 i=RadixSize-2;i>0;i--
     //count[0]=1 count[1]=2 则0号桶里的元素在0号位置 1号桶的元素分别在2号为 和1号位置
-    for( int i=1;i<bucketSize;++i )
+    for( int i=1;i<RadixSize;++i )
         count[i]+=count[i-1];
 
     //放入桶内 这里倒叙是因为上一步ptr数组里面 是按照前一位的从小到大排序的
     //这里针对当前一位相同的情况 优先把上一位大的元素安排在更后的位置
     for( int i=end;i>=start;i-- )
     {
-        bucket[--count[(ptr[i]/exp)%bucketSize]]=ptr[i];
+        bucket[--count[(ptr[i]/exp)%RadixSize]]=ptr[i];
     }
     //排序好的部分拷贝到原数组中
     memcpy( ptr+start, bucket,sizeof(int)*(end-start+1) );
 
-    for( int i=0;i<bucketSize;i++ )
+    for( int i=0;i<RadixSize;i++ )
     {
         int start1 = start+count[i];
         //i的右边界 count[i+i]-1 !!!
-        int end1 = (i+1)<bucketSize?(start + count[i+1]-1):end;
+        int end1 = (i+1)<RadixSize?(start + count[i+1]-1):end;
         if( start1<end1 )
         {
             //递归 再次在子结构中排序
-            _radix_sort_MSD_recursive(ptr, start1, end1, exp/bucketSize );
+            _radix_sort_MSD_recursive(ptr, start1, end1, exp/RadixSize );
         }
     }
     free( bucket );

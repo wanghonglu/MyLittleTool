@@ -14,6 +14,7 @@
 #include "heap_sort.h"
 #include "radix_sort.h"
 #include "count_sort.h"
+#include "bucket_sort.h"
 /*
  *  十大排序算法
  *  https://www.runoob.com/w3cnote/selection-sort.html
@@ -31,7 +32,7 @@ int *ProduceRandomArray(int len)
     assert(ptr != NULL );
     int i=0;
     for(;i<len;++i)
-        ptr[i]=random()%10000000;
+        ptr[i]=random();
     return ptr;
 }
 long
@@ -181,6 +182,7 @@ int main(int argc ,char**argv)
         {"三数取中法快排", better_quick_sort},//数组如果本来就有序 复杂度将达到n^2
         {"带去重的三数取中法快排", better_quick_sort2},//数组如果本来就有序 复杂度将达到n^2
         {"尾递归优化的快排", better_quick_sort3},//数组如果本来就有序 复杂度将达到n^2
+        {"优化交换元素的快排", quick_sort3},//数组如果本来就有序 复杂度将达到n^2
         //{"插入排序", insert_sort},
         {"希尔折半增量排序", shell_insert_sort},
         {"希尔质数增量排序", shell_insert_sort_partitionbyprime},
@@ -189,7 +191,8 @@ int main(int argc ,char**argv)
         {"堆排序", heap_sort},
         {"基数排序LSD", radix_sort_LSD},
         {"基数排序MSD", radix_sort_MSD},
-        {"计数排序", count_sort},
+        //{"计数排序", count_sort},
+        //{"桶排序+快排", bucket_sort_quick},
         {"", NULL}
     };
     int a[]={3,3,1,34,-123,223,18,118,34,57,100,-19,3,3,199,90,0,3,2,3,3,3,7,0};

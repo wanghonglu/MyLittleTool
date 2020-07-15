@@ -52,6 +52,11 @@ void
 quick_sort2(int*ptr, int len );
 void
 _quick_sort2(int*ptr, int left, int right );
+//快排 交换那地方改改 基准值不变
+void
+quick_sort3(int*ptr, int len );
+void 
+_quick_sort3(int*ptr, int left, int right );
 
 //三数取中发法
 void
@@ -79,14 +84,6 @@ void
 _better_quick_sort3(int*ptr, int left, int right );
 int
 partition(int*ptr, int left, int right );
-
-
-
-
-
-
-
-
 
 #ifdef __cplusplus
 }

@@ -25,7 +25,10 @@ count_sort( int*ptr, int len )
     }
 
     if( max-min>10000 )//计数排序不适用与数据特别分散的排序
+    {
+        fprintf( stderr, "数据太分散不适用于计数排序\n" );
         return;
+    }
 
     int countLength = max-min+1;
     int* count = (int*)malloc(sizeof(int)*countLength );

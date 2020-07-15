@@ -322,6 +322,57 @@ _better_quick_sort3( int *ptr, int left, int right )
         }
     }
 }
+void quick_sort3(int *ptr, int len)
+{
+    if( NULL == ptr || len<=1 )
+        return;
+    _quick_sort3(ptr, 0, len-1 );
+    return;
+}
+void
+_quick_sort3(int*ptr, int left, int right )
+{
+    if( right -left <= 1 )
+    {
+        if( 1 == right -left && ptr[left]>ptr[right] )
+            Swap(ptr[left],ptr[right]);
+        return;
+    }
+    //三数取中
+    int mid = left+(right-left)/2;
+
+    if( ptr[left]>ptr[mid] )
+        Swap(ptr[left], ptr[mid] );
+
+    if( ptr[mid]>ptr[right] )
+        Swap(ptr[mid],ptr[right]);
+
+    if( ptr[left]>ptr[mid] )
+        Swap(ptr[left], ptr[mid] );
+
+    Swap(ptr[mid],ptr[left]);
+
+    int pivot = ptr[left];
+    int start1 = left;
+    int start2 = right+1;
+    while( start1<start2 )
+    {
+        //这里比较恶心 即要控制 ++ --先行操作又要防止数组越界
+        //一定要先从右边开始 保证 start2--
+        while( start1<start2 && ptr[--start2]>=pivot )
+            ;
+        while( start1<start2 && ptr[++start1]<=pivot )
+            ;
+        if( start1<start2 )
+            Swap( ptr[start1],ptr[start2] );
+    }
+    Swap( ptr[left],ptr[start1] );
+
+
+
+    _quick_sort3( ptr, left, start1-1 );
+    _quick_sort3(ptr, start1+1, right ); 
+}
 
 
 

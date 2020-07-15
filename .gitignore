@@ -9,3 +9,5 @@ test.cpp
 *.log
 TESTBIN
 *.[oa]
+core.*
+*.swp
