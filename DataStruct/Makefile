@@ -1,12 +1,15 @@
 CC=g++
 Opt= -g -std=c++11
+all:DataStruct
+#下面的dep也会产生目标 所以all要放在它上面
+Dep=$(wildcard *.d)
+-include $(Dep)
 OBJ=$(patsubst %.cpp, %.o, $(wildcard *.cpp ))
-All=DataStruct
 Def= -D_UNIT_TEST_
 DataStruct:$(OBJ)
-	$(CC) $(Def) $(Opt) -o $@ $^
-$(OBJ):%.o:%.cpp
-	$(CC) $(Def) -c $(Opt) -o  $@ $^
+	$(CC) $(Opt) -o $@ $^ 
+$(OBJ):%.o:%.cpp 
+	$(CC) $(Def) -c $(Opt) -o  $@  $< -MMD -MF $*.d -MP 
 clean:
 	@rm DataStruct *.o
 .PHONY:clean DataStruct

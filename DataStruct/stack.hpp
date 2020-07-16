@@ -5,6 +5,13 @@
 #include<cassert>
 #include<algorithm>
 #include<stdexcept>
+/*
+ *  栈 
+ *  先进后出 后进先出
+ *  这个可以由数组实现,也可以链表实现,数组实现push的时候需要注意resize操作,适当的2倍增加长度
+ *
+ *  链表则无此限制
+ * */
 
 namespace datastruct{
 template<typename T>
@@ -86,7 +93,7 @@ void ArrayStack<T>::Pop()
 {
     if(IsEmpty())
         throw std::runtime_error("stack is empty");
-    size_--;
+    ptr_[--size_].~T();
 }
 template<typename T>
 void ArrayStack<T>::Push(const T& val )
@@ -179,9 +186,5 @@ void LinkedListStack<T>::Push( const T& val )
     size_++;
 }
 }//namespace datastrct end
-#ifdef _UNIT_TEST_
-#include<initializer_list>
-void stack_test(int argc, char**argv ); 
-#endif
 
 #endif
