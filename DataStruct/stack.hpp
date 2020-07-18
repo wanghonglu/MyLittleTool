@@ -10,10 +10,51 @@
  *  先进后出 后进先出
  *  这个可以由数组实现,也可以链表实现,数组实现push的时候需要注意resize操作,适当的2倍增加长度
  *
+ *  每种实现实现一个迭代器 当是练练手了,stl的迭代器是每种容器实现了一种迭代器 然后
+ *
  *  链表则无此限制
  * */
 
+
 namespace datastruct{
+template<typename T>
+class ArrayStack;
+template<typename T>
+class ArrayIterator{
+    friend  ArrayStack<T>;
+    public:
+    ArrayIterator( T*ptr = nullptr ):current_(ptr){}
+    T operator*()const{
+        return *current_;
+    }
+    T operator->()const{
+        return current_;
+    }
+    //前++
+    ArrayIterator& operator++()
+    {
+        current_+=1;
+        return *this;
+    }
+    //后++
+    ArrayIterator& operator++(int)
+    {
+        T *tmp = current_;
+        current_+=1;
+        return ArrayIterator(tmp);
+    }
+    bool operator==(const ArrayIterator& other)
+    {
+        return current_ == other.current_;
+    }
+    bool operator !=(const ArrayIterator&other)
+    {
+        return current_ !=other.current_;
+    }
+
+    private:
+    T       *current_;
+};
 template<typename T>
 class StackBase{
 public:
@@ -23,6 +64,7 @@ public:
     virtual T Top()const =0;
     virtual void Pop()=0;
     virtual void Push( const T& )=0; 
+    //这个size_ 本来是可以放在基类的 作为protected成员 及防治了外部访问又不影响子类使用,但是模板类这里有问题 子类访问的时候需要带上this指针!不知道为什么
 };
 //基类析构函数设置成纯虚函数,可以防止如果没有其他纯虚函数的时候,对基类实例化
 //但是基类的析构函数必须有实现,因为子类析构的时候必须要能调用基类的析构函数
@@ -44,10 +86,19 @@ public:
     T Top()const override;
     void Pop()override;
     void Push(const T& )override;
+
+    using iterator = ArrayIterator<T>;
+
+    iterator begin()const{
+        return iterator(ptr_);
+    }
+    iterator end()const{
+        return iterator(ptr_+size_);
+    }
 private:
     T         *ptr_ = nullptr;
-    size_t    size_;
     size_t    capcity_;
+    size_t    size_;
 };
 template< typename T>
 ArrayStack<T>::ArrayStack()

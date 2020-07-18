@@ -8,7 +8,9 @@ int main( int argc,char**argv )
         //堆
         //priority_queue_test(argc,argv);
         //队列
-        queue_test( argc,argv );
+        //queue_test( argc,argv );
+        //双向队列
+        deque_test(argc,argv);
     }
     catch( const std::exception& err )
     {

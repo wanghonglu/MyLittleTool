@@ -36,6 +36,14 @@ using namespace std;
  *  }
  *  至于c上的最下的碟子不关系,因为它不影响存放
  *
+ *  因为n=1时下面的递归也成立 可以统一写成 递归的形式
+ *   if(n>0)
+ *   {
+ *      fun( n-1,a,c,b ) a上的碟子n-1由a放到b上 通过c
+ *      a 上的碟子放到C
+ *      fun(n-1,b,a,c )  b上的碟子n-1由b放到c上 通过a
+ *   }
+ *
  *  * */
 int count=0;
 void towersofHanoi(int n,char a,char b,char c )
@@ -43,7 +51,7 @@ void towersofHanoi(int n,char a,char b,char c )
     if( n>0 )
     {
         towersofHanoi(n-1,a,c,b);
-        cout<<n<<" move top disk for tower ["<<a<<"] to top of tower ["<<c<<"]"<<endl;
+//        cout<<n<<" move top disk for tower ["<<a<<"] to top of tower ["<<c<<"]"<<endl;
         count++;
         towersofHanoi(n-1,b,a, c );
     }

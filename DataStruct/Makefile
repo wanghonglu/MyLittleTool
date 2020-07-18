@@ -11,5 +11,5 @@ DataStruct:$(OBJ)
 $(OBJ):%.o:%.cpp 
 	$(CC) $(Def) -c $(Opt) -o  $@  $< -MMD -MF $*.d -MP 
 clean:
-	@rm DataStruct *.o
+	@rm DataStruct *.o *.d
 .PHONY:clean DataStruct
