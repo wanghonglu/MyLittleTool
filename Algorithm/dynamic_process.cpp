@@ -31,21 +31,20 @@ std::vector<int>coins ={20,10,5,1};
 int  GetMinCoin( int number )
 {
     std::vector<int> result( number+1,0 );
-    static std::set<int> v(coins.begin(),coins.end());
     for( int i=1;i<=number;i++ )
     {
-        if( v.count(i))
-        {
-            result[i]=1;
-            continue;
-        }
-        int min = i;
+        int min = INT_MAX;
         for( int j=0;j<coins.size();j++ )
         {
-            if( i>coins[j] && min>result[i-coins[j]] )
+            if( i == coins[j] )
+            {
+                min = 0;
+                break;
+            }
+            if( i>coins[j] &&result[i-coins[j]]!=-1 &&  min>result[i-coins[j]] )
                 min = result[i-coins[j]];
         }
-        result[i]=min+1;
+        result[i]=min == INT_MAX?-1:min+1;
     }
     return result[number];
 }
