@@ -1,4 +1,4 @@
-#include<vector>
+ï»¿#include<vector>
 #include<functional>
 #include<algorithm>
 void insert_sort(std::vector<int>& nums)
@@ -30,22 +30,22 @@ void _merge_sort_recursive(std::vector<int>&nums, std::vector<int>&result, int l
 		return;
 	}
 	int mid = left + (right - left) / 2;
-	//·ÖÖÎ
+	//åˆ†æ²»
 	_merge_sort_recursive(nums, result, left, mid);
 	_merge_sort_recursive(nums, result, mid + 1, right);
-	//¹é²¢
+	//å½’å¹¶
 	int start = left;
 	int start1 = left, start2 = mid + 1;
 	while (start1 <= mid && start2 <= right)
 	{
 		result[start++] = nums[start1] < nums[start2] ? nums[start1++] : nums[start2++];
 	}
-	//¹é²¢Ê£ÓàÊý×é
+	//å½’å¹¶å‰©ä½™æ•°ç»„
 	while (start1 <= mid)
 		result[start++] = nums[start1++];
 	while (start2 <= right)
 		result[start++] = nums[start2++];
-	//½«ÅÅÐòºÃµÄÊý¾Ý¿½±´µ½Ô­Êý×é
+	//å°†æŽ’åºå¥½çš„æ•°æ®æ‹·è´åˆ°åŽŸæ•°ç»„
 	for (int i = left;i <= right;++i)
 		nums[i] = result[i];
 }
@@ -56,15 +56,15 @@ void merge_sort_recursive(std::vector<int>&nums)
 	nums.swap(result);
 	return;
 }
-//µü´ú°æµÄ¹é²¢
+//è¿­ä»£ç‰ˆçš„å½’å¹¶
 void merge_sort(std::vector<int>& nums)
 {
-	//µÝ¹éÊÇ´ÓÉÏµ½ÏÂ µü´úÊÇ´ÓÏÂµ½ÉÏ
+	//é€’å½’æ˜¯ä»Žä¸Šåˆ°ä¸‹ è¿­ä»£æ˜¯ä»Žä¸‹åˆ°ä¸Š
 	std::vector<int>result(nums.size());
 	int n = nums.size();
 	for (int step = 1;step < n ;step *= 2)
 	{
-		for (int i = 0;i < n;i += 2*step)//´Ó1¿ªÊ¼ÇÐ·Ö µ±sep=n/2µÄÊ±ºò ÓÒ±ßÊÇÖ¸µÄ±ß½ç
+		for (int i = 0;i < n;i += 2*step)//ä»Ž1å¼€å§‹åˆ‡åˆ† å½“sep=n/2çš„æ—¶å€™ å³è¾¹æ˜¯æŒ‡çš„è¾¹ç•Œ
 		{
 			int start = i;
 			int left = i;
@@ -81,7 +81,7 @@ void merge_sort(std::vector<int>& nums)
 			while (start2 <= right)
 				result[start++] = nums[start2++];
 		}
-		result.swap(nums);//ÕâÀï±£Ö¤ÁË numsÀïÃæµÄÓÐÐòµÄ ¼´×îÖÕ½á¹ûÊÇÓÐÐòµÄ
+		result.swap(nums);//è¿™é‡Œä¿è¯äº† numsé‡Œé¢çš„æœ‰åºçš„ å³æœ€ç»ˆç»“æžœæ˜¯æœ‰åºçš„
 	}
 }
 void _quick_sort(std::vector<int>&nums, int start, int end)
@@ -134,13 +134,13 @@ void shiftdown(std::vector<int>&nums, int pos,int len)
 }
 void heap_sort(std::vector<int>&nums)
 {
-	//´Ó×îºóÒ»¸ö¸¸½Úµã¿ªÊ¼ÏòÏÂµ÷Õû Ô­µØ½¨¶Ó 
-	//×îºóÒ»¸ö×Ó½ÚµãÎª nums.size()-1 ËûµÄ¸¸½ÚµãÎª(nums.size()-1-1)/2 ¼´nums.size()/2-1
+	//ä»Žæœ€åŽä¸€ä¸ªçˆ¶èŠ‚ç‚¹å¼€å§‹å‘ä¸‹è°ƒæ•´ åŽŸåœ°å»ºé˜Ÿ 
+	//æœ€åŽä¸€ä¸ªå­èŠ‚ç‚¹ä¸º nums.size()-1 ä»–çš„çˆ¶èŠ‚ç‚¹ä¸º(nums.size()-1-1)/2 å³nums.size()/2-1
 	for (int i = nums.size() / 2 - 1;i >= 0;i--)
 	{
 		shiftdown(nums, i,nums.size()-1);
 	}
-	//ÅÅÐò ÒÀ´Î´Ó´ó¶¥¶ÑÀïÃæÈ¡³öÖµ·ÅÔÚ×îºó
+	//æŽ’åº ä¾æ¬¡ä»Žå¤§é¡¶å †é‡Œé¢å–å‡ºå€¼æ”¾åœ¨æœ€åŽ
 	for (int i = nums.size() - 1; i >= 0;i--)
 	{
 		std::swap(nums[i], nums[0]);
