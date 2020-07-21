@@ -8,7 +8,7 @@ test.c
 test.cpp
 *.log
 TESTBIN
-*.[oa]
+*.[oad]
 core.*
 *.swp
 # 可执行文件都用这个开头
