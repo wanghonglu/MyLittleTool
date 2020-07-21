@@ -99,9 +99,9 @@ public:
 	计算最小值也同样  当为负数的时候 是乘的前面的最大 才能得到最小
 
 */
-class maxProduct {
+class maxProductSolution {
 public:
-	int maxProduct(vector<int>& nums) {
+	int maxProduct(std::vector<int>& nums) {
 		if (nums.empty())
 			return 0;
 		//乘积的话 num[i]如果是整数，则当前最大就是max(num[i],num[i]*result[i-1])

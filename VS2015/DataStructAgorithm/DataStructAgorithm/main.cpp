@@ -4,6 +4,8 @@
 #include<random>
 #include<ctime>
 #include "maxSubArray.h"
+#include "getmissnumber.h"
+#include "Nqueue.h"
 #define Size 100000
 void getrandom(std::vector<int>& v)
 {
@@ -40,7 +42,23 @@ int main()
 		cout << Solution().maxSubArray(v)<<endl;
 		cout << DynamicProcess().maxSubArray(v) << endl;
 	}
-
+	{
+		std::vector<int> v = { 0,1 };
+		cout<<MissingNumber().missingNumber(v)<<endl;
+	}
+	{
+		std::vector<std::vector<std::string>>ret;
+		ret = NQueue().solveNQueens(4);
+		cout << ret.size() << endl;
+		for (int i = 0; i < ret.size(); i++)
+		{
+			cout << "[ "<<endl;
+			for (int j = 0; j < ret[i].size(); j++)
+				cout << "\t"<<ret[i][j] <<"  " <<endl;
+			cout << "]"<<endl;
+		}
+	}
+	cout << "test end" << endl;
 	cin.get();
 
 }

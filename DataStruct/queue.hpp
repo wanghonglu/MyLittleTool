@@ -1,4 +1,4 @@
-#ifndef __QUEUE__H
+﻿#ifndef __QUEUE__H
 #define __QUEUE__H
 /*
  *  队列

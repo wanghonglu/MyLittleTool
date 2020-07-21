@@ -15,22 +15,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="test.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
-    <ClInclude Include="maxSubArray.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
-    <ClInclude Include="getmissnumber.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Nqueue.h">
-      <Filter>源文件</Filter>
+    <ClInclude Include="..\DataStructAgorithm\BinarySearchTree.hpp">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

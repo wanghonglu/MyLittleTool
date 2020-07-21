@@ -1,4 +1,4 @@
-#ifndef __DEQUE__H
+﻿#ifndef __DEQUE__H
 #define __DEQUE__H
 #include<iostream>
 /*

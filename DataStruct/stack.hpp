@@ -1,4 +1,4 @@
-#ifndef __STACK__H
+﻿#ifndef __STACK__H
 #define __STACK__H
 #include<cstdint>
 #include<cstdio>
