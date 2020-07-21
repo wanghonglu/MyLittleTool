@@ -88,6 +88,7 @@ protected:
 			:key_(key), val_(val), left_(nullptr), right_(nullptr) {}
 	};
 	~BaseBinarySearchTree() {}
+    using DealKey = std::function<void(const Key&)>;
 	
 	//大小
 	virtual  size_t size()const = 0;
@@ -106,7 +107,6 @@ protected:
 	//删除
 	virtual bool deletenode(const Key&key) = 0;
 	//三种遍历 递归和非递归版 第三个操作代表针对元素的操作,是个可调用对象
-	using DealKey = std::function<void(const Key&)>;
 	virtual void preorder(const DealKey& fun)const =0;
 	virtual void inorder(const DealKey& fun)const = 0;
 	virtual void postorder(const DealKey& fun)const = 0;
@@ -119,6 +119,10 @@ protected:
 template<typename Key,typename Value>
 class BinarySearchTree :public BaseBinarySearchTree <Key, Value>{
 public:
+    /* 坑爹啊 windows下正常编译 linux下就必须带这俩 不然编译不过 */
+    /* 模板类中还有using 或者typedef 时 注意在子类中要用这俩类型 必须typename 指定类型*/
+    using DealKey = typename BaseBinarySearchTree<Key,Value>::DealKey;
+    using Node = typename BaseBinarySearchTree<Key,Value>::Node;
 	BinarySearchTree():size_(0),root_(nullptr)
 	{
 	}

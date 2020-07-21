@@ -9,6 +9,7 @@ test.cpp
 *.log
 TESTBIN
 *.[oad]
+*.d
 core.*
 *.swp
 # 可执行文件都用这个开头
