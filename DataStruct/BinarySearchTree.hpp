@@ -53,6 +53,30 @@
 									右边的最右结点就是当前结点的后继
 	如果没有子树 前驱结点就是从当前结点往上遍历第一个有右子树的结点(左中右 此时当前结点做了右,那么前驱不就是第一个有右子树的父节点)
 				 后继结点就是从当前结点往上遍历第一个有左子树的结点(左中右 此时当前结点做了左,那么后继不就是第一个有左子树的父节点)
+	前驱后继可以不需要父节点的时候也能找到
+	具体做法是,在最开始查找数据的时候,不但记录下待求结点的父节点,
+		同时如果是找前驱结点,则在查找路径上,记录最后一次有右孩子的父节点,
+			如果找到的结点没有左子树,那么这个最后一个有右孩子的父节点就是他的前驱
+		如果是找后继结点,则在查找路径上,记录最后一次有左孩子的父节点
+			如果找到的结点没有右子树,那么这个最后一次有左孩子的父节点就是他的后继结点
+
+	非递归的二叉树遍历
+	前序中序都好理解
+		前序/中序都是不停的一路往左下放遍历,并把结果放在栈内,即放入栈内的是根左
+		所以:
+		前序就是在入栈的时候访问,因为先访问根节点嘛,然后通过根节点访问最下面的右子树
+		中序就是在出栈的时候访问,因为栈内的顺序是根左,先出来的是左结点,然后进入右子树
+		可以认为左孩子结点是左子树的根节点,那么栈内存的就全是根节点
+		当然了 也可以用数组模拟栈
+
+	后序遍历的非递归遍历,比较麻烦,因为我们保存的各个树的根结点,前序 中序 因为右子树都是最后访问,所以可以在入栈的时候访问就是前序
+	出栈的时候访问就是中序,但后序就不一样了,当访问到一个根节点,可能是准备去右结点 这时不能处理的
+	必须等到右子树处理了,才能处理根节点
+	入栈和前面的一样 栈里保存的从根节点往左的所有的树的根节点,如果最后的结点左子树没有值,右子树有值,那么先访问右子树
+	即第一步通过栈内的结点获取右子树,然后判断右子树有没有其他结点,没有就出栈,然后需要将栈内的数据弹出
+	这里根节点会访问三次 第一次正常遍历 第二次为了获取右结点,第三次才是需要真正操作的,所以需要一个额外的数组记录结点的访问状态
+	1:第一次访问 2:第二次获取右结点 3:出栈(具体操作这里做)
+
 
 	删除操作比较复杂:
 		1:如果当前待删除的结点,是叶子结点,即没有左孩子结点也没有右孩子结点,那么直接删除即可,同时也得把父节点的相应指针域置空
@@ -77,7 +101,7 @@
 #include<vector>
 template<typename Key,typename Value>
 class BaseBinarySearchTree {
-protected:
+public:
 	struct Node {
 		Node *left_ = nullptr;
 		Node *right_ = nullptr;
@@ -365,8 +389,8 @@ public:
 			return false;
 		/*
 			删除分三种情况
-			第一种: 左子树右子树都有的 这种其实右两种做法,要么用他的前驱代替自己然后删除原来前驱的位置
-			第二种用后继代替自己然后删除原来后继的位置,这里注意 这里前驱后继其实就是左子树的最左结点和右子树的最右结点
+			第一种: 左子树右子树都有的 这种其实有两种做法,要么用他的前驱代替自己然后删除原来前驱的位置
+			要么用后继代替自己然后删除原来后继的位置,这里注意 这里前驱后继其实就是左子树的最左结点和右子树的最右结点
 			因为他们本身是左子树或者右子树最大或者最小 所以必然最大的没有右孩子结点 最小的没有左孩子结点,即这里的前驱最多
 			只能有一个结点!! 只有一个或者没有结点可以转化成下面的做法
 			第二种: 只有一个孩子结点
@@ -431,14 +455,125 @@ public:
 	//非递归版的三种遍历方式 需要借助数据结构stack
 	void no_recursive_preorder(const DealKey& fun)const override
 	{
+		if (size() == 0)
+			return;
+#if 0
+		//前序遍历的非递归版本 跟左右
+		ArrayStack<Node*> st(size());
+		st.Push(root_);
+		Node*node;
+		while (!st.IsEmpty())
+		{
+			node =st.Top();
+			st.Pop();
+			fun(node->key_);//这里因为时根左右 所以先把右孩子放到栈里面
+			if (node->right_)
+				st.Push(node->right_);
+			if (node->left_)
+				st.Push(node->left_);
+		}
+#endif 
+		//第二种写法,上面的写法 我觉得挺简单的 
+		Node* node = root_;
+		ArrayStack<Node*> st(size());
+		while (node || !st.IsEmpty())
+		{
+			//根左右 先访问根 在访问左子树,边遍历遍历,一次完事node结点的所有根结点左结点全部遍历完
+			//push是为了访问右孩子
+			while (node)
+			{
+				fun(node->key_);
+				st.Push(node);//用于先放问左子树
+				node = node->left_;
+			}
+			if (!st.IsEmpty())
+			{
+				node = st.Top();//这个node上面已经遍历过了
+				st.Pop();//进入最下面结点的右子树 从下往上进入每个结点的右子树 右子树遍历也遵循根左右
+				node = node->right_;
+			}
+		}
+	
 	}
 	//非递归版的三种遍历方式 需要借助数据结构stack
 	void no_recursive_inorder(const DealKey& fun)const override
 	{
+#if 0
+		//中序遍历 左根右
+		Node* node = root_;
+		ArrayStack<Node*> st(size());
+		while (node || !st.IsEmpty())
+		{
+			while (node)
+			{
+				st.Push(node);//此时 栈里面保存的就 根->左 按顺序弹出就是左根的顺序
+				node = node->left_;
+			}
+			//当左子树为空的时候里面 存的是根结点 弹出来就是左根的顺序 再探查一下右子树,也按照左根右的顺序
+			if (!st.IsEmpty())
+			{
+				node = st.Top();
+				st.Pop();
+				fun(node->key_);
+				node = node->right_;//假设右结点为null下次就会弹出上一个的左子树
+			}
+		}
+#endif
+		//通过数组模拟栈
+		if (size() == 0)
+			return;
+		std::vector<Node*> st(size(), nullptr);
+		int top = 0;
+		Node* node = root_;
+		while (top > 0 || node)
+		{
+			while (node)
+			{
+				st[top++] = node;
+				node = node->left_;
+			}
+			if (top > 0)
+			{
+				node = st[--top];
+				fun(node->key_);
+				node = node->right_;
+			}
+		}
 	}
 	//非递归版的三种遍历方式 需要借助数据结构stack
 	void no_recursive_postorder(const DealKey& fun)const override
 	{
+		//用数组模拟栈 是为了方便记录每个元素的状态
+		std::vector<Node*> st(size(), nullptr);
+		int top = 0;
+		std::vector<uint8_t> flags(size(), 0);
+		Node* node = root_;
+		while (node || top>0 )
+		{
+			while (node)
+			{
+				st[top++] = node;
+				node = node->left_;
+				//这里记录node结点的状态 即这是首次访问,数组下标是top-1
+				flags[top - 1] = 1;
+			}
+			if (top > 0)
+			{
+				if (flags[top - 1] == 1)//此时应该要访问右结点,而不是出栈
+				{
+					node = st[top - 1];
+					node = node->right_;
+					flags[top - 1] = 2;//这时需要记录下他的状态 即已经访问完右结点
+				}
+				else//此时就该出栈了
+				{
+					node = st[--top];
+					fun(node->key_);
+					//这时候需要继续弹栈  所以这个node需要置为空
+					node = nullptr;
+				}
+			}
+		}
 	}
 	//树中最大值 即右子树中的最右结点
 	const Value& findmax()const override

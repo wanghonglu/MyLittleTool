@@ -144,9 +144,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\Algorithm\backtrack.cpp" />
+    <ClCompile Include="..\..\..\Algorithm\dynamic_process.cpp" />
+    <ClCompile Include="..\..\..\Algorithm\FastAndSlowPoint.c" />
+    <ClCompile Include="..\..\..\Algorithm\find_unique_number.c" />
+    <ClCompile Include="..\..\..\Algorithm\getKthFromEnd.c" />
+    <ClCompile Include="..\..\..\Algorithm\Hanoi.cpp" />
+    <ClCompile Include="..\..\..\Algorithm\Sigle_Stack.c" />
+    <ClCompile Include="..\..\..\Algorithm\TopKFrequent.cpp" />
+    <ClCompile Include="..\..\..\Algorithm\waysToChange.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\Algorithm\maxSubArray.h" />
     <ClInclude Include="getmissnumber.h" />
     <ClInclude Include="maxSubArray.h" />
     <ClInclude Include="Nqueue.h" />

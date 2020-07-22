@@ -359,9 +359,19 @@ void deque_test(int argc,char**argv )
     delete ptr;
     delete selfptr;
 }
+
+
 void binarySearchTree_test(int argc, char**argv)
 {
-	BinarySearchTree<int, std::string> tree;
+	BaseBinarySearchTree<int, std::string> *tree;
+	BaseBinarySearchTree<int, SelfDefine>*self;
+	if (argc == 1)
+	{
+		//BST树
+		tree = new BinarySearchTree<int, std::string>();
+		self = new BinarySearchTree<int, SelfDefine>();
+	}
+	assert(tree != nullptr && self != nullptr);
 	int a[] = { 10,1,19,20,23,22,24,40,11,2,3,12,14,17,7,4,5,6 };
 	/*
 	前序遍历
@@ -373,56 +383,68 @@ void binarySearchTree_test(int argc, char**argv)
 	*/
 	for (int i = 0; i < sizeof(a) / sizeof(int); i++)
 	{
-		tree.insert(a[i], std::to_string(a[i]));
+		tree->insert(a[i], std::to_string(a[i]));
 	}
 	{
 		//查找
-		std::string str = tree.findmax();
-		assert(tree.findmax() == "40");
-		assert(tree.findmin() == "1");
+		std::string str = tree->findmax();
+		assert(tree->findmax() == "40");
+		assert(tree->findmin() == "1");
 		std::string ret;
-		assert(tree.find(19, ret) && ret== "19");
-		assert(tree.find(11, ret) && ret == "11");
-		assert(!tree.find(101, ret));
+		assert(tree->find(19, ret) && ret== "19");
+		assert(tree->find(11, ret) && ret == "11");
+		assert(!tree->find(101, ret));
 	}
 	
 	{
 		//前驱后继
 		std::string ret;
-		assert(tree.getprenode(20, ret));
+		assert(tree->getprenode(20, ret));
 		assert(ret == "19");
-		assert(tree.getprenode(100, ret) == false);
-		tree.getnextnode(20, ret);
+		assert(tree->getprenode(100, ret) == false);
+		tree->getnextnode(20, ret);
 		assert(ret == "22");//后继
-		assert(!tree.getnextnode(40,ret));//40没有后继
+		assert(!tree->getnextnode(40,ret));//40没有后继
 		//assert(!tree.getprenode(1, ret));//1没有前驱
 	}
 	auto Print = [](int a) {
 		std::cout << a << " ";
 	};
 	std::cout << "前序遍历" << endl;
-	tree.preorder(Print);
+	tree->preorder(Print);
+	std::cout << endl;
+	
+	std::cout << "非递归的前序遍历" << endl;
+	tree->no_recursive_preorder(Print);
 	std::cout << endl;
 
 	std::cout << "中序遍历" << endl;
-	tree.inorder(Print);
+	tree->inorder(Print);
+	std::cout << endl;
+
+	std::cout << "非递归的中序遍历" << endl;
+	tree->no_recursive_inorder(Print);
 	std::cout << endl;
 
 	std::cout << "后序遍历" << endl;
-	tree.postorder(Print);
+	tree->postorder(Print);
+	std::cout << endl;
+
+	std::cout << "非递归的后序遍历" << endl;
+	tree->no_recursive_postorder(Print);
 	std::cout << endl;
 
 	{
 		//删除
 		std::cout << "原来的中序遍历" << endl;
-		tree.inorder(Print);
+		tree->inorder(Print);
 		std::cout << endl;
-		assert(!tree.deletenode(100));
+		assert(!tree->deletenode(100));
 
 		auto deletefunction = [&](int key) {
-			assert(tree.deletenode(key));
+			assert(tree->deletenode(key));
 			std::cout << "删除 "<<key<<" 之后的中序遍历" << endl;
-			tree.inorder(Print);
+			tree->inorder(Print);
 			std::cout << endl;
 		};
 		for (int i = 0; i < sizeof(a) / sizeof(int); i++)
@@ -432,7 +454,7 @@ void binarySearchTree_test(int argc, char**argv)
 
 	}
 	{
-		BinarySearchTree<int, SelfDefine> self;
+		
 		std::vector<int> numbers;
 		for (int i = 0; i < TestSize; i++)
 		{
@@ -445,11 +467,11 @@ void binarySearchTree_test(int argc, char**argv)
 			for (int i = 0; i < numbers.size(); i++)
 			{
 				std::string str = "这是第 " + std::to_string(numbers[i]) + " 个测试对象 ";
-				self.insert(numbers[i], SelfDefine(numbers[i], str));
+				self->insert(numbers[i], SelfDefine(numbers[i], str));
 			}
 		}
 
-		assert(self.size() == TestSize);
+		assert(self->size() == TestSize);
 		/*
 		1: 测试删除
 		2: 测试查找
@@ -466,7 +488,7 @@ void binarySearchTree_test(int argc, char**argv)
 			bool isOk = false;
 			{
 				TimeCounts t("查找 " + std::to_string(key));
-				isOk = self.find(key, ret);
+				isOk = self->find(key, ret);
 			}
 			if (isOk)
 				cout << " Find " << ret << endl;
@@ -480,7 +502,7 @@ void binarySearchTree_test(int argc, char**argv)
 			bool isOk = false;
 			{
 				TimeCounts t("删除 " + std::to_string(key));
-				isOk = self.deletenode(key);
+				isOk = self->deletenode(key);
 			}
 			if (isOk)
 				cout << " 删除成功 "<< endl;
@@ -489,13 +511,13 @@ void binarySearchTree_test(int argc, char**argv)
 		};
 		auto inorderfunction = [&self]() {
 			std::vector<int> ret;
-			ret.reserve(self.size());
+			ret.reserve(self->size());
 			auto savekey = [&ret](int a) { 
 				ret.push_back(a);
 			};
 			{
 				TimeCounts t("中序遍历");
-				self.inorder(savekey);
+				self->inorder(savekey);
 			}
 			std::for_each(ret.begin(), ret.end(), [](int a) {std::cout << a << " "; });
 		};
@@ -509,9 +531,9 @@ void binarySearchTree_test(int argc, char**argv)
 			{
 				TimeCounts t("查找 "+msg );
 				if (opt == 1)
-					isOk = self.getprenode(key, ret);
+					isOk = self->getprenode(key, ret);
 				else
-					isOk = self.getnextnode(key, ret);
+					isOk = self->getnextnode(key, ret);
 			}
 			if (isOk)
 				cerr << " 找到 " << msg << " " << ret << endl;
@@ -525,7 +547,7 @@ void binarySearchTree_test(int argc, char**argv)
 			bool isok = false;
 			{
 				TimeCounts t("插入");
-				isok = self.insert(key, SelfDefine(key, "这是第 " + std::to_string(key) + " 个测试对象 "));
+				isok = self->insert(key, SelfDefine(key, "这是第 " + std::to_string(key) + " 个测试对象 "));
 			}
 			if (isok)
 				cerr << "插入成功 " << endl;
@@ -538,9 +560,9 @@ void binarySearchTree_test(int argc, char**argv)
 			{
 				TimeCounts t("查找 " + str);
 				if (opt == 1)
-					ret = self.findmax();
+					ret = self->findmax();
 				else
-					ret = self.findmin();
+					ret = self->findmin();
 			}
 			std::cout << str << ret << endl;
 		};
@@ -579,7 +601,7 @@ void binarySearchTree_test(int argc, char**argv)
 				findMaxOrMin(0);
 				break;
 			case 9:
-				std::cout << "Size: " << self.size() << endl;
+				std::cout << "Size: " << self->size() << endl;
 				break;
 			case -1:
 				std::cin.clear();
@@ -593,6 +615,8 @@ void binarySearchTree_test(int argc, char**argv)
 	}
 
 	cout << __FUNCTION__ << " test end" << endl;
+	delete tree;
+	delete self;
 }
 
 

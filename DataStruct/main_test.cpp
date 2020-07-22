@@ -12,7 +12,7 @@ int main( int argc,char**argv )
         //双向队列
         //deque_test(argc,argv);
 		//二叉搜索树
-		binarySearchTree_test(argc,argv);
+		binarySearchTree_test(1,argv);
 
 
 		system("pause");
