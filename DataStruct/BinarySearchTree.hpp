@@ -99,600 +99,602 @@
 */
 
 #include<vector>
-template<typename Key,typename Value>
-class BaseBinarySearchTree {
-public:
-	struct Node {
-		Node *left_ = nullptr;
-		Node *right_ = nullptr;
-		//Node *parent_ = nullptr;//父节点 为了找前驱后继结点
-		Key    key_;
-		Value  val_;
-		Node(const Key& key, const Value& val)
-			:key_(key), val_(val), left_(nullptr), right_(nullptr) {}
+namespace datastruct {
+	template<typename Key, typename Value>
+	class BaseBinarySearchTree {
+	public:
+		struct Node {
+			Node *left_ = nullptr;
+			Node *right_ = nullptr;
+			//Node *parent_ = nullptr;//父节点 为了找前驱后继结点
+			Key    key_;
+			Value  val_;
+			Node(const Key& key, const Value& val)
+				:key_(key), val_(val), left_(nullptr), right_(nullptr) {}
+		};
+		~BaseBinarySearchTree() {}
+		using DealKey = std::function<void(const Key&)>;
+
+		//大小
+		virtual  size_t size()const = 0;
+		//二叉树的高度
+		virtual  size_t height()const = 0;
+		//最大
+		virtual   const Value&  findmax()const = 0;
+		//最小
+		virtual   const Value&  findmin()const = 0;
+		//前驱 后继
+		virtual  bool    getprenode(const Key&key, Value& val)const = 0;
+		virtual  bool    getnextnode(const Key&key, Value& val)const = 0;
+
+		//查找
+		virtual  bool    find(const Key&key, Value&val)const = 0;
+		//插入 重复返回false
+		virtual bool insert(const Key& key, const Value& val) = 0;
+		//删除
+		virtual bool deletenode(const Key&key) = 0;
+		//三种遍历 递归和非递归版 第三个操作代表针对元素的操作,是个可调用对象
+		virtual void preorder(const DealKey& fun)const = 0;
+		virtual void inorder(const DealKey& fun)const = 0;
+		virtual void postorder(const DealKey& fun)const = 0;
+		//非递归版的三种遍历
+		virtual void no_recursive_preorder(const DealKey& fun)const = 0;
+		virtual void no_recursive_inorder(const DealKey& fun) const = 0;
+		virtual void no_recursive_postorder(const DealKey& fun)const = 0;
 	};
-	~BaseBinarySearchTree() {}
-    using DealKey = std::function<void(const Key&)>;
-	
-	//大小
-	virtual  size_t size()const = 0;
-	//二叉树的高度
-	virtual  size_t height()const = 0;
-	//最大
-	virtual   const Value&  findmax()const = 0;
-	//最小
-	virtual   const Value&  findmin()const = 0;
-	//前驱 后继
-	virtual  bool    getprenode(const Key&key, Value& val)const = 0;
-	virtual  bool    getnextnode(const Key&key, Value& val)const = 0;
 
-	//查找
-	virtual  bool    find(const Key&key, Value&val)const = 0;
-    //插入 重复返回false
-	virtual bool insert(const Key& key, const Value& val) = 0;
-	//删除
-	virtual bool deletenode(const Key&key) = 0;
-	//三种遍历 递归和非递归版 第三个操作代表针对元素的操作,是个可调用对象
-	virtual void preorder(const DealKey& fun)const =0;
-	virtual void inorder(const DealKey& fun)const = 0;
-	virtual void postorder(const DealKey& fun)const = 0;
-	//非递归版的三种遍历
-	virtual void no_recursive_preorder(const DealKey& fun)const = 0;
-	virtual void no_recursive_inorder(const DealKey& fun) const = 0;
-	virtual void no_recursive_postorder(const DealKey& fun)const = 0;
-};
-
-template<typename Key,typename Value>
-class BinarySearchTree :public BaseBinarySearchTree <Key, Value>{
-public:
-    /* 坑爹啊 windows下正常编译 linux下就必须带这俩 不然编译不过 */
-    /* 模板类中还有using 或者typedef 时 注意在子类中要用这俩类型 必须typename 指定类型*/
-    using DealKey = typename BaseBinarySearchTree<Key,Value>::DealKey;
-    using Node = typename BaseBinarySearchTree<Key,Value>::Node;
-	BinarySearchTree():size_(0),root_(nullptr)
-	{
-	}
-	~BinarySearchTree()
-	{
-		_destruct(root_);
-		size_ = 0;
-		root_ = nullptr;
-	}
-	//重复数据插入失败
-	bool  insert(const Key& key, const Value& val)override
-	{
-		//return Insert(&root_, key, val);
-		//不递归应该也可以
-		Node* temp = root_, *parent = nullptr;;
-		while (temp)
+	template<typename Key, typename Value>
+	class BinarySearchTree :public BaseBinarySearchTree <Key, Value> {
+	public:
+		/* 坑爹啊 windows下正常编译 linux下就必须带这俩 不然编译不过 */
+		/* 模板类中还有using 或者typedef 时 注意在子类中要用这俩类型 必须typename 指定类型*/
+		using DealKey = typename BaseBinarySearchTree<Key, Value>::DealKey;
+		using Node = typename BaseBinarySearchTree<Key, Value>::Node;
+		BinarySearchTree() :size_(0), root_(nullptr)
 		{
-			parent = temp;
-			if (temp->key_ == key)
-				return false;
-			if (key<temp->key_)
-				temp = temp->left_;
-			else
-				temp = temp->right_;		
 		}
-		if (parent == nullptr)//当前构造的结点时根节点
+		~BinarySearchTree()
 		{
-			root_  = new Node(key, val);
+			_destruct(root_);
+			size_ = 0;
+			root_ = nullptr;
 		}
-		else
+		//重复数据插入失败
+		bool  insert(const Key& key, const Value& val)override
 		{
-			if (parent->key_ > key)
-				parent->left_ = new Node(key, val);
-			else
-				parent->right_ = new Node(key, val);
-		}
-		size_++;
-		return true;
-	}
-	size_t size()const override
-	{
-		return size_;
-	}
-	size_t height()const override
-	{
-		return _height(root_);
-	}
-	bool find(const Key&key, Value&val )const override
-	{
-		//可以是非递归的写法
-		Node* node = _find(root_, key);
-		if (node != nullptr)
-			val = node->val_;
-		return node != nullptr;
-	}
-	//有父节点的情况下 求前驱结点
-	bool getprenode(const Key& key, Value& val)const override
-	{
-#if 0
-		//结点信息中包含父节点的时候 查找前驱结点
-		//先找到这个结点
-		Node* node = root_;
-		while (node != nullptr && node->key_ != key)
-		{
-			if (key > node->key_)
-				node = node->right_;
-			else
-				node = node->left_;
-		}
-		if (node == nullptr)//没找到 直接返回
-			return false;
-		//有左子树的情况,前驱就是左子树的最大值
-		if (node->left_ != nullptr)
-		{
-			Node* temp = find_max(node->left_);
-			if (temp == nullptr)//无前驱结点
-				return false;
-			val = temp->val_;
-			return true;
-		}
-		else //没有左子树,则找到父节点中第一个拥有右子树的结点
-		{
-			Node*parent = node->parent_;
-			while (parent && node != parent->right_)
+			//return Insert(&root_, key, val);
+			//不递归应该也可以
+			Node* temp = root_, *parent = nullptr;;
+			while (temp)
 			{
-				node = parent;
-				parent = parent->parent_;
+				parent = temp;
+				if (temp->key_ == key)
+					return false;
+				if (key < temp->key_)
+					temp = temp->left_;
+				else
+					temp = temp->right_;
 			}
-			if (parent == nullptr)
-				return false;
-			val = parent->val_;
-			return true;
-		}
-#endif
-		//结点信息中不包含父节点的时候的前驱结点查找
-		//因为前驱结点是 有左子树的时候 左子树里面的最左结点,没有左子树时 从当前结点往上第一个拥有右子树的父节点
-		//所以遍历的时候,由于是从上到下遍历,所以最后一个有右子树的父节点,即为从当前结点往上遍历的第一个有右子树的父节点
-		Node* parent = nullptr, *lastNodeHaveRightChild = nullptr,*current=root_;
-
-		while (current && current->key_ != key)
-		{
-			parent = current;
-			if (key > current->key_)
+			if (parent == nullptr)//当前构造的结点时根节点
 			{
-				current = current->right_;
-				//搜索路径中 当前结点是父亲结点的右孩子,这里不能写在后面,不然不对的
-				lastNodeHaveRightChild = parent;
+				root_ = new Node(key, val);
 			}
 			else
-				current = current->left_;		
-		}
-		if (current == nullptr)
-			return false;
-		Node* preNode = nullptr;
-		if (current->left_)//左子树存在,左子树中的最大值 即左子树的最右值
-			preNode = find_max(current->left_);
-		else//否则就是从当前结点往上找的第一个含有右子树的父节点
-			preNode = lastNodeHaveRightChild;
-		if (preNode)
-			val = preNode->val_;
-		return preNode != nullptr;
-
-	}
-	//有父节点的情况下,求后继结点
-	bool getnextnode(const Key& key, Value& val)const override
-	{
-#if 0
-		//找到这个结点
-		Node* node = root_;
-		while (node && node->key_ != key)
-		{
-			if (key > node->key_)
-				node = node->right_;
-			else
-				node = node->left_;
-		}
-		if (node == nullptr)//未找到
-			return false;
-		//存在右子树,右子树的最小值即结果
-		if (node->right_)
-		{
-			Node* temp = find_min(node->right_);
-			if (temp == nullptr)
-				return false;
-			val = temp->val_;
-			return true;
-		}
-		else//从该结点往上找,找出第一个拥有左子树的结点
-		{
-			Node* parent = node->parent_;
-			while (parent && node != parent->left_)
 			{
-				node = parent;
-				parent = parent->parent_;
+				if (parent->key_ > key)
+					parent->left_ = new Node(key, val);
+				else
+					parent->right_ = new Node(key, val);
 			}
-			if (parent == nullptr)
-				return false;
-			val = parent->val_;
-			return true;
-		}
-#endif
-		//没有父节点的情况下,查找后继结点
-		//同样 如果当前结点由右子树,则后继结点就是右子树的最右结点
-		//如果没有就是从当前结点往上查找,直到找到一个当前结是父节点的左孩子(左中右的顺序,父节点就是它的后继结点)
-		Node* parent = nullptr, *node = root_, *lastHaveLeftChild = nullptr;
-		while (node && node->key_ != key)
-		{
-			parent = node;
-			if (key < node->key_)
-			{
-				lastHaveLeftChild = parent;
-				node = node->left_;
-			}
-			else
-				node = node->right_;
-		}
-		if (node == nullptr)
-			return false;
-		Node* nextNode = nullptr;
-		if (node->right_ != nullptr)//右子树中的最小值 即右子树的左值
-			nextNode = find_min(node->right_);
-		else
-			nextNode = lastHaveLeftChild;
-		if (nextNode)
-			val = nextNode->val_;
-		return nextNode != nullptr;
-	}
-	/*
-	*/
-	bool deletenode(const Key& key)override
-	{
-#if 0
-		//包含父节点的删除操作
-		Node* current = _find(root_, key);
-		if (current == nullptr)//树中无此结点
-			return false;
-		Node* parent = current->parent_;
-		//两个子节点都存在的情况
-		if (current->left_ != nullptr && current->right_ != nullptr)
-		{
-			//找出current的前驱或者后继其中一个即可,这里我们找后继
-			Node* temp = find_min(current->right_);
-			//跟当前结点替换key value
-			std::swap(temp->key_, current->key_);
-			std::swap(temp->val_, current->val_);
-			parent = temp->parent_;
-			current = temp;//右子树的最小,必然最多只有一个孩子结点,就可以转化成下面的情况统一处理
-		}
-		Node* child = current->left_;
-		if (child == nullptr)
-			child = current->right_;
-
-		if (current == root_)
-		{
-			root_ = child;
-		}
-		else
-		{
-			if (parent->left_ == current)//这里也包含对叶子结点的处理,即current == nullptr 
-				parent->left_ = child;
-			else
-				parent->right_ = child;
-		}
-		if (child != nullptr)//左右结点为空的时候 不用关系子节点的父节点的指向
-		{
-			child->parent_ = parent;
-		}
-		delete current;
-		size_--;
-		return true;
-		//结点为空
-#endif
-		//不包含父节点的删除操作
-		Node*parent = nullptr, *current = root_;
-		while (current&& current->key_ != key)
-		{
-			parent = current;
-			if (key > current->key_)
-				current = current->right_;
-			else
-				current = current->left_;
-		}
-		if (current == nullptr)
-			return false;
-		/*
-			删除分三种情况
-			第一种: 左子树右子树都有的 这种其实有两种做法,要么用他的前驱代替自己然后删除原来前驱的位置
-			要么用后继代替自己然后删除原来后继的位置,这里注意 这里前驱后继其实就是左子树的最左结点和右子树的最右结点
-			因为他们本身是左子树或者右子树最大或者最小 所以必然最大的没有右孩子结点 最小的没有左孩子结点,即这里的前驱最多
-			只能有一个结点!! 只有一个或者没有结点可以转化成下面的做法
-			第二种: 只有一个孩子结点
-			这时将孩子结点赋值给父节点对应的指针域
-			第三种:没有孩子结点 直接删除 然后把父节点对应的指针域置为空
-		*/
-		//左右都存在的
-		if (current->left_ && current->right_)
-		{
-			//跟上面不一样 这里我们找前驱 但是还需要找出前驱结点的父节点
-			Node* preNode = current->left_;
-			//这里是找的左子树 这样的话parent就是current
-			parent = current;
-			while (preNode && preNode->right_ != nullptr)
-			{
-				parent = preNode;
-				preNode = preNode->right_;
-			}
-			//替换本身的key value 这里的指针域暂时不动,留在后面做相应的修改
-			std::swap(preNode->key_, current->key_);
-			std::swap(preNode->val_, current->val_);
-			//current替换成当前结点 parent上面也做了修改 继续删除这个结点,以为这个结点最多只有一个孩子,可以跟下面的统一起来
-			current = preNode;
-		}
-		Node* child = current->left_;
-		if (child == nullptr)
-			child = current->right_;
-		//child 为空或者 仅有 一个孩子的情况 这里需要修改父节点了,但是当前结点可能会是根节点
-		if (current == root_)
-		{
-			root_ = child;//root结点不用管父节点
-		}
-		else
-		{
-			//修改对应的指针域
-			if (parent->left_ == current)
-				parent->left_ = child;
-			else
-				parent->right_ = child;
-		}
-		//全部处理完了 delete 
-		delete current;
-		size_--;
-		return true;
-	}
-	//三种遍历 返回遍历后的数组
-	void preorder(const DealKey& fun )const override
-	{
-		//前序遍历
-		_preorder(fun, root_);
-	}
-	//中序遍历会使key有序
-	void inorder(const DealKey& fun)const override
-	{
-		_inorder(fun, root_);
-	}
-	//后序
-	void postorder(const DealKey& fun)const override
-	{
-		_postorder(fun, root_);
-	}
-	//非递归版的三种遍历方式 需要借助数据结构stack
-	void no_recursive_preorder(const DealKey& fun)const override
-	{
-		if (size() == 0)
-			return;
-#if 0
-		//前序遍历的非递归版本 跟左右
-		ArrayStack<Node*> st(size());
-		st.Push(root_);
-		Node*node;
-		while (!st.IsEmpty())
-		{
-			node =st.Top();
-			st.Pop();
-			fun(node->key_);//这里因为时根左右 所以先把右孩子放到栈里面
-			if (node->right_)
-				st.Push(node->right_);
-			if (node->left_)
-				st.Push(node->left_);
-		}
-#endif 
-		//第二种写法,上面的写法 我觉得挺简单的 
-		Node* node = root_;
-		ArrayStack<Node*> st(size());
-		while (node || !st.IsEmpty())
-		{
-			//根左右 先访问根 在访问左子树,边遍历遍历,一次完事node结点的所有根结点左结点全部遍历完
-			//push是为了访问右孩子
-			while (node)
-			{
-				fun(node->key_);
-				st.Push(node);//用于先放问左子树
-				node = node->left_;
-			}
-			if (!st.IsEmpty())
-			{
-				node = st.Top();//这个node上面已经遍历过了
-				st.Pop();//进入最下面结点的右子树 从下往上进入每个结点的右子树 右子树遍历也遵循根左右
-				node = node->right_;
-			}
-		}
-	
-	}
-	//非递归版的三种遍历方式 需要借助数据结构stack
-	void no_recursive_inorder(const DealKey& fun)const override
-	{
-#if 0
-		//中序遍历 左根右
-		Node* node = root_;
-		ArrayStack<Node*> st(size());
-		while (node || !st.IsEmpty())
-		{
-			while (node)
-			{
-				st.Push(node);//此时 栈里面保存的就 根->左 按顺序弹出就是左根的顺序
-				node = node->left_;
-			}
-			//当左子树为空的时候里面 存的是根结点 弹出来就是左根的顺序 再探查一下右子树,也按照左根右的顺序
-			if (!st.IsEmpty())
-			{
-				node = st.Top();
-				st.Pop();
-				fun(node->key_);
-				node = node->right_;//假设右结点为null下次就会弹出上一个的左子树
-			}
-		}
-#endif
-		//通过数组模拟栈
-		if (size() == 0)
-			return;
-		std::vector<Node*> st(size(), nullptr);
-		int top = 0;
-		Node* node = root_;
-		while (top > 0 || node)
-		{
-			while (node)
-			{
-				st[top++] = node;
-				node = node->left_;
-			}
-			if (top > 0)
-			{
-				node = st[--top];
-				fun(node->key_);
-				node = node->right_;
-			}
-		}
-	}
-	//非递归版的三种遍历方式 需要借助数据结构stack
-	void no_recursive_postorder(const DealKey& fun)const override
-	{
-		//用数组模拟栈 是为了方便记录每个元素的状态
-		std::vector<Node*> st(size(), nullptr);
-		int top = 0;
-		std::vector<uint8_t> flags(size(), 0);
-		Node* node = root_;
-		while (node || top>0 )
-		{
-			while (node)
-			{
-				st[top++] = node;
-				node = node->left_;
-				//这里记录node结点的状态 即这是首次访问,数组下标是top-1
-				flags[top - 1] = 1;
-			}
-			if (top > 0)
-			{
-				if (flags[top - 1] == 1)//此时应该要访问右结点,而不是出栈
-				{
-					node = st[top - 1];
-					node = node->right_;
-					flags[top - 1] = 2;//这时需要记录下他的状态 即已经访问完右结点
-				}
-				else//此时就该出栈了
-				{
-					node = st[--top];
-					fun(node->key_);
-					//这时候需要继续弹栈  所以这个node需要置为空
-					node = nullptr;
-				}
-			}
-		}
-	}
-	//树中最大值 即右子树中的最右结点
-	const Value& findmax()const override
-	{
-		static Value default_val_ = Value();
-		Node *node = find_max(root_);
-		return node == nullptr ? default_val_ : node->val_;
-	}
-	//最小 即最左边的
-	const Value& findmin()const override
-	{
-		static Value default_val_ = Value();
-		Node *node = find_min(root_);
-		return node == nullptr ? default_val_ : node->val_;
-	}
-private:
-	bool _insert(Node*& node, const Key& key, const Value& val)
-	{
-		if (node == nullptr)
-		{
-			node = new Node(key, val);
 			size_++;
 			return true;
 		}
-		if (node->key_ == key)//已经有 覆盖
+		size_t size()const override
 		{
-			node->val_ = val;
-			return false;
+			return size_;
 		}
-		else if (node->val_ > val)
-			return _insert(node->left_, val);
-		else
-			return _insert(node->right_, val);
-	}
-	//递归版本
-	bool _find(Node* node, const Key&key, Value&val)
-	{
-		if (node == nullptr)
-			return false;//未找到
-
-		if (node->key_ == key)
+		size_t height()const override
 		{
-			val = node->val_;
+			return _height(root_);
+		}
+		bool find(const Key&key, Value&val)const override
+		{
+			//可以是非递归的写法
+			Node* node = _find(root_, key);
+			if (node != nullptr)
+				val = node->val_;
+			return node != nullptr;
+		}
+		//有父节点的情况下 求前驱结点
+		bool getprenode(const Key& key, Value& val)const override
+		{
+#if 0
+			//结点信息中包含父节点的时候 查找前驱结点
+			//先找到这个结点
+			Node* node = root_;
+			while (node != nullptr && node->key_ != key)
+			{
+				if (key > node->key_)
+					node = node->right_;
+				else
+					node = node->left_;
+			}
+			if (node == nullptr)//没找到 直接返回
+				return false;
+			//有左子树的情况,前驱就是左子树的最大值
+			if (node->left_ != nullptr)
+			{
+				Node* temp = find_max(node->left_);
+				if (temp == nullptr)//无前驱结点
+					return false;
+				val = temp->val_;
+				return true;
+			}
+			else //没有左子树,则找到父节点中第一个拥有右子树的结点
+			{
+				Node*parent = node->parent_;
+				while (parent && node != parent->right_)
+				{
+					node = parent;
+					parent = parent->parent_;
+				}
+				if (parent == nullptr)
+					return false;
+				val = parent->val_;
+				return true;
+			}
+#endif
+			//结点信息中不包含父节点的时候的前驱结点查找
+			//因为前驱结点是 有左子树的时候 左子树里面的最左结点,没有左子树时 从当前结点往上第一个拥有右子树的父节点
+			//所以遍历的时候,由于是从上到下遍历,所以最后一个有右子树的父节点,即为从当前结点往上遍历的第一个有右子树的父节点
+			Node* parent = nullptr, *lastNodeHaveRightChild = nullptr, *current = root_;
+
+			while (current && current->key_ != key)
+			{
+				parent = current;
+				if (key > current->key_)
+				{
+					current = current->right_;
+					//搜索路径中 当前结点是父亲结点的右孩子,这里不能写在后面,不然不对的
+					lastNodeHaveRightChild = parent;
+				}
+				else
+					current = current->left_;
+			}
+			if (current == nullptr)
+				return false;
+			Node* preNode = nullptr;
+			if (current->left_)//左子树存在,左子树中的最大值 即左子树的最右值
+				preNode = find_max(current->left_);
+			else//否则就是从当前结点往上找的第一个含有右子树的父节点
+				preNode = lastNodeHaveRightChild;
+			if (preNode)
+				val = preNode->val_;
+			return preNode != nullptr;
+
+		}
+		//有父节点的情况下,求后继结点
+		bool getnextnode(const Key& key, Value& val)const override
+		{
+#if 0
+			//找到这个结点
+			Node* node = root_;
+			while (node && node->key_ != key)
+			{
+				if (key > node->key_)
+					node = node->right_;
+				else
+					node = node->left_;
+			}
+			if (node == nullptr)//未找到
+				return false;
+			//存在右子树,右子树的最小值即结果
+			if (node->right_)
+			{
+				Node* temp = find_min(node->right_);
+				if (temp == nullptr)
+					return false;
+				val = temp->val_;
+				return true;
+			}
+			else//从该结点往上找,找出第一个拥有左子树的结点
+			{
+				Node* parent = node->parent_;
+				while (parent && node != parent->left_)
+				{
+					node = parent;
+					parent = parent->parent_;
+				}
+				if (parent == nullptr)
+					return false;
+				val = parent->val_;
+				return true;
+			}
+#endif
+			//没有父节点的情况下,查找后继结点
+			//同样 如果当前结点由右子树,则后继结点就是右子树的最右结点
+			//如果没有就是从当前结点往上查找,直到找到一个当前结是父节点的左孩子(左中右的顺序,父节点就是它的后继结点)
+			Node* parent = nullptr, *node = root_, *lastHaveLeftChild = nullptr;
+			while (node && node->key_ != key)
+			{
+				parent = node;
+				if (key < node->key_)
+				{
+					lastHaveLeftChild = parent;
+					node = node->left_;
+				}
+				else
+					node = node->right_;
+			}
+			if (node == nullptr)
+				return false;
+			Node* nextNode = nullptr;
+			if (node->right_ != nullptr)//右子树中的最小值 即右子树的左值
+				nextNode = find_min(node->right_);
+			else
+				nextNode = lastHaveLeftChild;
+			if (nextNode)
+				val = nextNode->val_;
+			return nextNode != nullptr;
+		}
+		/*
+		*/
+		bool deletenode(const Key& key)override
+		{
+#if 0
+			//包含父节点的删除操作
+			Node* current = _find(root_, key);
+			if (current == nullptr)//树中无此结点
+				return false;
+			Node* parent = current->parent_;
+			//两个子节点都存在的情况
+			if (current->left_ != nullptr && current->right_ != nullptr)
+			{
+				//找出current的前驱或者后继其中一个即可,这里我们找后继
+				Node* temp = find_min(current->right_);
+				//跟当前结点替换key value
+				std::swap(temp->key_, current->key_);
+				std::swap(temp->val_, current->val_);
+				parent = temp->parent_;
+				current = temp;//右子树的最小,必然最多只有一个孩子结点,就可以转化成下面的情况统一处理
+			}
+			Node* child = current->left_;
+			if (child == nullptr)
+				child = current->right_;
+
+			if (current == root_)
+			{
+				root_ = child;
+			}
+			else
+			{
+				if (parent->left_ == current)//这里也包含对叶子结点的处理,即current == nullptr 
+					parent->left_ = child;
+				else
+					parent->right_ = child;
+			}
+			if (child != nullptr)//左右结点为空的时候 不用关系子节点的父节点的指向
+			{
+				child->parent_ = parent;
+			}
+			delete current;
+			size_--;
+			return true;
+			//结点为空
+#endif
+		//不包含父节点的删除操作
+			Node*parent = nullptr, *current = root_;
+			while (current&& current->key_ != key)
+			{
+				parent = current;
+				if (key > current->key_)
+					current = current->right_;
+				else
+					current = current->left_;
+			}
+			if (current == nullptr)
+				return false;
+			/*
+				删除分三种情况
+				第一种: 左子树右子树都有的 这种其实有两种做法,要么用他的前驱代替自己然后删除原来前驱的位置
+				要么用后继代替自己然后删除原来后继的位置,这里注意 这里前驱后继其实就是左子树的最左结点和右子树的最右结点
+				因为他们本身是左子树或者右子树最大或者最小 所以必然最大的没有右孩子结点 最小的没有左孩子结点,即这里的前驱最多
+				只能有一个结点!! 只有一个或者没有结点可以转化成下面的做法
+				第二种: 只有一个孩子结点
+				这时将孩子结点赋值给父节点对应的指针域
+				第三种:没有孩子结点 直接删除 然后把父节点对应的指针域置为空
+			*/
+			//左右都存在的
+			if (current->left_ && current->right_)
+			{
+				//跟上面不一样 这里我们找前驱 但是还需要找出前驱结点的父节点
+				Node* preNode = current->left_;
+				//这里是找的左子树 这样的话parent就是current
+				parent = current;
+				while (preNode && preNode->right_ != nullptr)
+				{
+					parent = preNode;
+					preNode = preNode->right_;
+				}
+				//替换本身的key value 这里的指针域暂时不动,留在后面做相应的修改
+				std::swap(preNode->key_, current->key_);
+				std::swap(preNode->val_, current->val_);
+				//current替换成当前结点 parent上面也做了修改 继续删除这个结点,以为这个结点最多只有一个孩子,可以跟下面的统一起来
+				current = preNode;
+			}
+			Node* child = current->left_;
+			if (child == nullptr)
+				child = current->right_;
+			//child 为空或者 仅有 一个孩子的情况 这里需要修改父节点了,但是当前结点可能会是根节点
+			if (current == root_)
+			{
+				root_ = child;//root结点不用管父节点
+			}
+			else
+			{
+				//修改对应的指针域
+				if (parent->left_ == current)
+					parent->left_ = child;
+				else
+					parent->right_ = child;
+			}
+			//全部处理完了 delete 
+			delete current;
+			size_--;
 			return true;
 		}
-		if (key > node->key_)
-			return _find(node->right_, key, val);
-		else
-			return _find(node->left_, key, val);
-	}
-	Node* _find(Node*node, const Key&key)const //以node为根节点的树上找到key的结点
-	{
-		while (node && node->key_ != key)
+		//三种遍历 返回遍历后的数组
+		void preorder(const DealKey& fun)const override
 		{
-			if (key > node->key_)
-				node = node->right_;
+			//前序遍历
+			_preorder(fun, root_);
+		}
+		//中序遍历会使key有序
+		void inorder(const DealKey& fun)const override
+		{
+			_inorder(fun, root_);
+		}
+		//后序
+		void postorder(const DealKey& fun)const override
+		{
+			_postorder(fun, root_);
+		}
+		//非递归版的三种遍历方式 需要借助数据结构stack
+		void no_recursive_preorder(const DealKey& fun)const override
+		{
+			if (size() == 0)
+				return;
+#if 0
+			//前序遍历的非递归版本 跟左右
+			ArrayStack<Node*> st(size());
+			st.Push(root_);
+			Node*node;
+			while (!st.IsEmpty())
+			{
+				node = st.Top();
+				st.Pop();
+				fun(node->key_);//这里因为时根左右 所以先把右孩子放到栈里面
+				if (node->right_)
+					st.Push(node->right_);
+				if (node->left_)
+					st.Push(node->left_);
+			}
+#endif 
+			//第二种写法,上面的写法 我觉得挺简单的 
+			Node* node = root_;
+			ArrayStack<Node*> st(size());
+			while (node || !st.IsEmpty())
+			{
+				//根左右 先访问根 在访问左子树,边遍历遍历,一次完事node结点的所有根结点左结点全部遍历完
+				//push是为了访问右孩子
+				while (node)
+				{
+					fun(node->key_);
+					st.Push(node);//用于先放问左子树
+					node = node->left_;
+				}
+				if (!st.IsEmpty())
+				{
+					node = st.Top();//这个node上面已经遍历过了
+					st.Pop();//进入最下面结点的右子树 从下往上进入每个结点的右子树 右子树遍历也遵循根左右
+					node = node->right_;
+				}
+			}
+
+		}
+		//非递归版的三种遍历方式 需要借助数据结构stack
+		void no_recursive_inorder(const DealKey& fun)const override
+		{
+#if 0
+			//中序遍历 左根右
+			Node* node = root_;
+			ArrayStack<Node*> st(size());
+			while (node || !st.IsEmpty())
+			{
+				while (node)
+				{
+					st.Push(node);//此时 栈里面保存的就 根->左 按顺序弹出就是左根的顺序
+					node = node->left_;
+				}
+				//当左子树为空的时候里面 存的是根结点 弹出来就是左根的顺序 再探查一下右子树,也按照左根右的顺序
+				if (!st.IsEmpty())
+				{
+					node = st.Top();
+					st.Pop();
+					fun(node->key_);
+					node = node->right_;//假设右结点为null下次就会弹出上一个的左子树
+				}
+			}
+#endif
+			//通过数组模拟栈
+			if (size() == 0)
+				return;
+			std::vector<Node*> st(size(), nullptr);
+			int top = 0;
+			Node* node = root_;
+			while (top > 0 || node)
+			{
+				while (node)
+				{
+					st[top++] = node;
+					node = node->left_;
+				}
+				if (top > 0)
+				{
+					node = st[--top];
+					fun(node->key_);
+					node = node->right_;
+				}
+			}
+		}
+		//非递归版的三种遍历方式 需要借助数据结构stack
+		void no_recursive_postorder(const DealKey& fun)const override
+		{
+			//用数组模拟栈 是为了方便记录每个元素的状态
+			std::vector<Node*> st(size(), nullptr);
+			int top = 0;
+			std::vector<uint8_t> flags(size(), 0);
+			Node* node = root_;
+			while (node || top > 0)
+			{
+				while (node)
+				{
+					st[top++] = node;
+					node = node->left_;
+					//这里记录node结点的状态 即这是首次访问,数组下标是top-1
+					flags[top - 1] = 1;
+				}
+				if (top > 0)
+				{
+					if (flags[top - 1] == 1)//此时应该要访问右结点,而不是出栈
+					{
+						node = st[top - 1];
+						node = node->right_;
+						flags[top - 1] = 2;//这时需要记录下他的状态 即已经访问完右结点
+					}
+					else//此时就该出栈了
+					{
+						node = st[--top];
+						fun(node->key_);
+						//这时候需要继续弹栈  所以这个node需要置为空
+						node = nullptr;
+					}
+				}
+			}
+		}
+		//树中最大值 即右子树中的最右结点
+		const Value& findmax()const override
+		{
+			static Value default_val_ = Value();
+			Node *node = find_max(root_);
+			return node == nullptr ? default_val_ : node->val_;
+		}
+		//最小 即最左边的
+		const Value& findmin()const override
+		{
+			static Value default_val_ = Value();
+			Node *node = find_min(root_);
+			return node == nullptr ? default_val_ : node->val_;
+		}
+	private:
+		bool _insert(Node*& node, const Key& key, const Value& val)
+		{
+			if (node == nullptr)
+			{
+				node = new Node(key, val);
+				size_++;
+				return true;
+			}
+			if (node->key_ == key)//已经有 覆盖
+			{
+				node->val_ = val;
+				return false;
+			}
+			else if (node->val_ > val)
+				return _insert(node->left_, val);
 			else
-				node = node->left_;
+				return _insert(node->right_, val);
 		}
-		return node;
-	}
-	void _destruct(Node* temp)
-	{
-		if (temp)
+		//递归版本
+		bool _find(Node* node, const Key&key, Value&val)
 		{
-			_destruct(temp->left_);
-			_destruct(temp->right_);
-			delete temp;
+			if (node == nullptr)
+				return false;//未找到
+
+			if (node->key_ == key)
+			{
+				val = node->val_;
+				return true;
+			}
+			if (key > node->key_)
+				return _find(node->right_, key, val);
+			else
+				return _find(node->left_, key, val);
 		}
-    }
-	void _preorder(const DealKey& fun, Node*node)const
-	{
-		if (node == nullptr)
-			return;
-		fun(node->key_);
-		_preorder(fun, node->left_);
-		_preorder(fun, node->right_);
-	}
-	void _inorder(const DealKey& fun, Node*node)const
-	{
-		if (node == nullptr)
-			return;
-		_inorder(fun, node->left_);
-		fun(node->key_);
-		_inorder(fun, node->right_);
-	}
-	void _postorder(const DealKey& fun, Node* node)const 
-	{
-		if (node == nullptr)
-			return;
-		_postorder(fun, node->left_);
-		_postorder(fun, node->right_);
-		fun(node->key_);
-	}
-	Node* find_max(Node*node)const //找出以node为根的树里面最大的
-	{
-		while (node && node->right_ != nullptr)
-			node = node->right_;
-		return node;
-	}
-	Node* find_min(Node*node)const //找出以node为根的树里最小的
-	{
-		while (node && node->left_)
-			node = node->left_;
-		return node;
-	}
-	size_t _height(Node*node)const
-	{
-		if (node == nullptr)
-			return 0;
-		return std::max<size_t>(_height(node->left_), _height(node->right_)) + 1;
-	}
-	size_t     size_ = 0;
-	Node       *root_;
-};
+		Node* _find(Node*node, const Key&key)const //以node为根节点的树上找到key的结点
+		{
+			while (node && node->key_ != key)
+			{
+				if (key > node->key_)
+					node = node->right_;
+				else
+					node = node->left_;
+			}
+			return node;
+		}
+		void _destruct(Node* temp)
+		{
+			if (temp)
+			{
+				_destruct(temp->left_);
+				_destruct(temp->right_);
+				delete temp;
+			}
+		}
+		void _preorder(const DealKey& fun, Node*node)const
+		{
+			if (node == nullptr)
+				return;
+			fun(node->key_);
+			_preorder(fun, node->left_);
+			_preorder(fun, node->right_);
+		}
+		void _inorder(const DealKey& fun, Node*node)const
+		{
+			if (node == nullptr)
+				return;
+			_inorder(fun, node->left_);
+			fun(node->key_);
+			_inorder(fun, node->right_);
+		}
+		void _postorder(const DealKey& fun, Node* node)const
+		{
+			if (node == nullptr)
+				return;
+			_postorder(fun, node->left_);
+			_postorder(fun, node->right_);
+			fun(node->key_);
+		}
+		Node* find_max(Node*node)const //找出以node为根的树里面最大的
+		{
+			while (node && node->right_ != nullptr)
+				node = node->right_;
+			return node;
+		}
+		Node* find_min(Node*node)const //找出以node为根的树里最小的
+		{
+			while (node && node->left_)
+				node = node->left_;
+			return node;
+		}
+		size_t _height(Node*node)const
+		{
+			if (node == nullptr)
+				return 0;
+			return std::max<size_t>(_height(node->left_), _height(node->right_)) + 1;
+		}
+		size_t     size_ = 0;
+		Node       *root_;
+	};
+}//namespace 
 #endif
