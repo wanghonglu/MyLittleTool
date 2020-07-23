@@ -101,7 +101,7 @@ FindCircle( List *l )
     return f;
 }
 #define IntArrayLen(a) sizeof(a)/sizeof(int)
-int main()
+int FastSlowPoint()
 {
     List *l=InitList();
     Node* n1 = (Node*)malloc(sizeof(Node));

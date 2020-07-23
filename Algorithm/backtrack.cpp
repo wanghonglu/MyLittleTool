@@ -110,7 +110,7 @@ void Fullarange(const std::vector<int>&numbers, std::vector<int>&select,  std::v
         select.pop_back();
     }
 }
-int main(int argc,char**argv )
+int backtrack_test(int argc,char**argv )
 {
     if( argc<2 )
         return -1;

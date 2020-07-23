@@ -56,11 +56,4 @@ void towersofHanoi(int n,char a,char b,char c )
         towersofHanoi(n-1,b,a, c );
     }
 }
-int main(  int argc,char**argv)
-{
-    cout<<"从A上挪动到C上"<<endl;
-    if( argc > 1 )
-        towersofHanoi(atoi(argv[1]), 'A', 'B', 'C' );
-    cout<<count<<" 步"<<endl;
-    return 0;
-}
+

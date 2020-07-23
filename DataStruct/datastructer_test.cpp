@@ -434,6 +434,9 @@ void binarySearchTree_test(int argc, char**argv)
 	tree->no_recursive_postorder(Print);
 	std::cout << endl;
 
+	std::cout << "层序遍历" << endl;
+	tree->level_order(Print);
+	std::cout << endl;
 	{
 		//删除
 		std::cout << "原来的中序遍历" << endl;
@@ -461,7 +464,7 @@ void binarySearchTree_test(int argc, char**argv)
 			numbers.push_back(i);
 		}
 		//打乱数组 按顺序插入会让bst退化成链表
-		//randomshuffle(numbers);
+		randomshuffle(numbers);
 		{
 			TimeCounts t("插入 " + std::to_string(TestSize) + " 条数据 ");
 			for (int i = 0; i < numbers.size(); i++)
@@ -605,6 +608,7 @@ void binarySearchTree_test(int argc, char**argv)
 				break;
 			case 10:
 				std::cout << "高度" << self->height() << endl;
+				break;
 			case -1:
 				std::cin.clear();
 				end = true;

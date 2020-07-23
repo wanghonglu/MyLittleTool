@@ -91,6 +91,7 @@
 	对整个二叉树进行中序遍历,在中序遍历的结果中,当前节点的前一个值 即它的前驱结点,后一个结点时它的后继结点
 	但是这种的时间复杂度时O(n)
 
+	//层次遍历需要借助队列,将根节点入队 出列访问,然后放入左右结点 然后依次出列,每次出列都是按照一层一层访问的
 */
 /*
      BST树   AVL树 红黑树 本质上都是搜索树,所以这里实现接口类,基类不同的子类实现不同的函数
@@ -99,19 +100,11 @@
 */
 
 #include<vector>
+#include "queue.hpp"
 namespace datastruct {
 	template<typename Key, typename Value>
 	class BaseBinarySearchTree {
 	public:
-		struct Node {
-			Node *left_ = nullptr;
-			Node *right_ = nullptr;
-			//Node *parent_ = nullptr;//父节点 为了找前驱后继结点
-			Key    key_;
-			Value  val_;
-			Node(const Key& key, const Value& val)
-				:key_(key), val_(val), left_(nullptr), right_(nullptr) {}
-		};
 		~BaseBinarySearchTree() {}
 		using DealKey = std::function<void(const Key&)>;
 
@@ -141,15 +134,25 @@ namespace datastruct {
 		virtual void no_recursive_preorder(const DealKey& fun)const = 0;
 		virtual void no_recursive_inorder(const DealKey& fun) const = 0;
 		virtual void no_recursive_postorder(const DealKey& fun)const = 0;
+		//层次遍历
+		virtual void level_order(const DealKey& fun)const = 0;
 	};
 
 	template<typename Key, typename Value>
 	class BinarySearchTree :public BaseBinarySearchTree <Key, Value> {
+	struct Node {
+			Node *left_ = nullptr;
+			Node *right_ = nullptr;
+			//Node *parent_ = nullptr;//父节点 为了找前驱后继结点
+			Key    key_;
+			Value  val_;
+			Node(const Key& key, const Value& val)
+				:key_(key), val_(val), left_(nullptr), right_(nullptr) {}
+	};
 	public:
 		/* 坑爹啊 windows下正常编译 linux下就必须带这俩 不然编译不过 */
 		/* 模板类中还有using 或者typedef 时 注意在子类中要用这俩类型 必须typename 指定类型*/
 		using DealKey = typename BaseBinarySearchTree<Key, Value>::DealKey;
-		using Node = typename BaseBinarySearchTree<Key, Value>::Node;
 		BinarySearchTree() :size_(0), root_(nullptr)
 		{
 		}
@@ -582,6 +585,25 @@ namespace datastruct {
 				}
 			}
 		}
+		//层次遍历
+		void level_order(const DealKey& fun)const override
+		{
+			if (root_ == nullptr)
+				return;
+			LinkedListQueue<Node*> q;
+			q.push(root_);
+			Node* node;
+			while (!q.empty())
+			{
+				node = q.front();
+				fun(node->key_);
+				q.pop();
+				if (node->left_)
+					q.push(node->left_);
+				if (node->right_)
+					q.push(node->right_);
+			}
+		}
 		//树中最大值 即右子树中的最右结点
 		const Value& findmax()const override
 		{
@@ -596,6 +618,7 @@ namespace datastruct {
 			Node *node = find_min(root_);
 			return node == nullptr ? default_val_ : node->val_;
 		}
+
 	private:
 		bool _insert(Node*& node, const Key& key, const Value& val)
 		{
