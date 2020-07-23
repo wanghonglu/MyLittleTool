@@ -11,7 +11,7 @@
 using namespace std;
 using namespace datastruct;
 void bracket_match();//括号匹配
-#define TestSize 59999
+#define TestSize 5000000
 #define PrintArray(arry) std::for_each(arry,arry+sizeof(arry)/sizeof(arry[0]), [](decltype(arry[0]) t){std::cout<<t<<" ";});
 template<typename T>
 void randomshuffle(T& arry)
@@ -31,12 +31,12 @@ public:
 	}
 	uint64_t now()
 	{
-		return std::chrono::duration_cast<std::chrono::milliseconds>(
+		return std::chrono::duration_cast<std::chrono::microseconds>(
 			std::chrono::system_clock::now().time_since_epoch()).count();
 	}
 	~TimeCounts()
 	{
-		std::cerr << str_ << " 耗时: " << now() - counts_ << " ms " << std::endl;
+		std::cerr << str_ << " 耗时: " << now() - counts_ << " 微秒 " << std::endl;
 	}
 };
 struct SelfDefine{
@@ -461,7 +461,7 @@ void binarySearchTree_test(int argc, char**argv)
 			numbers.push_back(i);
 		}
 		//打乱数组 按顺序插入会让bst退化成链表
-		randomshuffle(numbers);
+		//randomshuffle(numbers);
 		{
 			TimeCounts t("插入 " + std::to_string(TestSize) + " 条数据 ");
 			for (int i = 0; i < numbers.size(); i++)
@@ -571,7 +571,7 @@ void binarySearchTree_test(int argc, char**argv)
 		{
 			int number = 0;
 			std::cerr << " \t1:删除\n\t2:查找\n\t3:中序遍历输出结果\n"
-				"\t4:前驱结点\n\t5:后继结点\n\t6:插入\n\t7:最大结点\n\t8:最小\n\t9:bst size\n\t-1:退出\n";
+				"\t4:前驱结点\n\t5:后继结点\n\t6:插入\n\t7:最大结点\n\t8:最小\n\t9:bst size\n\t10:二叉树的高度\n\t-1:退出\n";
 			std::cin >> number;
 			SelfDefine ret;
 			switch (number)
@@ -603,6 +603,8 @@ void binarySearchTree_test(int argc, char**argv)
 			case 9:
 				std::cout << "Size: " << self->size() << endl;
 				break;
+			case 10:
+				std::cout << "高度" << self->height() << endl;
 			case -1:
 				std::cin.clear();
 				end = true;

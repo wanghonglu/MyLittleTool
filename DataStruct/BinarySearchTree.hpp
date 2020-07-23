@@ -116,6 +116,8 @@ public:
 	
 	//大小
 	virtual  size_t size()const = 0;
+	//二叉树的高度
+	virtual  size_t height()const = 0;
 	//最大
 	virtual   const Value&  findmax()const = 0;
 	//最小
@@ -189,6 +191,10 @@ public:
 	size_t size()const override
 	{
 		return size_;
+	}
+	size_t height()const override
+	{
+		return _height(root_);
 	}
 	bool find(const Key&key, Value&val )const override
 	{
@@ -679,6 +685,12 @@ private:
 		while (node && node->left_)
 			node = node->left_;
 		return node;
+	}
+	size_t _height(Node*node)const
+	{
+		if (node == nullptr)
+			return 0;
+		return std::max<size_t>(_height(node->left_), _height(node->right_)) + 1;
 	}
 	size_t     size_ = 0;
 	Node       *root_;
