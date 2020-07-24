@@ -214,7 +214,7 @@ bool AVLTree<Key, Value>::is_balance(Node*node)const
 {
 	if (getbalancefactor(node) > 1)
 		return false;
-	return getbalancefactor(node->left_) && getbalancefactor(node->right_);
+	return getbalancefactor(node->left_) < 2 && getbalancefactor(node->right_)<2;
 }
 template<typename Key,typename Value>
 typename AVLTree<Key, Value>::Node* AVLTree<Key, Value>::find_min(Node* node )const
@@ -593,6 +593,7 @@ bool AVLTree<Key, Value>::insert(const Key& key, const Value& val)
 {
 	size_t temp = size();
 	root_ = insert(root_, key, val);
+	assert(is_balance(root_));
 	return temp != size();
 }
 template<typename Key, typename Value>

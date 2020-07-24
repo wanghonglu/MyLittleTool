@@ -412,6 +412,12 @@ void binarySearchTree_test(int argc, char**argv)
 		assert(ret == "22");//后继
 		assert(!tree->getnextnode(40,ret));//40没有后继
 		//assert(!tree.getprenode(1, ret));//1没有前驱
+		if (argc == 2)
+		{
+			AVLTree<int, string> *ptr = dynamic_cast<AVLTree<int, string>*>(tree);
+			assert(ptr);
+			assert(ptr->is_balance());
+		}
 	}
 	auto Print = [](int a) {
 		std::cout << a << " ";
@@ -476,11 +482,27 @@ void binarySearchTree_test(int argc, char**argv)
 			for (int i = 0; i < numbers.size(); i++)
 			{
 				std::string str = "这是第 " + std::to_string(numbers[i]) + " 个测试对象 ";
+				static bool ini = false;
+				if (!ini)
+				{
+					cout << " size(int) " << sizeof(numbers.size()) << " sizeof(str)" << str.size() << endl;
+					ini = true;
+				}
 				self->insert(numbers[i], SelfDefine(numbers[i], str));
 			}
 		}
-
-		assert(self->size() == TestSize);
+		
+		{
+			//释放vector内存
+			std::vector<int> temp;
+			temp.swap(numbers);
+		}
+		if (argc == 2)
+		{
+			AVLTree<int, SelfDefine> *ptr = dynamic_cast<AVLTree<int, SelfDefine>*>(self);
+			assert(ptr);
+			assert(ptr->is_balance());
+		}
 		/*
 		1: 测试删除
 		2: 测试查找
