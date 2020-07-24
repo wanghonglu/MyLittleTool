@@ -373,9 +373,9 @@ void binarySearchTree_test(int argc, char**argv)
 	}
 	else
 	{
-		//AVL数
-		//tree = new AVLTree<int, std::string>();
-		//self = new AVLTree<int, SelfDefine>();
+		//AVL树
+		tree = new AVLTree<int, std::string>();
+		self = new AVLTree<int, SelfDefine>();
 	}
 	assert(tree != nullptr && self != nullptr);
 	int a[] = { 10,1,19,20,23,22,24,40,11,2,3,12,14,17,7,4,5,6 };

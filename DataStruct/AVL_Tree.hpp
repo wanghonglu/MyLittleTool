@@ -136,9 +136,9 @@ class AVLTree :public BaseBinarySearchTree<Key,Value>
 		void destruct(Node* node);
 
 		//最左结点
-		Node* find_min(Node*);
+		Node* find_min(Node*)const;
 		//最右结点
-		Node* find_max(Node*);
+		Node* find_max(Node*)const;
 
 		bool is_balance(Node*node)const;
 
@@ -217,14 +217,14 @@ bool AVLTree<Key, Value>::is_balance(Node*node)const
 	return getbalancefactor(node->left_) && getbalancefactor(node->right_);
 }
 template<typename Key,typename Value>
-typename AVLTree<Key, Value>::Node* AVLTree<Key, Value>::find_min(Node* node )
+typename AVLTree<Key, Value>::Node* AVLTree<Key, Value>::find_min(Node* node )const
 {
 	while (node && node->left_)
 		node = node->left_;
 	return node;
 }
 template<typename Key, typename Value>
-typename AVLTree<Key, Value>::Node* AVLTree<Key, Value>::find_max(Node* node)
+typename AVLTree<Key, Value>::Node* AVLTree<Key, Value>::find_max(Node* node)const
 {
 	while (node && node->right_)
 		node = node->right_;
@@ -285,10 +285,10 @@ bool AVLTree<Key, Value>::getprenode(const Key&key, Value& val)const
 		if (key > node->key_)
 		{
 			lastHaveRightChild = node;
-			node->right_;
+			node = node->right_;
 		}
 		else
-			node->left_;
+			node = node->left_;
 	}
 
 	if (node == nullptr)
@@ -442,6 +442,7 @@ void AVLTree<Key, Value>::no_recursive_postorder(const DealKey& fun)const
 		{
 			st[top++] = node;
 			flags[top - 1] = 1;
+			node = node->left_;
 		}
 		if (top > 0)
 		{
@@ -550,9 +551,10 @@ typename AVLTree<Key, Value>::Node* AVLTree<Key, Value>::insert(Node* node, cons
 {
 	if (node == nullptr)//找到位置插入
 	{
-		node = new Node(key, val);//新建结点高度也设置为1
+		node = new Node(key, val);//新建结点高度为1 叶子节点的高度为1
+		size_++;
 	}
-	if (key == node->key_)//插入的结点 已经存在,修改一下
+	else if(key == node->key_)//插入的结点 已经存在,修改一下
 	{
 		node->val_ = val;
 	}
@@ -575,7 +577,7 @@ typename AVLTree<Key, Value>::Node* AVLTree<Key, Value>::insert(Node* node, cons
 		//回溯的过程中只有其中一个父节点会失衡 其他应该不用回溯
 		if (getbalancefactor(node) > 1)
 		{
-			if (key > node->left_)//左子树插入右孩子先左旋再右旋
+			if (key > node->left_->key_)//左子树插入右孩子先左旋再右旋
 				node = leftAndRightRotate(node);
 			else//左子树插入左孩子 右旋
 				node = rightRotate(node);
@@ -589,14 +591,16 @@ typename AVLTree<Key, Value>::Node* AVLTree<Key, Value>::insert(Node* node, cons
 template<typename Key,typename Value>
 bool AVLTree<Key, Value>::insert(const Key& key, const Value& val)
 {
+	size_t temp = size();
 	root_ = insert(root_, key, val);
-	return true;
+	return temp != size();
 }
 template<typename Key, typename Value>
 bool AVLTree<Key, Value>::deletenode(const Key&key)
 {
+	size_t temp = size();
 	root_ = deletenode(root_, key);
-	return true;
+	return temp !=size();
 }
 /*
 	删除操作 可以变相的认为是插入
@@ -609,7 +613,7 @@ typename AVLTree<Key, Value>::Node* AVLTree<Key, Value>::deletenode(Node* node, 
 		return nullptr;
 	if (key > node->key_)
 		node->right_ = deletenode(node->right_,key);
-	else if (key < node->key)
+	else if (key < node->key_)
 		node->left_ = deletenode(node->left_, key);
 	else
 	{
@@ -617,6 +621,7 @@ typename AVLTree<Key, Value>::Node* AVLTree<Key, Value>::deletenode(Node* node, 
 		//BST树删除的时候 左右子树都存在的情况下,替换左子树最大或者右子树最小 都行然后删除
 		//但这里为了使树尽量少的旋转,在左右子树中更高的一个树里面去删除
 		Node* temp = nullptr;
+		size_--;
 		if (node->left_ != nullptr && node->right_ != nullptr)//左右子树都存在的情况
 		{
 			if (node->left_->height_ > node->right_->height_)//左子树比右子树高
@@ -653,7 +658,7 @@ typename AVLTree<Key, Value>::Node* AVLTree<Key, Value>::deletenode(Node* node, 
 		}
 	}
 	//需要重新node结点的高度,看看是否需要旋转
-	node->height_ = std::max<size_t>(GetHeight(node->left_), GetHeight(node->right)) + 1;
+	node->height_ = std::max<size_t>(GetHeight(node->left_), GetHeight(node->right_)) + 1;
 	if (getbalancefactor(node) < 2)
 		return node;//不需要调整
 	else
