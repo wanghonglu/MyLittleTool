@@ -5,7 +5,7 @@
 #include "queue.hpp"
 #include "deque.hpp"
 #include "BinarySearchTree.hpp"
-
+#include "AVL_Tree.hpp"
 void stack_test(int argc,char**argv );
 void priority_queue_test(int argc, char**argv );
 void queue_test(int argc,char**argv );

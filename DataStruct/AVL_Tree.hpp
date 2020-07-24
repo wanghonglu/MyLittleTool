@@ -1,4 +1,4 @@
-﻿#ifndef __AVL_TREE_HPP
+﻿#ifndef  __AVL_TREE_HPP
 #define  __AVL_TREE_HPP
 /*	
 	前面的BST树有局限性 比如如果插入的数据时按顺序插入1-1000万数据  那么树就会变成只有右子树的树了 类似链表了
@@ -80,13 +80,14 @@
 		删除右子树的结点导致失衡,可以看成在未删除的树上添加了结点,这样等价于插入,然后按照情况 进行上面四种旋转即可
 	
 */	
+
 #include "BinarySearchTree.hpp"
 
 namespace datastruct {
-	template<typename Key,typename Value>
-	class AVLTree :public BaseBinarySearchTree<Key,Value>
+template<typename Key,typename Value>
+class AVLTree :public BaseBinarySearchTree<Key,Value>
 	{
-#define GetHeight(node) node?node->height_:0
+#define GetHeight(node) ((node)?node->height_:0)
 		struct Node {
 			Key		key_;
 			Value	val_;
@@ -112,9 +113,9 @@ namespace datastruct {
 		bool  getnextnode(const Key&key, Value& val)const override;
 		//查找
 		bool  find(const Key&key, Value& val)const override;
-		//插入  重复返回false
+		//插入   默认都成功 重复就覆盖
 		bool  insert(const Key& key, const Value& val)override;
-		//删除 找不到返回false
+		//删除 不存在不报错
 		bool  deletenode(const Key&key)override;
 		//遍历 前序 中序 后续 以及他们的非递归形式
 		void preorder(const DealKey& fun)const override;
@@ -148,6 +149,11 @@ namespace datastruct {
 		postorder(const DealKey&fun, Node*);
 		//四种旋转
 		//单左旋
+		//插入
+		Node* insert(Node*, const Key& key, const Value& val)
+			//删除操作 可以认为是变相的插入操作
+		Node* deletenode(Node*, const Key&key, const Value& val);
+		Node* 
 		Node* leftRotate(Node*);
 		//单右旋
 		Node* rightRotate(Node*);
@@ -528,7 +534,141 @@ Node* AVLTree<Key, Value>::leftAndRightRotate(Node*node)
 /*
 	BST树的插入可以通过 循环的方式进行,但是AVL的插入就不行了
 	因为AVL要在回退的过程中判断那里的左右子树高度差超过1了,这种用循环不太好做
-	就是AVL树针对递归的结果,要左相应的处理,所以不能循环只能递归
+	就是AVL树针对递归的结果,要做相应的处理,所以不能循环只能递归
 */
+template<typename Key,typename Value>
+Node* AVLTree<Key, Value>::insert(Node* node, const Key&key, const Value& val)
+{
+	if (node == nullptr)//找到位置插入
+	{
+		node = new Node(key, val);//新建结点高度也设置为1
+	}
+	if (key == node->key_)//插入的结点 已经存在,修改一下
+	{
+		node->val_ = val;
+	}
+	else if (key > node->key_)//右子树插入
+	{
+		node->right_ = insert(node->right_, key, val);
+		//平衡因子失衡
+		if (getbalancefactor(node) > 1)
+		{
+			//这里需要判断是在右子树插入左孩子还是右孩子导致的失衡
+			if (key > node->right_->key_)//右子树插入右结点左旋转
+				node = leftRotate(node);
+			else//右子树插入左孩子  先右旋再左旋
+				node = rightAndLeftRotate(node);
+		}
+	}
+	else//左子树插入
+	{
+		node->left_ = insert(node->left_, key, val);
+		//回溯的过程中只有其中一个父节点会失衡 其他应该不用回溯
+		if (getbalancefactor(node) > 1)
+		{
+			if (key > node->left_)//左子树插入右孩子先左旋再右旋
+				node = leftAndRightRotate(node);
+			else//左子树插入左孩子 右旋
+				node = rightRotate(node);
+
+		}
+	}
+	//所有操作做完,因为下面的一个结点的更新 上面的每个结点的高度也要更新
+	node->height_ = std::max<size_t>(GetHeight(node->left_), GetHeight(node->right_)) + 1;
+	return node;
+}
+template<typename Key,typename Value>
+bool AVLTree<Key, Value>::insert(const Key& key, const Value& val)
+{
+	root_ = insert(root_, key, val);
+	return true;
+}
+template<typename Key, typename Value>
+bool AVLTree<Key, Value>::deletenode(const Key&key, const Value& val)
+{
+	root_ = deletenode(root_, key, val);
+	return true;
+}
+/*
+	删除操作 可以变相的认为是插入
+	删除不存在不报错
+*/
+template<typename Key, typename Value>
+Node* AVLTree<Key, Value>::deletenode(Node* node, const Key&key, const Value& val)
+{
+	if (node == nullptr)//没找到 返回
+		return nullptr;
+	if (key > node->key_)
+		node->right_ = deletenode(node->right_);
+	else if (key < node->key)
+		node->left_ = deletenode(node->left_);
+	else
+	{
+		//找到了就删除,这里和BST树的删除不一样 
+		//BST树删除的时候 左右子树都存在的情况下,替换左子树最大或者右子树最小 都行然后删除
+		//但这里为了使树尽量少的旋转,在左右子树中更高的一个树里面去删除
+		Node* temp = nullptr;
+		if (node->left_ != nullptr && node->right_ != nullptr)//左右子树都存在的情况
+		{
+			if (node->left_->height_ > node->right_->height_)//左子树比右子树高
+			{
+				temp = find_max(node->left_);//取左子树中最大的
+				std::swap(node->key_, temp->key_);
+				std::swap(node->val_, temp->val_);
+				node->left_ = deletenode(node->left_, key, val);
+			}
+			else
+			{
+				temp = find_min(node->right_);//取右子树中最小的
+				std::swap(node->key_, temp->key_);
+				std::swap(node->val_, temp->val_);
+				node->right_ = deletenode(node->right_, key, val);
+			}	
+		}
+		else if (node->left_ != nullptr)//左子树不为空 右子树为空的情况
+		{
+			temp = node->left_;
+			delete node;
+			node = temp;
+		}
+		else if (node->right_ != nullptr)//左子树为空 右子树不为空
+		{
+			temp = node->right_;
+			delete node;
+			node = temp;
+		}
+		else//左右子树都为空的情况 直接删除返回即可
+		{
+			delete node;
+			return nullptr;
+		}
+	}
+	//需要重新node结点的高度,看看是否需要旋转
+	node->height_ = std::max<size_t>(GetHeight(node->left_), GetHeight(node->right)) + 1;
+	if (getbalancefactor(node) < 2)
+		return node;//不需要调整
+	else
+	{
+		//需要判断左右子树的高度
+		//左子树比右子树高
+		if (GetHeight(node->left_) > GetHeight(node->right_))
+		{
+			//左子树插入左孩子 右旋
+			if (GetHeight(node->left_->left_) > GetHeight(node->left_->right_))
+				node = rightRotate(node);
+			else//左子树插入右孩子 先左旋再右旋
+				node = leftAndRightRotate(node);
+		}
+		else//右子树比左子树高
+		{
+			//右子树插入左孩子 先右旋再左旋
+			if (GetHeight(node->right_->left_) > GetHeight(node->right_->right_))
+				node = rightAndLeftRotate(node);
+			else//右子树插入右孩子 左选
+				node = leftRotate(node);
+		}
+	}
+	return node;
+}
 }//namespace 
 #endif
