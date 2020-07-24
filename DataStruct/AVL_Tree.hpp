@@ -132,7 +132,7 @@ class AVLTree :public BaseBinarySearchTree<Key,Value>
 		Value& operator [](const Key&key);
 	private:
 		//平衡因子 左右子树的高度差的绝对值
-		inline size_t getbalancefactor(Node*);
+		inline size_t getbalancefactor(Node*)const ;
 		void destruct(Node* node);
 
 		//最左结点
@@ -140,20 +140,20 @@ class AVLTree :public BaseBinarySearchTree<Key,Value>
 		//最右结点
 		Node* find_max(Node*);
 
-		bool is_balance(Node*node);
+		bool is_balance(Node*node)const;
 
-		preorder(const DealKey&fun, Node*);
+		void preorder(const DealKey&fun, Node*)const;
 
-		inorder(const DealKey&fun, Node*);
+		void inorder(const DealKey&fun, Node*)const;
 
-		postorder(const DealKey&fun, Node*);
+		void postorder(const DealKey&fun, Node*)const;
 		//四种旋转
 		//单左旋
 		//插入
-		Node* insert(Node*, const Key& key, const Value& val)
+		Node* insert(Node*, const Key& key, const Value& val);
 			//删除操作 可以认为是变相的插入操作
-		Node* deletenode(Node*, const Key&key, const Value& val);
-		Node* 
+		Node* deletenode(Node*, const Key&key);
+
 		Node* leftRotate(Node*);
 		//单右旋
 		Node* rightRotate(Node*);
@@ -174,6 +174,15 @@ AVLTree<Key, Value>::~AVLTree()
 	destruct(root_);
 	root_ = nullptr;
 	size_ = 0;
+}
+template<typename Key,typename Value>
+void AVLTree<Key, Value>::destruct(Node* node)
+{
+	if (node == nullptr)
+		return;
+	destruct(node->left_);
+	destruct(node->right_);
+	delete node;
 }
 template<typename Key, typename Value>
 size_t AVLTree<Key, Value>::size()const
@@ -208,14 +217,14 @@ bool AVLTree<Key, Value>::is_balance(Node*node)const
 	return getbalancefactor(node->left_) && getbalancefactor(node->right_);
 }
 template<typename Key,typename Value>
-Node* AVLTree<Key, Value>::find_min(Node* node )
+typename AVLTree<Key, Value>::Node* AVLTree<Key, Value>::find_min(Node* node )
 {
 	while (node && node->left_)
 		node = node->left_;
 	return node;
 }
 template<typename Key, typename Value>
-Node* AVLTree<Key, Value>::find_max(Node* node)
+typename AVLTree<Key, Value>::Node* AVLTree<Key, Value>::find_max(Node* node)
 {
 	while (node && node->right_)
 		node = node->right_;
@@ -237,7 +246,7 @@ const Value& AVLTree<Key, Value>::findmin()const
 }
 //查找
 template<typename Key, typename Value >
-bool AVLTree<Key, Value>::find(const Key&key, Value& val)
+bool AVLTree<Key, Value>::find(const Key&key, Value& val)const
 {
 	Node *node = root_;
 	while (node && node->key_ != key)
@@ -268,7 +277,7 @@ Value& AVLTree<Key, Value>::operator[](const Key&key)
 //前驱
 //左子树存在 前驱就是左子树中最大的 否则就是从当前结点往上第一个拥有右孩子
 template<typename Key,typename Value>
-bool AVLTree<Key, Value>::getprenode(const Key&key, Value& val)
+bool AVLTree<Key, Value>::getprenode(const Key&key, Value& val)const
 {
 	Node* node = root_, *lastHaveRightChild = nullptr;
 	while (node && node->key_ != key)
@@ -299,7 +308,7 @@ bool AVLTree<Key, Value>::getprenode(const Key&key, Value& val)
 //后继
 //有右子树 右子树最小即他的后继 否则从该结点往上第一个有左孩子的父节点即他的后继
 template<typename Key,typename Value>
-bool AVLTree<Key, Value>::getnextnode(const Key&key, Value& val)
+bool AVLTree<Key, Value>::getnextnode(const Key&key, Value& val)const
 {
 	Node* node = root_, *lastHaveleftChild = nullptr;
 	while (node && node->key_ != key)
@@ -328,7 +337,7 @@ bool AVLTree<Key, Value>::getnextnode(const Key&key, Value& val)
 }
 //遍历 递归形式
 template<typename Key,typename Value>
-void AVLTree<Key, Value>::preorder(const DealKey& fun,Node* node )
+void AVLTree<Key, Value>::preorder(const DealKey& fun,Node* node )const
 {
 	if (node == nullptr)
 		return;
@@ -337,7 +346,7 @@ void AVLTree<Key, Value>::preorder(const DealKey& fun,Node* node )
 	preorder(fun,node->right_);
 }
 template<typename Key, typename Value>
-void AVLTree<Key, Value>::inorder(const DealKey& fun, Node* node)
+void AVLTree<Key, Value>::inorder(const DealKey& fun, Node* node)const
 {
 	if (node == nullptr)
 		return;
@@ -346,7 +355,7 @@ void AVLTree<Key, Value>::inorder(const DealKey& fun, Node* node)
 	inorder(fun, node->right_);
 }
 template<typename Key, typename Value>
-void AVLTree<Key, Value>::postorder(const DealKey& fun, Node* node)
+void AVLTree<Key, Value>::postorder(const DealKey& fun, Node* node)const
 {
 	if (node == nullptr)
 		return;
@@ -355,23 +364,23 @@ void AVLTree<Key, Value>::postorder(const DealKey& fun, Node* node)
 	fun(node->key_);
 }
 template<typename Key, typename Value>
-void AVLTree<Key, Value>::preorder(const DealKey& fun)
+void AVLTree<Key, Value>::preorder(const DealKey& fun)const 
 {
 	preorder(fun, root_);
 }
 template<typename Key, typename Value>
-void AVLTree<Key, Value>::inorder(const DealKey& fun)
+void AVLTree<Key, Value>::inorder(const DealKey& fun)const
 {
 	inorder(fun, root_);
 }
 template<typename Key, typename Value>
-void AVLTree<Key, Value>::postorder(const DealKey& fun)
+void AVLTree<Key, Value>::postorder(const DealKey& fun)const
 {
 	postorder(fun, root_);
 }
 //遍历的非递归形式
 template<typename Key,typename Value>
-void AVLTree<Key, Value>::no_recursive_preorder(const DealKey& fun)
+void AVLTree<Key, Value>::no_recursive_preorder(const DealKey& fun)const
 {
 	//这里用数组模拟栈
 	std::vector<Node*> st(size());
@@ -396,7 +405,7 @@ void AVLTree<Key, Value>::no_recursive_preorder(const DealKey& fun)
 }
 //非递归的中序遍历
 template<typename Key,typename Value>
-void AVLTree<Key, Value>::no_recursive_inorder(const DealKey& fun)
+void AVLTree<Key, Value>::no_recursive_inorder(const DealKey& fun)const
 {
 	std::vector<Node*> st(size());
 	int top = 0;
@@ -421,7 +430,7 @@ void AVLTree<Key, Value>::no_recursive_inorder(const DealKey& fun)
 //结点存入栈中都是为了访问右孩子,但是后序遍历是左根右 即要先访问左,再访问右最后访问根
 //所以第一次存的时候记录状态1 第二次取出来访问右子树的时候记录1 第三次取的时候 是真正的该去掉的时候
 template<typename Key,typename Value>
-void AVLTree<Key, Value>::no_recursive_postorder(const DealKey& fun)
+void AVLTree<Key, Value>::no_recursive_postorder(const DealKey& fun)const
 {
 	std::vector<Node*> st(size());
 	int top = 0;
@@ -455,7 +464,7 @@ void AVLTree<Key, Value>::no_recursive_postorder(const DealKey& fun)
 }
 //层序遍历
 template<typename Key,typename Value>
-void AVLTree<Key, Value>::level_order(const DealKey& fun)
+void AVLTree<Key, Value>::level_order(const DealKey& fun)const
 {
 	if (root_ == nullptr)
 		return;
@@ -479,7 +488,7 @@ void AVLTree<Key, Value>::level_order(const DealKey& fun)
 //node结点变成右孩子的左孩子
 //返回旋转后的右孩子作为上面结点的新右孩子,
 template<typename Key,typename Value>
-Node* AVLTree<Key, Value>::leftRotate(Node*node)
+typename AVLTree<Key, Value>::Node* AVLTree<Key, Value>::leftRotate(Node*node)
 {
 	Node* n = node->right_;
 	node->right_ = n->left_;
@@ -498,7 +507,7 @@ Node* AVLTree<Key, Value>::leftRotate(Node*node)
 	返回新的node结点的左孩子
 */
 template<typename Key,typename Value>
-void AVLTree<Key, Value>::rightRotate(Node* node)
+typename AVLTree<Key, Value>::Node* AVLTree<Key, Value>::rightRotate(Node* node)
 {
 	Node* n = node->left_;
 	node->left_ = n->right_;
@@ -516,7 +525,7 @@ void AVLTree<Key, Value>::rightRotate(Node* node)
 	此时先将node结点的右孩子左旋,然后再把node结点左旋
 */
 template<typename Key,typename Value>
-Node* AVLTree<Key, Value>::rightAndLeftRotate(Node*node)
+typename AVLTree<Key, Value>::Node* AVLTree<Key, Value>::rightAndLeftRotate(Node*node)
 {
 	node->right_ = rightRotate(node->right_);
 	return leftRotate(node);
@@ -526,7 +535,7 @@ Node* AVLTree<Key, Value>::rightAndLeftRotate(Node*node)
 	当左子树插入右结点的时候 此时先将node结点的左孩子左旋 然后把node结点右旋
 */
 template<typename Key,typename Value>
-Node* AVLTree<Key, Value>::leftAndRightRotate(Node*node)
+typename AVLTree<Key, Value>::Node* AVLTree<Key, Value>::leftAndRightRotate(Node*node)
 {
 	node->left_ = leftRotate(node->left_);
 	return rightRotate(node);
@@ -537,7 +546,7 @@ Node* AVLTree<Key, Value>::leftAndRightRotate(Node*node)
 	就是AVL树针对递归的结果,要做相应的处理,所以不能循环只能递归
 */
 template<typename Key,typename Value>
-Node* AVLTree<Key, Value>::insert(Node* node, const Key&key, const Value& val)
+typename AVLTree<Key, Value>::Node* AVLTree<Key, Value>::insert(Node* node, const Key&key, const Value& val)
 {
 	if (node == nullptr)//找到位置插入
 	{
@@ -584,9 +593,9 @@ bool AVLTree<Key, Value>::insert(const Key& key, const Value& val)
 	return true;
 }
 template<typename Key, typename Value>
-bool AVLTree<Key, Value>::deletenode(const Key&key, const Value& val)
+bool AVLTree<Key, Value>::deletenode(const Key&key)
 {
-	root_ = deletenode(root_, key, val);
+	root_ = deletenode(root_, key);
 	return true;
 }
 /*
@@ -594,14 +603,14 @@ bool AVLTree<Key, Value>::deletenode(const Key&key, const Value& val)
 	删除不存在不报错
 */
 template<typename Key, typename Value>
-Node* AVLTree<Key, Value>::deletenode(Node* node, const Key&key, const Value& val)
+typename AVLTree<Key, Value>::Node* AVLTree<Key, Value>::deletenode(Node* node, const Key&key)
 {
 	if (node == nullptr)//没找到 返回
 		return nullptr;
 	if (key > node->key_)
-		node->right_ = deletenode(node->right_);
+		node->right_ = deletenode(node->right_,key);
 	else if (key < node->key)
-		node->left_ = deletenode(node->left_);
+		node->left_ = deletenode(node->left_, key);
 	else
 	{
 		//找到了就删除,这里和BST树的删除不一样 
@@ -615,14 +624,14 @@ Node* AVLTree<Key, Value>::deletenode(Node* node, const Key&key, const Value& va
 				temp = find_max(node->left_);//取左子树中最大的
 				std::swap(node->key_, temp->key_);
 				std::swap(node->val_, temp->val_);
-				node->left_ = deletenode(node->left_, key, val);
+				node->left_ = deletenode(node->left_, key);
 			}
 			else
 			{
 				temp = find_min(node->right_);//取右子树中最小的
 				std::swap(node->key_, temp->key_);
 				std::swap(node->val_, temp->val_);
-				node->right_ = deletenode(node->right_, key, val);
+				node->right_ = deletenode(node->right_, key);
 			}	
 		}
 		else if (node->left_ != nullptr)//左子树不为空 右子树为空的情况
