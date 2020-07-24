@@ -392,7 +392,7 @@ void binarySearchTree_test(int argc, char**argv)
 		tree->insert(a[i], std::to_string(a[i]));
 	}
 	{
-		//查找
+		//查
 		std::string str = tree->findmax();
 		assert(tree->findmax() == "40");
 		assert(tree->findmin() == "1");
@@ -417,6 +417,12 @@ void binarySearchTree_test(int argc, char**argv)
 			AVLTree<int, string> *ptr = dynamic_cast<AVLTree<int, string>*>(tree);
 			assert(ptr);
 			assert(ptr->is_balance());
+			assert((*ptr)[20] == "20");
+			assert((*ptr)[22] == "22");
+			std::string& str = (*ptr)[20];
+			str = "299";
+			assert((*ptr)[20] == "299");
+
 		}
 	}
 	auto Print = [](int a) {
