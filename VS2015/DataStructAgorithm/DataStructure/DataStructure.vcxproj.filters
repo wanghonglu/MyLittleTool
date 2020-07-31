@@ -36,6 +36,9 @@
     <ClInclude Include="..\..\..\DataStruct\AVL_Tree.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\DataStruct\RBTree.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\DataStruct\DataStruct" />

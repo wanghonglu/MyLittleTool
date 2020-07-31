@@ -148,6 +148,7 @@
     <ClInclude Include="..\..\..\DataStruct\deque.hpp" />
     <ClInclude Include="..\..\..\DataStruct\priority_queue.hpp" />
     <ClInclude Include="..\..\..\DataStruct\queue.hpp" />
+    <ClInclude Include="..\..\..\DataStruct\RBTree.hpp" />
     <ClInclude Include="..\..\..\DataStruct\stack.hpp" />
     <ClInclude Include="..\..\..\DataStruct\test.hpp" />
   </ItemGroup>

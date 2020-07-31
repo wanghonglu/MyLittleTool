@@ -84,10 +84,10 @@
 #include "BinarySearchTree.hpp"
 
 namespace datastruct {
+#define GetHeight(node) ((node)?node->height_:0)
 template<typename Key,typename Value>
 class AVLTree :public BaseBinarySearchTree<Key,Value>
 	{
-#define GetHeight(node) ((node)?node->height_:0)
 		struct Node {
 			Key		key_;
 			Value	val_;
