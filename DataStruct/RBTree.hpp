@@ -67,26 +67,285 @@
 			1:待删除结点没有孩子
 				1.1:如果待删除结点是红色的,直接删除即可,因为红色结点不影响黑高
 			
-*/	
+*/
+#include "queue.hpp"
+#include <vector>
 namespace datastruct {
+	#define NodeIsBlack(node)  node->color_==COLOR_BLACK
+	#define NodeIsRed(node)	   node->color_ == COLOR_RED
+	#define SetNodeBlack(node) node->color_ = COLOR_BLACK
+	#define SetNodeRed(node)   node->color_ = COLOR_RED
 	template<typename Key,typename Value>
 	class RBTree :public BaseBinarySearchTree<Key, Value> {
+		enum NodeColor{
+			COLOR_RED,
+			COLOR_BLACK,
+		}
 		struct Node {
-			Key			key_;
-			Value		val_;
-			Node*		left_;
-			Node*		right_;
-			Node*		parent_;
-			bool		red_;
+			Key				key_;
+			Value			val_;
+			Node*			left_;
+			Node*			right_;
+			Node*			parent_;
+			NodeColor		color_;
 			explicit Node(const Key& key, const Value& val, Node* senntienl) :key_(key), val_(val), left_(senntienl),
-				right_(senntienl), parent_(senntienl), red_(true) {}
+				right_(senntienl), parent_(senntienl), color_(COLOR_RED) {}
 		};
 	public:
-		RBTree() :root_(nullptr), size_(0), sentienl_(nullptr){}
+		RBTree() :root_(nullptr), size_(0)
+		{
+			sentienl_ = new Node(Key(), Value());
+			SetNodeBlack(sentienl_);//哨兵节点是黑色的
+			root_ = sentienl_;
+		}
+		~RBTree()
+		{
+			destruct(root_);
+			delete sentienl_;
+			size_=0;
+		}
+		size_t  size()const override
+		{
+			return size_;
+		}
+		size_t height()const override
+		{
+			return height(root_);
+		}
+		const Value& findmax()const override
+		{
+			Node* node = root_;
+			while( node->right_!=sentienl_)
+				node = node->right_;
+			return node->val_;	
+		}
+		const Value& findmin()const override
+		{
+			Node* node=root_;
+			while( node->left_!=sentienl_ )
+				node = node->left_;
+			return node->val_;
+		}
+		//前驱 跟BST没有本质的区别，有左子树，则左子树最大，否则就是从当前节点往上，第一个有右孩子节点的节点
+		bool getprenode(const Key&key, Value& val )const override
+		{
+			Node* node = root_, *firstHaveRightChild = nullptr, 
+			while( node !=sentienl_ && node->key_ !=key )
+			{
+				if( key>node->key_ )
+				{
+					firstHaveRightChild = node;
+					node = node->right_;
+				}
+				else
+					node = node->left_;
+			}
+			if( node == sentienl_ )
+				return false;
+			
+			if( node->left_ !=sentienl_ )
+			{
+				node  = node->left_;
+				while( node->right_ !=sentienl_)
+					node = node->right_;
+				val = node->val_;
+				return true;
+			}
+			//不存在左子树看从下网上第一个有右孩子的父节点
+			if(	firstHaveRightChild!=nullptr )
+				val = firstHaveRightChild->val_;
+			return firstHaveRightChild!=nullptr;
+		}
+		//后继 跟BST也没有区别
+		bool getpostnode(const Key& key, Value& val )const override
+		{
+			Node *node = root_, *firstHaveLeftChild = nullptr;
+			while(node !=sentienl_ && node->key_ !=key )
+			{
+				if( key <node->key_ )
+				{
+					firstHaveLeftChild = node;
+					node = node->left_;
+				}
+				else
+					node = node->right_;
+			}
+			if( node == sentienl_ )
+				return false;
+			//右子树的最小
+			if( node->right_!=sentienl_ )
+			{
+				node = node->right_;
+				while( node->left_!=sentienl_ )
+					node = node->left_;
+				val = node->val_;
+				return true;
+			}
+			if( firstHaveLeftChild != nullptr )
+				val = firstHaveLeftChild->val_;
+			return firstHaveLeftChild!=nullptr;
+		}
+		using DealKey = typename BaseBinarySearchTree<Key,Value>::DealKey;
+		//三序递归遍历
+		void preorder(const DealKey& deal )const override
+		{
+			_preorder(root_);
+		}
+		void inorder(const DealKey& deal )const override
+		{
+			_inorder(root_);
+		}
+		void postorder(const DealKey& deal )const override
+		{
+			_postorder(root_);
+		}
+		//层序遍历
+		void levelorder(const DealKey& deal )const override
+		{
+			if( size() == 0 )
+				return;
+			ArrayQueue<Node*> q;
+			Node *node;
+			q.push(root_);
+			while( !q.empty() )
+			{
+				node = q.front();
+				q.pop();
+				deal(node);
+				if( node->left_!=sentienl_)
+					q.push(node->left_);
+				if( node->right_ != sentienl_ )
+					q.puhs( node->right_);
+			}
+		}
+		//非递归遍历的三序遍历
+		//非递归 前序遍历
+		void no_recursive_preorder(const DealKey& deal )const override
+		{
+			if( size() == 0 )
+				return;
+			std::vector<Node*> st(size());
+			Node*node = root_;
+			int top = 0;
+			while( top>0 || node !=sentienl_ )
+			{
+				while( node != sentienl_ )
+				{
+					deal(node);
+					st[top++] = node;
+					node = node->left_;
+				}
+				if(top>0)
+				{
+					node = st[--top];
+					node = node->right_;
+				}
+			}
+		}
+		//非递归遍历的 中序遍历
+		void no_recursive_inorder(const DealKey& deal )const override
+		{
+			if( size() == 0 )
+				return;
+			std::vector<Node*> st(size());
+			Node* node = root_;
+			int top=0;
+			while( top>0 || node !=sentienl_ )
+			{
+				while( node !=sentienl_ )
+				{
+					st[top++] = node;
+					node = node->left_;
+				}
+				if(top>0)
+				{
+					node = st[--top];
+					deal(node);
+					node = node->right_;
+				}
+			}
+		}
+		//非递归遍历的 后续遍历 
+		//这个比较麻烦，需要给节点打上标记
+		//注明是要通过该节点找到右孩子 还是遍历完右孩子 回到该节点
+		void no_recursive_postorder(const DealKey& deal )const override
+		{
+			if( size() == 0 )
+				return ;
+			std::vector<Node*>st(size());
+			int top = 0;
+			std::vector<uint8>flag(size(),0);
+			Node* node = root_;
+			while( top>0 || node !=sentienl_ )
+			{
+				while(node !=sentienl_ )
+				{
+					st[top++] = node;
+					flag[top-1]=1;
+					node = node->left_;
+				}
+				if( top>0 )
+				{
+					if( flag[top-1] == 1 )
+					{
+						node = st[top-1]->right_;
+						flag[top-1]==2;
+					}
+					else if( flag[top-1] == 2 )//可以出栈
+					{
+						node = st[--top];
+						deal(node);
+						node = sentienl_;//这个元素一定要置空防止再次遍历
+					}
+				}
+			}
+		}
 	private:
+		void destruct(Node*node )
+		{
+			if(node!=sentienl_)
+			{
+				destruct(node->left_);
+				destruct(node->right_);
+				delete node;
+			}
+		}
+		size_t height(Node* node )
+		{
+			if( node == sentienl_ )
+				return 0;
+			return std::max<size_t>( height(node->left_), height(node->right_))+1;
+		}
+		void _preorder(const DealKey& deal , Node* node )
+		{
+			if(node !=sentienl_ )
+			{
+				deal(node);
+				_preorder(node->left_);
+				_preorder(node->right_);
+			}
+		}
+		void _inorder(const DealKey& deal, Node* node )
+		{
+			if( node!= sentienl_ )
+			{
+				_inorder(node->left_);
+				deal(node);
+				_inorder(node->right_);
+			}
+		}
+		void _postorder(const DealKey& deal, Node* node )
+		{
+			if(node!=sentienl_ )
+			{
+				_postorder(node->left_);
+				_postorder(node->right_);
+				deal(node);
+			}
+		}
 		Node*     root_;
 		size_t    size_;
-		Node*     sentienl_;
+		Node*     sentienl_;//哨兵节点，根节点的父节点，叶节点子孩子都指向这个值
 	};
 
 }//namespace
