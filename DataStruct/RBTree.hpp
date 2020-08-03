@@ -44,7 +44,7 @@
 		黑							黑
 	黑		红			->		红		红
 				红			黑
-		3: 左右  父节点时祖父结点的左孩子,当前结点是父节点的右孩子
+		3: 左右  父节点是祖父结点的左孩子,当前结点是父节点的右孩子
 		先对父节点左旋,然后得到左左情况 变色,最祖父结点进行右旋
 		比如
 		黑				黑				黑
@@ -71,10 +71,10 @@
 #include "queue.hpp"
 #include <vector>
 namespace datastruct {
-	#define NodeIsBlack(node)  node->color_==COLOR_BLACK
-	#define NodeIsRed(node)	   node->color_ == COLOR_RED
-	#define SetNodeBlack(node) node->color_ = COLOR_BLACK
-	#define SetNodeRed(node)   node->color_ = COLOR_RED
+	#define NodeIsBlack(node)  (node)->color_==COLOR_BLACK
+	#define NodeIsRed(node)	   (node)->color_ == COLOR_RED
+	#define SetNodeBlack(node) (node)->color_ = COLOR_BLACK
+	#define SetNodeRed(node)   (node)->color_ = COLOR_RED
 	template<typename Key,typename Value>
 	class RBTree :public BaseBinarySearchTree<Key, Value> {
 		enum NodeColor{
@@ -88,8 +88,8 @@ namespace datastruct {
 			Node*			right_;
 			Node*			parent_;
 			NodeColor		color_;
-			explicit Node(const Key& key, const Value& val, Node* senntienl) :key_(key), val_(val), left_(senntienl),
-				right_(senntienl), parent_(senntienl), color_(COLOR_RED) {}
+			explicit Node(const Key& key, const Value& val, Node* parent) :key_(key), val_(val), left_(nullptr),
+				right_(nullptr), parent_(parent), color_(COLOR_RED) {}
 		};
 	public:
 		RBTree() :root_(nullptr), size_(0)
@@ -300,7 +300,215 @@ namespace datastruct {
 				}
 			}
 		}
+		//查找
+		bool find(const Key& key, Value& val )const override
+		{
+			Node* node = root_;
+			while( node !=sentienl_ && node->key_ != key )
+			{
+				if( key>node->key_ )
+					node = node->right_;
+				else
+					node = node->left_;
+			}
+			val  = node->val_;//如果等于sentienl_ 给填充个默认值
+			return node !=sentienl_;
+		}
+		//模仿std::map实现一个 即可当右值又可以做左值的功能,做右值求值,做左值赋值
+		Value& operator[](const Key&key )
+		{
+			Node* node = root_;
+			while( node!=sentienl_ && node->key_!=key )
+				node = node->key_>key?node->left_:node->right_;
+			if( node !=sentienl_ )
+				return node->val_;
+			//插入一个空值,
+			insert(key,Value());
+			//todo 略low~~~ 待优化
+			return this->[](key);
+		}
+		bool IsBanlace()const//检查红黑树是否符合要求
+		{
+			return NodeIsBlack(root_) && IsBanlace(root_);
+		}
+		size_t BlackHeight()const
+		{
+			return blackheight(root_);
+		}
+		//插入  难度- 中等
+		bool insert(const Key&key, const Value& val )override
+		{
+			if( root_ == sentienl_ )//空树
+			{
+				root_ = makeNewNode(key,val,nullptr);
+				SetNodeBlack(root_);
+				++size_;
+				return true;
+			}
+			Node* node=root_,*parent = nullptr,**temp;
+			while( node!=sentienl_ && node->key_ != key )
+			{
+				parent = node;
+				if( key>node->key_ )
+					temp = &node->right_;
+				else
+					temp = &node->left_;
+				node = *temp;
+			}
+			if( node != sentienl_ )//已经存在 修改
+			{
+				node->val_ = val;
+				return false;
+			}
+			//不存在插入 默认是红色,子节点是sentienl_
+			node = makeNewNode(key,value,p);
+			*temp = node;
+			//调整
+			//调整的结束条件是 父节点是黑色,或者本身是跟节点
+			Node* gp;//gp 祖父节点 uncle 叔叔节点
+			while( node != root_ && NodeIsRed(node->parent_) )
+			{
+				//父节点是红色,则一定存在祖父节点(红黑树根节点是黑色)
+				// 叔叔节点如果是红色的,只需要将叔叔节点和父节点变成黑色,祖父节点变成红色,这样红黑树的黑高是不变的,然后把祖父节点变成node
+				// 再往上调整
+				// 叔叔节点如果是黑色,这时需要根据node节点和他的父节点,及他的父节点和祖父节点的位置来不同的处理
+				// 左左 node节点是它父节点的左孩子,父节点是祖父节点左孩子,祖父节点右旋,然后把祖父节点变成红色,父节点变成黑色 这样黑高不变,
+				//且红黑树不出现连续的红色节点
+				//左右 node节点是他的父节点右孩子,父节点是祖父节点的左孩子,先把父节点左旋转,然后变成上面的情况了
+				// 右右 node节点是它父节点的右孩子,父节点是祖父节点的右孩子,祖父节点左旋,祖父节点变成红色,父节点变成黑色,然后继续以父节点往上调整
+				// 右左 node节点是它的父节点左孩子,父节点是祖父节点的右孩子,先把父节点右旋,然后再把祖父节点左旋,祖父节点变红,父节点变黑
+				// 除了变色操作其他和AVL树一毛一样
+				// 变色调整会迭代往上操作,别的只调整一次就不用动了
+				//父节点是红色 则必然存在祖父节点
+				gp = node->parent_->parent_;
+				//父节点是祖父节点的左孩子
+				if( node->parent_ == gp->left_ )
+				{
+					//叔叔节点是红色,变色,会往上递归  节点不存在为sentienl节点 为黑色 和节点为黑可以统一
+					if( NodeIsRed(gp->right_) )
+					{
+						//叔叔节点/父节点变黑色 祖父节点变红色,祖父节点作为新的待调整节点继续往上
+						SetNodeBlack(node->parent_);
+						SetNodeBlack(gp->right_);
+						SetNodeRed(gp);
+						node = gp;
+						continue;
+					}
+					//叔叔节点是黑色,分情况 自己是右孩子则父节点左旋,然后变成左左情况	
+					if( node == node->parent_->right_ )//左右情况
+					{
+						node = node->parent_;
+						//左左情况 node节点是最下面的节点,这时经过旋转父节点变成最下面的节点
+						leftRotate(node);	
+					}
+					//统一变成左左情况情况,祖父节点变红,父节点变黑,右旋
+					SetNodeRed(gp);
+					SetNodeBlack(node->parent_);
+					rightRotate(gp);
+					
+				}
+				else//父节点是祖父节点的右孩子
+				{
+					//叔叔节点是红色
+					if( NodeIsRed(gp->left_) )
+					{
+						//变色 父节点 叔叔节点变黑 祖父节点变红
+						SetNodeBlack(node->parent_);
+						SetNodeBlack(gp->left_);
+						SetNodeRed(gp);
+						node = gp;
+						continue;//左右子树黑高+1 当整个树没变
+					}
+					//叔叔节点是黑色
+					if( node == node->parent_->left_ )//右左情况 通过旋转变成右右
+					{
+						node = node->parent_;
+						rightRotate(node);
+					}
+					//右右 祖父节点变红 父节点变黑 祖父节点左旋
+					SetNodeRed(gp);
+					SetNodeBlack(node->parent_);
+					leftRotate(gp);
+				}
+			} 
+			//最终可能出现 跟节点变红,直接根节点变黑 这次整个树的黑高增加了,这也是唯一会让整个树黑高增加的地方
+			SetNodeBlack(root_);
+		}
 	private:
+		//左旋
+		/*
+			本质上跟AVL树一毛一样
+			但是这里增加了每个节点的父节点属性
+			左旋 右孩子的左子树赋值给父节点的右子树,父节点作为右孩子的左子树
+		*/
+		void leftRotate(Node* node )
+		{
+			Node* right = node->right_;
+			node->right_ = right->left_;
+			right->left_ = node;
+			//修改右孩子的左孩子的父指针域
+			if( node->right_!=sentienl_ )
+				node->right_->parent_ = node;
+
+			if( node->parent_ == nullptr )//跟节点
+			{
+				root_ = right;
+			}
+			else
+			{
+				//修改父节点对应的指针域
+				if( node == node->parent_->left_ )
+					node->parent_->left_ = right;
+				else
+					node->parent_->right_ = right;
+			}
+			//修改当前节点中的parent指针  和右孩子中的parent指针域
+			right->parent_ = node->parent_;
+			node->parent_ = right;
+		}
+		/*右旋*/
+		void rightRotate(Node* node )
+		{
+			Node* leftchild = node->left_;
+			//自己作为左孩子的右孩子 左孩子的右孩子作为自己的左孩子
+			node->left_ = leftchild->right_;
+			leftchild->right_ = node;
+			//修改原左孩子的右孩子的父亲指针
+			if( node->left_ !=sentienl_ )
+				node->left_->parent_ = node;
+			//修改node节点的父节点中的指针域
+			if( node->parent_ == nullptr )
+				root_ = leftchild;
+			else if( node == node->parent_->left_ )
+				node->parent_->left_ = leftchild;
+			else
+				node->parent_->right_ = leftchild;
+			//修改node节点和他的左孩子节点中的父指针域
+			leftchild->parent_ = node->parent_;
+			node->parent_ = leftchild;
+		}
+		bool IsBanlace(Node* node )const
+		{
+			//检查 根节点为黑(第一步就检查了)  当前节点为红则父节点 子节点都不会是红色
+			// 各个子树的黑高相等
+			if( node == sentienl_ )
+				return true;
+			//没有连续的两个红色节点
+			if( NodeIsRed(node) )
+			{
+				if( NodeIsRed(node->parent_) )
+					return false;
+				if( NodeIsRed(node->left_) || NodeIsBlack(node->right_) )
+					return false;
+			}
+			return blackheight(node->left_) == blackheight(node->right_);
+		}
+		size_t blackheight(Node* node )const
+		{
+			if( node == sentienl_ )
+				return 1;
+			return std::max<size_t>( blackheight(node->left_), blackheight(node->right_) )+NodeIsBlack(node)?1:0;
+		}
 		void destruct(Node*node )
 		{
 			if(node!=sentienl_)
@@ -309,6 +517,15 @@ namespace datastruct {
 				destruct(node->right_);
 				delete node;
 			}
+		}
+		//新建节点默认是红色 子节点为sentienl_ 
+		Node* makeNewNode( const Key& key, const Value& val,Node* parent )
+		{
+			Node* node = new Node( key,val,parent );
+			node->left_ = sentienl_;
+			node->right_ = sentienl_;
+			SetNodeRed(node);
+			return node;
 		}
 		size_t height(Node* node )
 		{
