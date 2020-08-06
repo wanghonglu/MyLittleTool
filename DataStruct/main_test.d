@@ -1,5 +1,5 @@
 main_test.o: main_test.cpp test.hpp stack.hpp priority_queue.hpp \
- queue.hpp deque.hpp BinarySearchTree.hpp AVL_Tree.hpp
+ queue.hpp deque.hpp BinarySearchTree.hpp AVL_Tree.hpp RBTree.hpp
 
 test.hpp:
 
@@ -14,3 +14,5 @@ deque.hpp:
 BinarySearchTree.hpp:
 
 AVL_Tree.hpp:
+
+RBTree.hpp:

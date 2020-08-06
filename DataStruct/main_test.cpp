@@ -16,7 +16,9 @@ int main( int argc,char**argv )
 		//二叉搜索树
 		//binarySearchTree_test(1,argv);
 		//AVL树
-		binarySearchTree_test(2, argv);
+		//binarySearchTree_test(2, argv);
+        //红黑树
+        binarySearchTree_test(3,argv);
 		system("pause");
     }
     catch( const std::exception& err )

@@ -11,7 +11,7 @@
 using namespace std;
 using namespace datastruct;
 void bracket_match();//括号匹配
-#define TestSize 5000000
+#define TestSize 500000
 #define PrintArray(arry) std::for_each(arry,arry+sizeof(arry)/sizeof(arry[0]), [](decltype(arry[0]) t){std::cout<<t<<" ";});
 template<typename T>
 void randomshuffle(T& arry)
@@ -371,12 +371,20 @@ void binarySearchTree_test(int argc, char**argv)
 		tree = new BinarySearchTree<int, std::string>();
 		self = new BinarySearchTree<int, SelfDefine>();
 	}
-	else
+	else if(argc == 2 )
 	{
 		//AVL树
 		tree = new AVLTree<int, std::string>();
 		self = new AVLTree<int, SelfDefine>();
 	}
+	else if(argc ==3 )
+	{
+		//红黑树
+		tree = new RBTree<int,std::string>();
+		self = new RBTree<int,SelfDefine>();
+	}
+	else
+		return;
 	assert(tree != nullptr && self != nullptr);
 	int a[] = { 10,1,19,20,23,22,24,40,11,2,3,12,14,17,7,4,5,6 };
 	/*
@@ -468,9 +476,13 @@ void binarySearchTree_test(int argc, char**argv)
 			tree->inorder(Print);
 			std::cout << endl;
 		};
+		auto len=tree->size();
+		int tmp = len;
 		for (int i = 0; i < sizeof(a) / sizeof(int); i++)
 		{
+			assert( (tmp+i) == len );
 			deletefunction(a[i]);
+			tmp = tree->size();
 		}
 
 	}

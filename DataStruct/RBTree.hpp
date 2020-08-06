@@ -64,9 +64,77 @@
 		删除比插入更加复杂:
 			根AVL或者BST树类似,删除一个结点的时候,先判断有几个孩子,有一个替换 有两个找前驱或者后继,没有直接删除
 			但是考虑到红黑树的性质,就要做不一样的处理了.
-			1:待删除结点没有孩子
-				1.1:如果待删除结点是红色的,直接删除即可,因为红色结点不影响黑高
-			
+
+			首先要找到删除节点的替换节点 而且如果有两个孩子的节点,真正删除的节点就不是该node节点了
+			1:删除的节点没有孩子,则该节点直接删除即可,用它的左孩子或者右孩子作为调整节点去调整整个红黑树
+			2:删除的节点有一个孩子,这时就用这个孩子为调整节点去调整整个红黑树
+			3:删除的节点有两个孩子,找出右子树的最小作为替换该节点的删除节点,然后用该节点的右孩子去作为调整节点调整红黑树
+			这个情况必然只有一个孩子,因为他是右子树最小,则必然不会有左孩子
+
+			这里有一个问题,如果是情况1和情况2 则调整节点的父节点就变成原来删除的父节点
+			但是3比较特殊,3的删除节点会转移,如果直接用转移后的父节点代替调整节点的父节点,但是有一种情况
+			原节点是替身节点的父节点,调整节点的父节点就不能设置为替身节点的父节点,因为父节点会detele,会变成野指针
+
+		找到这个调整起点,就开始平衡
+			1:如果原来删除的节点是红色,则可以不用调整,因为不影响红黑树的任何性质
+			2:如果这个起点节点是根节点,也不用调整直接变黑即可
+		如果删除的节点是黑色,则有一定的难度,为了方便理解,把这个调整节点再附着一层黑色(删除节点如果红色,不用调整,则必然删除节点是黑色)
+		这样依赖就违背了每个节点只能是红色或者黑色的原则
+		这里只有这个调整节点是黑+黑时才需要调整,红+黑直接变色即可
+		现在的矛盾是删除节点所在的子树少了一个黑色节点!!!
+		当前节点时黑+黑,有四种方式调整
+			1:兄弟节点是红色,则此时父节点,兄弟节点的孩子节点都是黑色
+				 a:将兄弟节点变成黑色
+				 b:父节点变成红色
+				 c:父节点左旋
+				 d:左旋后重新设置调整节点的兄弟节点
+				 (大写是黑 小写是红)
+				 P                           B
+			N		 b        ->		p        BR
+				  BL    BR			N		BL 
+				 (调整节点兄弟节点变成了黑色,成了(原来兄弟节点的其中一个孩子) ) ,兄弟节点是黑色是后面的情况
+				 此时红黑树的性质没有破坏,但N的兄弟节点变成了黑色
+
+		    2:兄弟节点是黑色,且两个节点都是黑色 父节点可以是任何颜色
+				  a:设置兄弟为红色
+				  b:设置当前父节点为调整节点
+
+				  父节点可以为任何颜色
+				  (p)	                  (p)
+			 N          B         ->	N       b
+			 		SL     SR				BL      BR
+				  这个处理还是好理解的,因为右子树也少了一个黑色节点,跟左子树平衡了,现在父节点变成了 原来的颜色+黑了
+				  等于往上转移了
+
+			3:兄弟节点是黑色,兄弟节点的左孩子是红色,右孩子是黑色(这里判断的时候 一定要写右孩子是黑色 而不是左孩子为红色,因为左右孩子都为红的情况留在下一个case处理)
+				   a:设置兄弟节点的左孩子为黑色	 
+				   b:设置兄弟节点为红色
+				   c:对兄弟节点右旋
+				   d:重新设置调整节点的兄弟节点
+				
+					这样的调整是为了后面,且此时也不破坏红黑树的性质
+				(p)						(p)
+			N		B         ->	N		BL
+				 bl		BR  					b
+				 									BR
+			4:兄弟节点是黑色,兄弟节点的右孩子是红色,左孩子为任意色
+					a:把父节点的颜色赋值给兄弟节点
+					b:把父节点变黑
+					c:把兄弟节点的右孩子设置为黑色
+					d:对父节点左旋
+					e:把调整节点设置为根节点( 这一步实际上是跳出循环)
+
+					这一步很关键,也比较难
+				(p)                     (b)
+			N		B        ->		P		 BR  跳出循环   	
+				 (bl) br		N      (bl)
+					刚开始是p的左子树少了一个黑节点
+					通过左旋让左子树多了一个黑节点(此时父节点由于拷贝了原来的父节点,所以颜色不变)
+					左子树平衡了 右子树,原来有一个B的黑节点现在换成了BR,BR的树原来就是平衡的所以这里可以结束了
+			这是当前节点是父节点的左孩子的情况,右孩子类似
+		红黑树 ngnix实现没有注释 不太好读
+		内核实现非常好 居然有注释
+		https://github.com/torvalds/linux/blob/master/lib/rbtree.c
 */
 #include "queue.hpp"
 #include <vector>
@@ -80,7 +148,7 @@ namespace datastruct {
 		enum NodeColor{
 			COLOR_RED,
 			COLOR_BLACK,
-		}
+		};
 		struct Node {
 			Key				key_;
 			Value			val_;
@@ -94,7 +162,7 @@ namespace datastruct {
 	public:
 		RBTree() :root_(nullptr), size_(0)
 		{
-			sentienl_ = new Node(Key(), Value());
+			sentienl_ = new Node(Key(), Value(), nullptr );
 			SetNodeBlack(sentienl_);//哨兵节点是黑色的
 			root_ = sentienl_;
 		}
@@ -129,7 +197,7 @@ namespace datastruct {
 		//前驱 跟BST没有本质的区别，有左子树，则左子树最大，否则就是从当前节点往上，第一个有右孩子节点的节点
 		bool getprenode(const Key&key, Value& val )const override
 		{
-			Node* node = root_, *firstHaveRightChild = nullptr, 
+			Node* node = root_, *firstHaveRightChild = nullptr;
 			while( node !=sentienl_ && node->key_ !=key )
 			{
 				if( key>node->key_ )
@@ -157,7 +225,7 @@ namespace datastruct {
 			return firstHaveRightChild!=nullptr;
 		}
 		//后继 跟BST也没有区别
-		bool getpostnode(const Key& key, Value& val )const override
+		bool getnextnode(const Key& key, Value& val )const override
 		{
 			Node *node = root_, *firstHaveLeftChild = nullptr;
 			while(node !=sentienl_ && node->key_ !=key )
@@ -189,18 +257,18 @@ namespace datastruct {
 		//三序递归遍历
 		void preorder(const DealKey& deal )const override
 		{
-			_preorder(root_);
+			_preorder(deal,root_);
 		}
 		void inorder(const DealKey& deal )const override
 		{
-			_inorder(root_);
+			_inorder(deal,root_);
 		}
 		void postorder(const DealKey& deal )const override
 		{
-			_postorder(root_);
+			_postorder(deal,root_);
 		}
 		//层序遍历
-		void levelorder(const DealKey& deal )const override
+		void level_order(const DealKey& deal )const override
 		{
 			if( size() == 0 )
 				return;
@@ -211,11 +279,11 @@ namespace datastruct {
 			{
 				node = q.front();
 				q.pop();
-				deal(node);
+				deal(node->key_);
 				if( node->left_!=sentienl_)
 					q.push(node->left_);
 				if( node->right_ != sentienl_ )
-					q.puhs( node->right_);
+					q.push( node->right_);
 			}
 		}
 		//非递归遍历的三序遍历
@@ -231,7 +299,7 @@ namespace datastruct {
 			{
 				while( node != sentienl_ )
 				{
-					deal(node);
+					deal(node->key_);
 					st[top++] = node;
 					node = node->left_;
 				}
@@ -260,7 +328,7 @@ namespace datastruct {
 				if(top>0)
 				{
 					node = st[--top];
-					deal(node);
+					deal(node->key_);
 					node = node->right_;
 				}
 			}
@@ -274,7 +342,7 @@ namespace datastruct {
 				return ;
 			std::vector<Node*>st(size());
 			int top = 0;
-			std::vector<uint8>flag(size(),0);
+			std::vector<unsigned char>flag(size(),0);
 			Node* node = root_;
 			while( top>0 || node !=sentienl_ )
 			{
@@ -294,7 +362,7 @@ namespace datastruct {
 					else if( flag[top-1] == 2 )//可以出栈
 					{
 						node = st[--top];
-						deal(node);
+						deal(node->key_);
 						node = sentienl_;//这个元素一定要置空防止再次遍历
 					}
 				}
@@ -325,7 +393,7 @@ namespace datastruct {
 			//插入一个空值,
 			insert(key,Value());
 			//todo 略low~~~ 待优化
-			return this->[](key);
+			return this->operator[](key);
 		}
 		bool IsBanlace()const//检查红黑树是否符合要求
 		{
@@ -361,9 +429,227 @@ namespace datastruct {
 				return false;
 			}
 			//不存在插入 默认是红色,子节点是sentienl_
-			node = makeNewNode(key,value,p);
+			node = makeNewNode(key,val,parent);
 			*temp = node;
 			//调整
+			reBalance_Insert(node);
+			return true;
+		}
+		bool deletenode(const Key&key )override
+		{
+			//删除比较难~~~~~~
+			Node* node = root_;
+			while( node!=sentienl_ && node->key_!=key)
+				node = node->key_>key?node->left_:node->right_;
+			if( node == sentienl_ )//没找到
+				return false;
+			
+			//temp要替代的节点 subst要删除的节点,temp是要替代原节点进行红黑树调整的
+			Node* temp,*subst;
+
+			//存在两个子节点的时候,用右子树的最小(node的后继,替换node )
+			//存在一个子节点的时候用另一个孩子替换
+			if( node->right_!=sentienl_ && node->right_!=sentienl_ )
+			{
+				subst = node->right_;
+				while(subst->left_!=sentienl_ )
+					subst = subst->left_; 
+				//此时的subst必然最多还有右孩子,不可能有左孩子,因为subst是node->right_树里最小的
+				temp = subst->right_;
+			}
+			else
+			{
+				subst = node;
+				temp = node->right_!=sentienl_?node->right_:node->left_;
+			}
+			
+			if( subst == root_ )//这种情况只有树是个单边的树,那么可以直接把根节点去掉换成唯一的左孩子或者右孩子
+			{
+				root_ = temp;
+				delete subst;
+				size_--;
+				SetNodeBlack(root_);
+				root_->parent_=nullptr;
+				return true;
+			}
+			//修改原来父节点的指针域 此时subst不是根节点必然存在父节点
+			if( subst == subst->parent_->left_ )
+				subst->parent_->left_ = temp;
+			else
+				subst->parent_->right_= temp;
+
+			//替换子节点的父节点指针域
+			bool isRed = NodeIsRed(subst);//这个subst指针后面会改所以这里提前存一下
+			if( subst == node )//这是没有替换的情况
+			{
+				temp->parent_ = subst->parent_;
+			}
+			else
+			{
+				//这里是吧node的内容替换成subst node的颜色不变,然后把subst删掉
+				node->key_ = subst->key_;
+				node->val_ = subst->val_;
+				temp->parent_ = subst->parent_;
+		
+				if( subst->parent_ == sentienl_ )//删除的是根节点
+					root_ = temp;
+				else
+				{
+					if( subst == subst->parent_->left_ )
+						subst->parent_->left_ = temp;
+					else
+						subst->parent_->right_ = temp;
+				}
+				//原来的node节点相当于没动 所以node的左右孩子也不需要动 删除subst
+				node = subst;			
+			}
+			delete node;
+			size_--;
+			//重新调整红黑树
+			if(!isRed)//删除红色节点不用调整跳出
+				reBalance_delete(temp);	
+			return true;
+		}
+	private:
+		void reBalance_delete(Node* node )
+		{
+			Node*  bro;//兄弟节点
+			/*	
+				删除的是黑色节点,即待调整节点带了一个黑色属性,当待调整节点为红色时,可以直接把它调整成黑色,结束
+			*/
+			while( node!=root_&&NodeIsBlack(node) )
+			{
+				if(node == node->parent_->left_ )//当前节点时左孩子
+				{
+					bro = node->parent_->right_;
+					/*
+						case1: 兄弟节点是红色,父节点,兄弟节点的孩子节点,都是黑色,此时需要转化成后面的情况处理,
+								1:兄弟节点变黑
+								2:父节点变红
+								3:父节点左旋
+								4:重新设置兄弟节点为原兄弟节点的左孩子
+					*/ 
+					if( NodeIsRed(bro) )
+					{
+						SetNodeBlack(bro);
+						SetNodeRed(node->parent_);
+						leftRotate(node->parent_);
+						bro = node->parent_->right_;
+					}
+
+					/*
+					 	case2: 兄弟节点是黑色,两个孩子都是黑色,此时父节点看左子树少了一个黑节点,所以只需要让右结点也少一个黑节点即可
+							1:兄弟节点变成红色
+							2:父节点变成新的调整节点
+							此时相当于调整节点向上转移了
+					*/
+					if( NodeIsBlack(bro->left_) && NodeIsBlack(bro->right_) )
+					{
+						SetNodeRed(bro);
+						node = node->parent_;
+						//进行下一次调整
+						continue;
+					}
+					else
+					{
+						/*
+							case3: 兄弟节点是黑色,左孩子是红色此时需要转化成case4的情况
+							1:左孩子变黑色
+							2:兄弟节点变红色
+							3:兄弟节点右旋
+							4:重新设置兄弟节点
+						*/
+
+						if( NodeIsBlack(bro->right_) )//这里判断一定写右孩子为黑,因为有可能左右都是红,这种统一在下个case处理
+						{
+							SetNodeBlack(bro->left_);//左孩子必然是红,因为两个都是黑前面判断了
+							SetNodeRed(bro);
+							rightRotate(bro);
+							bro = node->parent_->right_;
+						}
+						/*
+							case4: 兄弟节点是黑色,右孩子是红色,左孩子是任意色
+							1:父节点的颜色拷贝给兄弟节点
+							2:父节点设置为黑色
+							3:兄弟节点的右孩子设置为黑色
+							4:父节点左旋 
+							break 跳出循环
+							这里parent(新的parent)颜色保持不变,左子树多了一个黑节点,右子树的右结点变成了黑色,黑色节点没变
+
+						*/
+						bro->color_ = node->parent_->color_;
+						SetNodeBlack(node->parent_);
+						SetNodeBlack(node->right_);
+						rightRotate(node->parent_);
+						break;
+					}
+				}
+				else//node结点是右孩子的情况类似
+				{
+					bro = node->parent_->left_;
+					if( NodeIsRed(bro) )
+					{
+						/*
+							兄弟节点为红色
+							1:兄弟节点变黑
+							2:父节点变红
+							3:父节点右旋
+							4:重新设置兄弟节点
+						*/
+						SetNodeBlack(bro);
+						SetNodeRed(node->parent_);
+						rightRotate(node->parent_);
+						bro = node->parent_->left_;
+					}
+
+					if( NodeIsBlack(bro->left_) && NodeIsBlack(bro->right_) )
+					{
+						/*
+							兄弟节点的两个孩子都是黑色
+							1:设置兄弟节点为红色
+							2:转移调整节点为父节点
+						*/
+						SetNodeBlack(bro);
+						node = node->parent_;
+						continue;
+					}
+					else
+					{
+							/*
+							兄弟节点的右孩子是红色,左孩子是黑,这里一定是以左孩子为黑作为依据,左右都是红的留在下个case处理
+							1:右孩子设置成黑
+							2:兄弟节点设置为红
+							3:兄弟节点左旋
+							4:重新设置兄弟节点
+							为case4 准备
+						*/
+						if( NodeIsBlack(bro->left_) )//这里一定是以右孩子为黑为判断依据,两个都红留在后面处理
+						{
+							SetNodeBlack(bro->right_);//这个一定是黑
+							SetNodeRed(bro);
+							leftRotate(bro);
+							bro = node->parent_->left_;
+						}
+						/*
+							兄弟节点为黑,兄弟节点的左孩子为红,兄弟节点的右孩子任意
+							1:把父节点的颜色拷贝给兄弟节点
+							2:父节点变黑
+							3:左孩子变黑
+						    4:父节点右旋
+							结束
+						*/
+						bro->color_ = node->parent_->color_;
+						SetNodeBlack(node->parent_);
+						SetNodeBlack(bro->left_);
+						rightRotate(node->parent_);
+						break;
+					}
+				}
+			}
+			SetNodeBlack(node);
+		}
+		void reBalance_Insert(Node* node )
+		{
 			//调整的结束条件是 父节点是黑色,或者本身是跟节点
 			Node* gp;//gp 祖父节点 uncle 叔叔节点
 			while( node != root_ && NodeIsRed(node->parent_) )
@@ -434,7 +720,6 @@ namespace datastruct {
 			//最终可能出现 跟节点变红,直接根节点变黑 这次整个树的黑高增加了,这也是唯一会让整个树黑高增加的地方
 			SetNodeBlack(root_);
 		}
-	private:
 		//左旋
 		/*
 			本质上跟AVL树一毛一样
@@ -527,37 +812,37 @@ namespace datastruct {
 			SetNodeRed(node);
 			return node;
 		}
-		size_t height(Node* node )
+		size_t height(Node* node )const
 		{
 			if( node == sentienl_ )
 				return 0;
 			return std::max<size_t>( height(node->left_), height(node->right_))+1;
 		}
-		void _preorder(const DealKey& deal , Node* node )
+		void _preorder(const DealKey& deal , Node* node )const
 		{
 			if(node !=sentienl_ )
 			{
-				deal(node);
-				_preorder(node->left_);
-				_preorder(node->right_);
+				deal(node->key_);
+				_preorder(deal,node->left_);
+				_preorder(deal,node->right_);
 			}
 		}
-		void _inorder(const DealKey& deal, Node* node )
+		void _inorder(const DealKey& deal, Node* node )const
 		{
 			if( node!= sentienl_ )
 			{
-				_inorder(node->left_);
-				deal(node);
-				_inorder(node->right_);
+				_inorder(deal,node->left_);
+				deal(node->key_);
+				_inorder(deal,node->right_);
 			}
 		}
-		void _postorder(const DealKey& deal, Node* node )
+		void _postorder(const DealKey& deal, Node* node )const
 		{
 			if(node!=sentienl_ )
 			{
-				_postorder(node->left_);
-				_postorder(node->right_);
-				deal(node);
+				_postorder(deal,node->left_);
+				_postorder(deal,node->right_);
+				deal(node->key_);
 			}
 		}
 		Node*     root_;

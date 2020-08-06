@@ -622,7 +622,6 @@ typename AVLTree<Key, Value>::Node* AVLTree<Key, Value>::deletenode(Node* node, 
 		//BST树删除的时候 左右子树都存在的情况下,替换左子树最大或者右子树最小 都行然后删除
 		//但这里为了使树尽量少的旋转,在左右子树中更高的一个树里面去删除
 		Node* temp = nullptr;
-		size_--;
 		if (node->left_ != nullptr && node->right_ != nullptr)//左右子树都存在的情况
 		{
 			if (node->left_->height_ > node->right_->height_)//左子树比右子树高
@@ -645,16 +644,19 @@ typename AVLTree<Key, Value>::Node* AVLTree<Key, Value>::deletenode(Node* node, 
 			temp = node->left_;
 			delete node;
 			node = temp;
+			size_--;
 		}
 		else if (node->right_ != nullptr)//左子树为空 右子树不为空
 		{
 			temp = node->right_;
 			delete node;
 			node = temp;
+			size_--;
 		}
 		else//左右子树都为空的情况 直接删除返回即可
 		{
 			delete node;
+			size_--;
 			return nullptr;
 		}
 	}
