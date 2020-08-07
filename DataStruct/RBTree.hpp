@@ -1,6 +1,8 @@
 ﻿#ifndef __RBTREE__H__
 #define __RBTREE__H__
 #include "BinarySearchTree.hpp"
+#include<sstream>
+#include<utility>
 /*
 	红黑树性质:
 	除了满足正常的二叉搜索树外 还额外包含以下性质
@@ -357,7 +359,7 @@ namespace datastruct {
 					if( flag[top-1] == 1 )
 					{
 						node = st[top-1]->right_;
-						flag[top-1]==2;
+						flag[top-1]=2;
 					}
 					else if( flag[top-1] == 2 )//可以出栈
 					{
@@ -433,6 +435,7 @@ namespace datastruct {
 			*temp = node;
 			//调整
 			reBalance_Insert(node);
+			size_++;
 			return true;
 		}
 		bool deletenode(const Key&key )override
@@ -489,17 +492,9 @@ namespace datastruct {
 				//这里是吧node的内容替换成subst node的颜色不变,然后把subst删掉
 				node->key_ = subst->key_;
 				node->val_ = subst->val_;
+				//这里一定要注意temp可能是叶子节点,
 				temp->parent_ = subst->parent_;
-		
-				if( subst->parent_ == sentienl_ )//删除的是根节点
-					root_ = temp;
-				else
-				{
-					if( subst == subst->parent_->left_ )
-						subst->parent_->left_ = temp;
-					else
-						subst->parent_->right_ = temp;
-				}
+
 				//原来的node节点相当于没动 所以node的左右孩子也不需要动 删除subst
 				node = subst;			
 			}
@@ -509,6 +504,47 @@ namespace datastruct {
 			if(!isRed)//删除红色节点不用调整跳出
 				reBalance_delete(temp);	
 			return true;
+		}
+		void PrettyPrintRBTree()const
+		{
+			ArrayQueue<const Node*> q;//pos 0:根 1:左孩子	2:右孩子
+			q.push( root_);
+			const Node* node;
+			#define IsLeft(node) node == node->parent_->left_
+			while( !q.empty() )
+			{
+				int size = q.size();
+				std::stringstream ss;
+				while(size--)
+				{
+					node = q.front();
+					q.pop();
+					if( node == sentienl_ )
+					{
+						ss<<"( NIL )";
+						continue;
+					}
+					if(node->parent_ == nullptr )
+						ss<<"( 根 ";
+					else if( IsLeft(node) )
+						ss<<"( 左 ";
+					else
+						ss<<"( 右 ";
+					ss<<node->key_;
+					if(NodeIsBlack(node) )
+						ss<<" 黑 )";
+					else
+						ss<<" 红 )";
+					if(node->left_!=nullptr )
+						q.push(node->left_);
+					if(node->right_!=nullptr)
+						q.push(node->right_);
+					ss<<"\t";
+				}
+				std::cerr<<ss.str()<<std::endl;
+				
+			}
+			std::cerr<<std::endl;
 		}
 	private:
 		void reBalance_delete(Node* node )
@@ -579,7 +615,7 @@ namespace datastruct {
 						*/
 						bro->color_ = node->parent_->color_;
 						SetNodeBlack(node->parent_);
-						SetNodeBlack(node->right_);
+						SetNodeBlack(bro->right_);
 						rightRotate(node->parent_);
 						break;
 					}
@@ -725,6 +761,10 @@ namespace datastruct {
 			本质上跟AVL树一毛一样
 			但是这里增加了每个节点的父节点属性
 			左旋 右孩子的左子树赋值给父节点的右子树,父节点作为右孩子的左子树
+			这里只旋转不变色
+			A							C					
+		B		C         A左旋->    A  	F	
+			  E	   F			B		E
 		*/
 		void leftRotate(Node* node )
 		{
@@ -751,7 +791,12 @@ namespace datastruct {
 			right->parent_ = node->parent_;
 			node->parent_ = right;
 		}
-		/*右旋*/
+		/*	右旋
+			只旋转不变色
+					A					B
+				B		C	A右旋->	D		A		
+			D      F					F		C
+		*/
 		void rightRotate(Node* node )
 		{
 			Node* leftchild = node->left_;
@@ -812,7 +857,7 @@ namespace datastruct {
 			SetNodeRed(node);
 			return node;
 		}
-		size_t height(Node* node )const
+		size_t height(const Node* node )const
 		{
 			if( node == sentienl_ )
 				return 0;
