@@ -11,7 +11,7 @@
 using namespace std;
 using namespace datastruct;
 void bracket_match();//括号匹配
-#define TestSize 500000
+#define TestSize 5000000
 #define PrintArray(arry) std::for_each(arry,arry+sizeof(arry)/sizeof(arry[0]), [](decltype(arry[0]) t){std::cout<<t<<" ";});
 template<typename T>
 void randomshuffle(T& arry)
@@ -370,18 +370,21 @@ void binarySearchTree_test(int argc, char**argv)
 		//BST树
 		tree = new BinarySearchTree<int, std::string>();
 		self = new BinarySearchTree<int, SelfDefine>();
+		std::cout<<"BST树测试"<<std::endl;
 	}
 	else if(argc == 2 )
 	{
 		//AVL树
 		tree = new AVLTree<int, std::string>();
 		self = new AVLTree<int, SelfDefine>();
+		std::cout<<"AVL树测试"<<std::endl;
 	}
 	else if(argc ==3 )
 	{
 		//红黑树
 		tree = new RBTree<int,std::string>();
 		self = new RBTree<int,SelfDefine>();
+		std::cout<<"红黑树测试"<<std::endl;
 	}
 	else
 		return;
@@ -463,6 +466,12 @@ void binarySearchTree_test(int argc, char**argv)
 	std::cout << "层序遍历" << endl;
 	tree->level_order(Print);
 	std::cout << endl;
+	if( argc ==3 )
+	{
+		RBTree<int,std::string>* ptr = dynamic_cast<RBTree<int,std::string>*>(tree);
+		assert(ptr);
+		ptr->PrettyPrintRBTree();
+	}
 	{
 		//删除
 		std::cout << "原来的中序遍历" << endl;
@@ -520,6 +529,13 @@ void binarySearchTree_test(int argc, char**argv)
 			AVLTree<int, SelfDefine> *ptr = dynamic_cast<AVLTree<int, SelfDefine>*>(self);
 			assert(ptr);
 			assert(ptr->is_balance());
+		}
+		else if( argc == 3 )
+		{
+			RBTree<int,SelfDefine>* ptr = dynamic_cast<RBTree<int,SelfDefine>*>(self);
+			assert(ptr);
+			assert(ptr->IsBanlace());
+			std::cout<<"RBTree is right"<<endl;
 		}
 		/*
 		1: 测试删除

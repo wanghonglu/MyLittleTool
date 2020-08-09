@@ -616,7 +616,7 @@ namespace datastruct {
 						bro->color_ = node->parent_->color_;
 						SetNodeBlack(node->parent_);
 						SetNodeBlack(bro->right_);
-						rightRotate(node->parent_);
+						leftRotate(node->parent_);
 						break;
 					}
 				}

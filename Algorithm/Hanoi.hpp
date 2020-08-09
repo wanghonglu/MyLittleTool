@@ -45,15 +45,33 @@ using namespace std;
  *   }
  *
  *  * */
-int count=0;
-void towersofHanoi(int n,char a,char b,char c )
+#include "Algorithm_test.hpp"
+template<int N>
+class HanoiTowerAgorithm:public AgorithmSolution
 {
-    if( n>0 )
+    public:
+    HanoiTowerAgorithm()
     {
-        towersofHanoi(n-1,a,c,b);
-//        cout<<n<<" move top disk for tower ["<<a<<"] to top of tower ["<<c<<"]"<<endl;
-        count++;
-        towersofHanoi(n-1,b,a, c );
+        m_algorithmName = "汉诺塔问题";
+        m_nNumber = N;
     }
-}
+    void Solution()override
+    {
+        towerOfHanoi(m_nNumber,'A','B','C');
+        std::cout<<"汉诺塔问题 "<<m_nNumber<<" 层 碟子时，从A挪动到C总共需要的步骤是: "<<m_step<<" 步"<<std::endl;
+    }
+    private:
+    void towerOfHanoi(int n, char a, char b,char c)
+    {
+        if(n>0)
+        {
+            towerOfHanoi(n-1, a,c,b);//把前面的n-1个碟子从a通过c拿到b上
+            m_step++;//把第n个碟子从a直接拿到c
+            //把剩下的n-1个盘子从b通过a拿到c上
+            towerOfHanoi(n-1,b,a,c);
+        }
+    }
+    size_t  m_nNumber;//总共的碟子数量
+    size_t  m_step;//步数
+};
 

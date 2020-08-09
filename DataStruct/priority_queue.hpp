@@ -157,7 +157,7 @@ void ArrayPriorityQueue<T,CMP>::shiftup(size_t pos )
     T val=data_[pos];
     int son = pos;
     int parent = (son-1)/2;
-
+    //这里之所以不用parent是因为 当son=0时 parent=0 0-1/2 会死循环!!!
     while( son>0 )
     {
         if( cmp_(val,data_[parent]))

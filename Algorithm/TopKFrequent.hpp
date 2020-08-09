@@ -22,9 +22,26 @@
 #include<queue>
 #include<unordered_map>
 #include<map>
+#include "Algorithm_test.hpp"
 using namespace std;
-class Solution {
+template<size_t N>
+class TopKFrequent:public AgorithmSolution{
 public:
+    TopKFrequent()
+    {
+        m_algorithmName = "统计出现频率前K高的元素";
+        m_nk = N;
+    }
+    void Solution()override
+    {
+        std::vector<int> a={1,1,1,8,6,6,6,6,6,8,8,8,8,8,2,2,3};
+        auto result = topKFrequent(a,m_nk);
+        std::cout<<"原数组 ";
+        PrintArray(a);
+        std::cout<<"中出现频率前 "<<m_nk<<" 高的元素为: ";
+        PrintArray(result);
+    }
+
     std::vector<int> topKFrequent(vector<int>& nums, int k) {
         std::vector<int> result;
         if( nums.empty())
@@ -35,7 +52,7 @@ public:
         auto cmp=[](const std::pair<int,int>& t1, const std::pair<int,int>& t2 ){
                 return t1.second>t2.second;
             };
-        std::priority_queue<std::pair<int,int>, std::vector<std::pair<int,int>>, decltype(cmp)>count_sort(cmp);
+        PriorityQueue<std::pair<int,int>, decltype(cmp)>count_sort(cmp);
         for( int i=0;i<nums.size();++i )
         {
             count[nums[i]]++;
@@ -65,12 +82,6 @@ public:
 
         return result; 
     }
+    size_t  m_nk;
 };
-int main()
-{
-    std::vector<int> a={1,1,1,8,6,6,6,6,6,8,8,8,8,8,2,2,3};
-    Solution b;
-    std::vector<int> t = b.topKFrequent(a,2);
-    std::for_each(t.begin(),t.end(),[](int a){std::cout<<a<<" ";});
-    std::cout<<std::endl;
-}
+
