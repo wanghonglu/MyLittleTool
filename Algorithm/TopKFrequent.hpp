@@ -22,7 +22,7 @@
 #include<queue>
 #include<unordered_map>
 #include<map>
-#include "Algorithm_test.hpp"
+#include "BaseAlgorithm.hpp"
 using namespace std;
 template<size_t N>
 class TopKFrequent:public AlgorithmSolution{

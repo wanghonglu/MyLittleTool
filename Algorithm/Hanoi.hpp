@@ -45,7 +45,7 @@ using namespace std;
  *   }
  *
  *  * */
-#include "Algorithm_test.hpp"
+#include "BaseAlgorithm.hpp"
 template<int N>
 class HanoiTowerAgorithm:public AlgorithmSolution
 {

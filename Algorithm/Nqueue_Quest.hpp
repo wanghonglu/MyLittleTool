@@ -33,7 +33,7 @@
 #include<cstring>
 #include<set>
 #include<algorithm>
-#include "Algorithm_test.hpp"
+#include "BaseAlgorithm.hpp"
 using namespace std;
 template<size_t N>
 class NQueueQuest:public AlgorithmSolution{

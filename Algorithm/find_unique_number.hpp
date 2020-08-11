@@ -17,7 +17,7 @@
 #define __FIND_UNIQUE_NUMBER__
 #include<stdio.h>
 #include<vector>
-#include"Algorithm_test.hpp"
+#include"BaseAlgorithm.hpp"
 class FindUnique_number:public AlgorithmSolution{
     public:
     FindUnique_number()

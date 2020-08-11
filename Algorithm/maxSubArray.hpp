@@ -31,7 +31,7 @@
 	计算最小值也同样  当为负数的时候 是乘的前面的最大 才能得到最小
 */
 #include<vector>
-#include "Algorithm_test.hpp"
+#include "BaseAlgorithm.hpp"
 class MaxSumArray:public AlgorithmSolution{
 	public:
 	MaxSumArray()

@@ -24,7 +24,7 @@ struct ListNode {
 #define __FIND_KTH_FROM_END
 #include<stdlib.h>
 #include<stdio.h>
-#include "Algorithm_test.hpp"
+#include "BaseAlgorithm.hpp"
 class ListGetKthFromEnd:public AlgorithmSolution
 {
     public:

@@ -26,7 +26,7 @@
 #include<iostream>
 #include<set>
 #include<cstring>
-#include "Algorithm_test.hpp"
+#include "BaseAlgorithm.hpp"
 /*
  *   leetcode  322
  * */
