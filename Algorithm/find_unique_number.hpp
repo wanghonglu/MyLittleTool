@@ -18,15 +18,16 @@
 #include<stdio.h>
 #include<vector>
 #include"Algorithm_test.hpp"
-class FindUnique_number:public AgorithmSolution{
+class FindUnique_number:public AlgorithmSolution{
     public:
     FindUnique_number()
     {
         m_algorithmName = "查找唯一不重复的数据 异或交换两数";
+        m_index = AlgorithmSolution::s_index++;
     }
     void Solution()override
     {
-        AgorithmSolution::Solution();
+        AlgorithmSolution::Solution();
         std::vector<int> nums={1,7,8,1024,9,188823,1024,1,1987,188823,8,5,5,9};
         int base=0;
         //这个base是那个两个不重复的数 异或后的结果 因为重复的数异或后为0 0异或任何数都是其本身

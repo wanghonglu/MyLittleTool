@@ -8,50 +8,36 @@
 #include "maxSubArray.hpp"
 #include "TopKFrequent.hpp"
 #include "Sigle_Stack.hpp"
-enum{
-    NQueue_Quest,//8皇后问题 回溯算法
-    GetMinCoin_Quest,//找零钱问题，动态规划
-    Find_Unique,//找出唯一不重复的数
-    FindKthFromEnd,//找到链表的倒数第K个值
-    Hanoi,//汉诺塔问题
-    Find_List_Circle,//查找链表环
-    MaxSum_SubArray,//和最大子数组
-    MaxProduct_SubArray,//乘积最大子数组
-    TopK_Frent,//统计出现频率前K高的元素
-    LargetRectangle_Area,//统计图最大矩形面积
-    InOrder_LineUp,//排队向右看问题
-    NextHighest_Temperature,//下一个最高温度问题
-    GetRain_Quest,//接雨水问题
-    MergeList_Quest,//合并链表
-};
 //8皇后
-RegistAlgorithm(NQueueQuest<8>,NQueue_Quest)
+RegistAlgorithm(NQueueQuest<8>)
 //找零钱
-RegistAlgorithm(GetMinCoinQuest<41>,GetMinCoin_Quest)
+RegistAlgorithm(GetMinCoinQuest<41>)
 //找唯一不重复的
-RegistAlgorithm(FindUnique_number,Find_Unique)
+RegistAlgorithm(FindUnique_number)
 //链表倒数第K个值
-RegistAlgorithm(ListGetKthFromEnd,FindKthFromEnd)
+RegistAlgorithm(ListGetKthFromEnd)
 //汉诺塔问题
-RegistAlgorithm(HanoiTowerAgorithm<10>,Hanoi)
+RegistAlgorithm(HanoiTowerAgorithm<10>)
 //查找链表的环
-RegistAlgorithm(FindListCircle,Find_List_Circle)
+RegistAlgorithm(FindListCircle)
 //和最大子数组
-RegistAlgorithm(MaxSumArray,MaxSum_SubArray)
+RegistAlgorithm(MaxSumArray)
 //乘积最大子数组
-RegistAlgorithm(MaxProductArray,MaxProduct_SubArray)
+RegistAlgorithm(MaxProductArray)
 //统计出现频率前K高的元素
-RegistAlgorithm(TopKFrequent<3>,TopK_Frent)
+RegistAlgorithm(TopKFrequent<3>)
 //统计图最大矩形问题
-RegistAlgorithm(LargestRectanleArea,LargetRectangle_Area)
+RegistAlgorithm(LargestRectanleArea)
 //排队向右看问题
-RegistAlgorithm(InorderLineUp,InOrder_LineUp)
+RegistAlgorithm(InorderLineUp)
 //下一个最高问题问题
-RegistAlgorithm(NextHighestTemperture,NextHighest_Temperature)
+RegistAlgorithm(NextHighestTemperture)
 //接雨水问题
-RegistAlgorithm(GetRainQuest,GetRain_Quest)
+RegistAlgorithm(GetRainQuest)
 //合并链表
-RegistAlgorithm(MergeOrderedList,MergeList_Quest)
+RegistAlgorithm(MergeOrderedList)
+//反转链表
+RegistAlgorithm(ReserverList)
 int main(int argc,char**argv )
 {
     int opt =-1;
@@ -59,7 +45,7 @@ int main(int argc,char**argv )
     {
        if( argc>1 )
             opt = atoi(argv[1]);
-       AgorithmSolution* test = GetOneTest(opt);
+       AlgorithmSolution* test = GetOneTest(opt);
        test->Solution();
     }
     catch(const std::exception& e)

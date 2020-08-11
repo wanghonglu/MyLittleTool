@@ -25,12 +25,13 @@ struct ListNode {
 #include<stdlib.h>
 #include<stdio.h>
 #include "Algorithm_test.hpp"
-class ListGetKthFromEnd:public AgorithmSolution
+class ListGetKthFromEnd:public AlgorithmSolution
 {
     public:
     ListGetKthFromEnd()
     {
         m_algorithmName="链表查找倒数第K个值 删除倒数第K个值 双指针法";
+        m_index = AlgorithmSolution::s_index++;
     }
     void Solution()override
     {
@@ -95,16 +96,17 @@ class ListGetKthFromEnd:public AgorithmSolution
  * 假设他们相遇在M点,那么此时把快指针再从头开始走,一次一步,满指针也继续从M点走一次也一步
  * 因为他俩速度一样, 那么他俩走N步必然会再次在M点集合,此时 他们第一次相遇的点 就是环的位置
  * */
-class FindListCircle:public AgorithmSolution
+class FindListCircle:public AlgorithmSolution
 {
     public:
     FindListCircle()
     {
         m_algorithmName="查找链表是否有环，并找到环的位置";
+        m_index = AlgorithmSolution::s_index++;
     }
     void Solution()override
     {
-        AgorithmSolution::Solution();
+        AlgorithmSolution::Solution();
         List<int> l={1,2,3,4,5,6,7,8};
 
         auto node = l.head();
@@ -172,13 +174,14 @@ class FindListCircle:public AgorithmSolution
 /*
 输入两个递增排序的链表，合并这两个链表并使新链表中的节点仍然是递增排序的。
 */
-class MergeOrderedList:public AgorithmSolution
+class MergeOrderedList:public AlgorithmSolution
 {
     public:
 
     MergeOrderedList()
     {
         m_algorithmName = "合并有序链表";
+        m_index = AlgorithmSolution::s_index++;
     }
     void Solution()override
     {
@@ -195,18 +198,19 @@ class MergeOrderedList:public AgorithmSolution
         l1.print();
         std::cout<<"原始链表l2:"<<std::endl;
         l2.print();
-        List<int>l3(mergeTwoLists(l1.head(),l2.head()));
+        List<int>l3(mergeTwoLists2(l1.head(),l2.head()));
 
         std::cout<<"合并后的链表"<<std::endl;
         l3.print();
     }
     private:
+    //二级指针做法 更优雅
     template<typename T>
     ListNode<T>* mergeTwoLists(ListNode<T>*l1,ListNode<T>*l2)
     {
         if(!l1 || !l2 )
             return l1?l1:l2;
-        ListNode<T>*head,**node = &head;
+        ListNode<T>*head,**node = &head;//引用不能被重新赋值所以这里不许是二级指针
         while( l1!=nullptr && l2!=nullptr )
         {
             if( l1->val_<l2->val_ )
@@ -221,21 +225,82 @@ class MergeOrderedList:public AgorithmSolution
             }
             node = &(*node)->next_;
         }
-
-        while(l1!=nullptr )
+        *node = l1?l1:l2;
+        return head;
+    }
+    //一级指针做法
+    template<typename T>
+    ListNode<T>* mergeTwoLists2(ListNode<T>*l1,ListNode<T>*l2)
+    {
+        if(!l1 || !l2 )
+            return l1?l1:l2;
+        ListNode<T>*head = nullptr ;
+        ListNode<T>*node =nullptr;//
+        while( l1!=nullptr && l2!=nullptr )
         {
-            *node = l1;
-            l1 = l1->next_;
-            node =&(*node)->next_;
-        }
-        while(l2!=nullptr )
-        {
-            *node = l2;
-            l2 = l2->next_;
-            node =&(*node)->next_;
+            if( l1->val_<l2->val_ )
+            {
+                if(node==nullptr)
+                    node = l1;
+                else
+                    node->next_ = l1;
+                l1 = l1->next_;
+            }
+            else
+            {
+                if(node==nullptr)
+                    node = l2;
+                else
+                    node->next_ = l2;
+                l2 = l2->next_;
+            }
+            if( head == nullptr )
+            {
+                head = node;
+            }
+            else
+                node = node->next_;
         }
         return head;
     }
 
+};
+/*
+    输入一个链表，反转链表
+*/
+class ReserverList:public AlgorithmSolution{
+    public:
+
+    ReserverList()
+    {
+        m_algorithmName = "反转链表 ";
+        m_index = AlgorithmSolution::s_index++;
+    }
+    void Solution()override
+    {
+        List<int>l;
+        for( int i=0;i<30;++i )
+            l.insert(i);
+        std::cout<<"原始链表: "<<std::endl;
+        l.print();
+        List<int>l2(reverseList(l.head()));
+        std::cout<<"反转后的链表"<<std::endl;
+        l2.print();
+    }
+    private:
+    template<typename T>
+    ListNode<T>* reverseList(ListNode<T>*head )
+    {
+        ListNode<T>* before =nullptr,*temp;
+        while( head )
+        {
+            temp = head->next_;
+            head->next_ = before;
+            before = head;
+            head = temp;
+        }
+        return before;
+    }
+    
 };
 #endif

@@ -12,11 +12,12 @@
  * 如果当前元素大于等于栈顶入栈   则入栈 否则栈顶出栈,此时需要计算栈顶所在最大矩形面积 
  * 计算方法为 pop出来该计算元素,新的栈顶 即该计算元素的左边界 计算元素的右边界为遍历元素 有了两个边界 面积自然好算
  * */
-class LargestRectanleArea:public AgorithmSolution{
+class LargestRectanleArea:public AlgorithmSolution{
 public:
     LargestRectanleArea()
     {
         m_algorithmName = "最大矩形问题  单调栈算法";
+        m_index = AlgorithmSolution::s_index++;
     }
     void Solution()override
     {
@@ -74,11 +75,12 @@ private:
  * 如果他俩相邻 则栈顶元素谁都看不到
  * 最后还需要把栈里的所有元素弹出来再计算  此时栈里元素能看到的人数是  最后一个人下标-当前人下标-1
  * */
-class InorderLineUp:public AgorithmSolution{
+class InorderLineUp:public AlgorithmSolution{
 public:
     InorderLineUp()
     {
         m_algorithmName = "排队向右看问题  单调栈算法";
+        m_index = AlgorithmSolution::s_index++;
     }
     void Solution()override
     {
@@ -118,11 +120,12 @@ public:
  *  每次由比栈顶大的数 则表明找到了 当前栈顶的下一个更大的温度 比栈顶小则入栈
  *
  * */
-class NextHighestTemperture:public AgorithmSolution{
+class NextHighestTemperture:public AlgorithmSolution{
 public:
     NextHighestTemperture()
     {
         m_algorithmName = "观测到下一个更高温度至少需要几天  单调栈算法";
+        m_index = AlgorithmSolution::s_index++;
     }
     void Solution()override
     {
@@ -161,11 +164,12 @@ public:
  *  
  *
  * */
-class GetRainQuest:public AgorithmSolution{
+class GetRainQuest:public AlgorithmSolution{
 public:
     GetRainQuest()
     {
         m_algorithmName = "接雨水问题  单调栈算法";
+        m_index = AlgorithmSolution::s_index++;
     }
     void Solution()override
     {
@@ -201,131 +205,5 @@ public:
 
     }
 };
-// int GetMaxArray( int *heights, size_t heightsSize  )
-// {
-//  #define Max(a,b) ((a)>(b)?(a):(b))
-//     Stack *st=InitStack(heightsSize);
-//     int maxArea=0,idx=0;
-//     for(;idx<heightsSize;idx++ )
-//     {
-//         while( !IsEmpty(st) && heights[idx]< heights[Top(st)] )
-//         {
-//            int current = Top(st);
-//            Pop(st);
-//            //整个宽度就是左边+右边+1(1是自身的宽度)  面积 宽度x高度
-//            int left = IsEmpty(st)?current:(current-Top(st)-1);
-//            int right = idx-current-1;
-//            maxArea = Max( maxArea, (left+right+1)*heights[current] );
-//         }
-//         Push(st, idx);
-//     }
-//     //计算剩余栈内的最大面积
-//     if( IsEmpty(st) )
-//     {
-//         ClearStack(st);
-//         return maxArea;
-//     }
-
-//     while( !IsEmpty(st) )
-//     {
-//         int current = Top(st);
-//         Pop(st);
-//         int left = IsEmpty(st)?current:(current-Top(st)-1);
-//         int right =heightsSize-1-current; 
-//         maxArea = Max(maxArea, (left+right+1)*heights[current]);
-//     }
-
-//     ClearStack(st);
-//     return maxArea;
-
-// #undef  Max
-
-// }
-
-// int CanLookRight( int *array, size_t len  )
-// {
-//     int result =0;
-//     Stack *st = InitStack(len);
-//     int idx=0;
-//     for(  ;idx<len;++idx )
-//     {
-//         while( !IsEmpty(st) && array[idx]>= array[Top(st)]  )
-//         {
-//             int topIdx = Top(st);
-//             Pop(st);
-//             result +=( idx-topIdx-1 );
-//         }
-//         Push(st, idx);
-//     }
-//     while( !IsEmpty(st) )
-//     {
-//         int topIdx = Top(st);
-//         Pop(st);
-//         //此时的idx代表最后一个人 意思是 topIdx能看到的人从自己开始到最后一个截至
-//         result +=( idx-topIdx-1 );
-//     }
-//     ClearStack(st);
-//     return result;
-// }
-
-// int* dailyTemperatures(int* T, int TSize, int* returnSize){
-//     if( T== NULL  )
-//         return NULL;
-//     Stack *st=InitStack(TSize);
-//     *returnSize = TSize;
-//     int *array = (int*)malloc(TSize*sizeof(int));
-//     memset( array, 0, TSize*sizeof(int) );
-//     int idx=0;
-//     for(;idx<TSize;idx++ )
-//     {
-//        while( !IsEmpty(st)&& T[idx]>T[Top(st)] ) 
-//        {
-//             int current = Top(st);
-//             Pop(st);
-//             array[current]=idx-current;
-//        }
-//        Push(st, idx);
-//     }
-//     //剩下的就不用算了 都是0
-//     ClearStack(st);
-//     return array;
-// }
-
-// int trap(int* height, int heightSize)
-// {
-//     if( height == NULL  )
-//         return 0;
-//     Stack *st = InitStack(heightSize);
-
-//     int idx=0 ,total=0;
-//     for(;idx<heightSize;idx++ )
-//     {
-//         while(!IsEmpty(st) && height[idx] > height[Top(st)])
-//         {
-//             int top = Top(st);
-//             Pop(st);
-//             if( IsEmpty(st) )
-//                 continue;
-//             //栈内的元素比current 大  即新的top左边比current大的 idx是右边比current大的
-//             int len = idx-Top(st)-1;
-//             int h = height[Top(st)]<height[idx]?height[Top(st)]:height[idx] - height[top];
-//             int area = len*h;
-//             printf("current :%d area:%d\n", idx, area );
-//             total+=area;
-//         }
-//         Push(st,idx);
-//     }
-//     //剩下的存不下水
-//     ClearStack(st);
-//     return total;
-    
-// }
-// void Print(int*a, size_t len)
-// {
-//     int idx=0;
-//     for(;idx<len;idx++)
-//         printf("%d ", a[idx]);
-//     printf("\n");
-// }
 
 #endif

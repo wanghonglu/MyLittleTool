@@ -47,13 +47,14 @@ using namespace std;
  *  * */
 #include "Algorithm_test.hpp"
 template<int N>
-class HanoiTowerAgorithm:public AgorithmSolution
+class HanoiTowerAgorithm:public AlgorithmSolution
 {
     public:
     HanoiTowerAgorithm()
     {
         m_algorithmName = "汉诺塔问题";
         m_nNumber = N;
+        m_index = AlgorithmSolution::s_index++;
     }
     void Solution()override
     {

@@ -16,15 +16,21 @@
     std::cout<<std::endl;\
 }while(0)
 
-class AgorithmSolution{
+class AlgorithmSolution{
     public:
+        static  size_t s_index;
+        AlgorithmSolution(){}
         virtual void  Solution()
         {
             std::cout<<m_algorithmName<<std::endl;
+            m_index =0;
         }
         std::string   m_algorithmName="未知算法";
+        size_t        m_index=0;
+        virtual ~AlgorithmSolution(){}
 
 };
+size_t AlgorithmSolution::s_index=0;
 class TestSolutionFactory{
 public:
     static TestSolutionFactory& Instant()
@@ -32,11 +38,11 @@ public:
         static TestSolutionFactory factory;
         return factory;
     }
-    void Regiest(int key,AgorithmSolution* t)
+    void Regiest(int key,AlgorithmSolution* t)
     {
         m_factory[key]=t;
     }
-    AgorithmSolution* GetOne(int key )
+    AlgorithmSolution* GetOne(int key )
     {
         if(m_factory.count(key))
             return m_factory[key];
@@ -58,20 +64,23 @@ private:
     {}
     TestSolutionFactory(const TestSolutionFactory&)=delete;
     TestSolutionFactory& operator =(const TestSolutionFactory& )=delete;
-    std::map<int,AgorithmSolution*>    m_factory;
+    std::map<int,AlgorithmSolution*>    m_factory;
 };
 //全局范围内不能进行函数调用，所以必须把注册放到构造函数里面去
-#define RegistAlgorithm(classname,type)   \
-class RegistCalss##type{                  \
+#define CONCAT_(a,b) a##b
+#define CONCAT(a,b) CONCAT_(a,b)
+//不直接用classname是因为会有模板的情况出现
+#define RegistAlgorithm(classname)   \
+class CONCAT(RegistCalss,CONCAT(__FUNCTION__,__LINE__)){                  \
     public:                               \
-    RegistCalss##type()                         \
+    CONCAT(RegistCalss,CONCAT(__FUNCTION__,__LINE__))()                         \
     {                                     \
-        TestSolutionFactory::Instant().Regiest(type,&m_alg);\
+        TestSolutionFactory::Instant().Regiest(m_alg.m_index,&m_alg);\
     }                                     \
     private:                              \
     classname     m_alg;                  \
 };\
-static RegistCalss##type s_RegistCalss##type;
+static CONCAT(RegistCalss,CONCAT(__FUNCTION__,__LINE__)) CONCAT(s_,CONCAT(RegistCalss,CONCAT(__FUNCTION__,__LINE__)));
 
 #define GetOneTest(type)  TestSolutionFactory::Instant().GetOne(type)
 #define GetHelp()  TestSolutionFactory::Instant().PrintAll()

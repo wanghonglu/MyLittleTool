@@ -25,12 +25,13 @@
 #include "Algorithm_test.hpp"
 using namespace std;
 template<size_t N>
-class TopKFrequent:public AgorithmSolution{
+class TopKFrequent:public AlgorithmSolution{
 public:
     TopKFrequent()
     {
         m_algorithmName = "统计出现频率前K高的元素";
         m_nk = N;
+        m_index = AlgorithmSolution::s_index++;
     }
     void Solution()override
     {

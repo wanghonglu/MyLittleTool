@@ -36,15 +36,16 @@
 #include "Algorithm_test.hpp"
 using namespace std;
 template<size_t N>
-class NQueueQuest:public AgorithmSolution{
+class NQueueQuest:public AlgorithmSolution{
     public:
     NQueueQuest():m_base(N,std::vector<int>(N,0))
     {
         m_algorithmName = "N皇后问题，回溯算法";
         m_nQueue = N;
+        m_index = AlgorithmSolution::s_index++;
     }
     virtual void Solution()override{
-        AgorithmSolution::Solution();
+        AlgorithmSolution::Solution();
         NQueen(0);
         std::cout<<"总共 "<<m_nQueue<<" 个皇后 共 "<<m_result<<" 个摆法"<<std::endl;
     }

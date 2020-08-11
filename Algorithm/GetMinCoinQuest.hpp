@@ -31,16 +31,17 @@
  *   leetcode  322
  * */
 template<size_t N>
-class GetMinCoinQuest:public AgorithmSolution{
+class GetMinCoinQuest:public AlgorithmSolution{
     public:
     GetMinCoinQuest()
     {
         m_algorithmName = "找零钱问题 动态规划";
         m_counts = N;
+        m_index = AlgorithmSolution::s_index++;
     }
     void Solution()override
     {
-        AgorithmSolution::Solution();
+        AlgorithmSolution::Solution();
 
         std::vector<int>coins ={20,10,5,1};
         std::vector<int> result( m_counts+1,0 );

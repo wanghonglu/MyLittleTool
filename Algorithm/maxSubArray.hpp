@@ -32,11 +32,12 @@
 */
 #include<vector>
 #include "Algorithm_test.hpp"
-class MaxSumArray:public AgorithmSolution{
+class MaxSumArray:public AlgorithmSolution{
 	public:
 	MaxSumArray()
 	{
 		m_algorithmName = "最大和子数组";
+		m_index = AlgorithmSolution::s_index++;
 	}
 	void Solution()override
 	{
@@ -105,11 +106,12 @@ class MaxSumArray:public AgorithmSolution{
 
 };
 #endif
-class MaxProductArray:public AgorithmSolution{
+class MaxProductArray:public AlgorithmSolution{
 	public:
 	MaxProductArray()
 	{
 		m_algorithmName = "最大乘积子数组 动态规划";
+		m_index = AlgorithmSolution::s_index++;
 	}
 	void Solution()override
 	{
