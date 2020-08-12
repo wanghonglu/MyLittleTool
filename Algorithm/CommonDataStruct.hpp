@@ -28,17 +28,20 @@ class List{
     }
     List(std::initializer_list<T> l)
     {
+        //这里构造有点问题,如果l是递增的,这里按照每次往头节点插入,最终下来链表变成递减的了~~~~
         for( auto& e:l )
             insert(e);
+        reverse();
     }
     List(ListNode<T>*head )
     {
+        //这里也一样~~~ head原来如果是递增的,这里按照头节点插入法,最终变成了递减的了~~~
         while( head )
         {
             insert(head->val_);
             head = head->next_;
         }
-       
+        reverse();
     }
     ~List()
     {
@@ -49,19 +52,31 @@ class List{
             delete node;
             node = temp;
         }
-        head_ = tail_ = nullptr;
+        head_  = nullptr;
+    }
+    //链表反转
+    void reverse()
+    {
+        decltype(head_) before=nullptr;
+        while( head_ )
+        {
+            auto temp = head_->next_;
+            head_->next_ = before;
+            before = head_;
+            head_ = temp;
+        }
+        head_ = before;
     }
     void insert(T val )
     {
         ListNode<T>* node  = new ListNode<T>(val);
-        if( head_ == nullptr  || tail_ == nullptr )
+        if( head_ == nullptr  )
         { 
             head_ = node;
-            tail_ = node;
             return;
         }
-        tail_->next_ = node;
-        tail_ = node;
+        node->next_ = head_;
+        head_ = node;
     }
     void print()
     {
@@ -97,19 +112,17 @@ class List{
         if( !start )
             return;
         *parent = node->next_;//这里就不用处理删除尾元素 头元素的情况了
-        if( node->next_ == nullptr )
-        {
-            //这里有意思了，这里的*parent是最有一个节点的next指针，而tail实际应该等于最有一个节点的指针的
-            //所以需要把 next的地址转化成 整个结构的地址，即把某个成员的地址转化成整个结构体的地址
-            //鼎鼎大名的内核宏，计算偏移量
-            tail_ = *( parent- (size_t)(&(((ListNode<T>*)0)->next_)));
-        }
-            
+        // if( node->next_ == nullptr )
+        // {
+        //     //这里有意思了，这里的*parent是最有一个节点的next指针，而tail实际应该等于最有一个节点的指针的
+        //     //所以需要把 next的地址转化成 整个结构的地址，即把某个成员的地址转化成整个结构体的地址
+        //     //鼎鼎大名的内核宏，计算偏移量
+        //     tail_ = *( parent- (size_t)(&(((ListNode<T>*)0)->next_)));
+        // }    
         delete node;      
     }
     private:
         ListNode<T>* head_ = nullptr;
-        ListNode<T>* tail_ = nullptr;
 };
 void ListTest()
 {

@@ -187,7 +187,7 @@ class MergeOrderedList:public AlgorithmSolution
     {
         List<int>l1;
         List<int>l2;
-        for( int i=0;i<20;i++ )
+        for( int i=20;i>=0;i-- )
         {
             if( i & 1)
                 l1.insert(i);
@@ -254,13 +254,12 @@ class MergeOrderedList:public AlgorithmSolution
                     node->next_ = l2;
                 l2 = l2->next_;
             }
-            if( head == nullptr )
-            {
+            if(head == nullptr )
                 head = node;
-            }
             else
                 node = node->next_;
         }
+        node->next_ = l1?l1:l2;
         return head;
     }
 
