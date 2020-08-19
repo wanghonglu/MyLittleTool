@@ -31,7 +31,6 @@ class ListGetKthFromEnd:public AlgorithmSolution
     ListGetKthFromEnd()
     {
         m_algorithmName="链表查找倒数第K个值 删除倒数第K个值 双指针法";
-        m_index = AlgorithmSolution::s_index++;
     }
     void Solution()override
     {
@@ -102,7 +101,6 @@ class FindListCircle:public AlgorithmSolution
     FindListCircle()
     {
         m_algorithmName="查找链表是否有环，并找到环的位置";
-        m_index = AlgorithmSolution::s_index++;
     }
     void Solution()override
     {
@@ -181,7 +179,6 @@ class MergeOrderedList:public AlgorithmSolution
     MergeOrderedList()
     {
         m_algorithmName = "合并有序链表";
-        m_index = AlgorithmSolution::s_index++;
     }
     void Solution()override
     {
@@ -273,7 +270,6 @@ class ReserverList:public AlgorithmSolution{
     ReserverList()
     {
         m_algorithmName = "反转链表 ";
-        m_index = AlgorithmSolution::s_index++;
     }
     void Solution()override
     {

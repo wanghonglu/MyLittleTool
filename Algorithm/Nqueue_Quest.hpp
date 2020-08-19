@@ -42,7 +42,6 @@ class NQueueQuest:public AlgorithmSolution{
     {
         m_algorithmName = "N皇后问题，回溯算法";
         m_nQueue = N;
-        m_index = AlgorithmSolution::s_index++;
     }
     virtual void Solution()override{
         AlgorithmSolution::Solution();

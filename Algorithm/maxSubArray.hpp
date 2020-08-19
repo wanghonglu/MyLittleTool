@@ -37,7 +37,6 @@ class MaxSumArray:public AlgorithmSolution{
 	MaxSumArray()
 	{
 		m_algorithmName = "最大和子数组";
-		m_index = AlgorithmSolution::s_index++;
 	}
 	void Solution()override
 	{
@@ -111,7 +110,6 @@ class MaxProductArray:public AlgorithmSolution{
 	MaxProductArray()
 	{
 		m_algorithmName = "最大乘积子数组 动态规划";
-		m_index = AlgorithmSolution::s_index++;
 	}
 	void Solution()override
 	{

@@ -37,7 +37,6 @@ class GetMinCoinQuest:public AlgorithmSolution{
     {
         m_algorithmName = "找零钱问题 动态规划";
         m_counts = N;
-        m_index = AlgorithmSolution::s_index++;
     }
     void Solution()override
     {
@@ -72,5 +71,53 @@ class GetMinCoinQuest:public AlgorithmSolution{
     }
     private:
     size_t             m_counts;//总共需要的零钱
+};
+/*
+    给定不同面额的硬币和一个总金额。写出函数来计算可以凑成总金额的硬币组合数。假设每一种面额的硬币有无限个。 
+    amount = 5, coins = [1, 2, 5]
+    输出: 4
+    解释: 有四种方式可以凑成总金额:
+    5=5
+    5=2+2+1
+    5=2+1+1+1
+    5=1+1+1+1+1   
+*/
+class GetAllCoin:public AlgorithmSolution{
+    public:
+    GetAllCoin()
+    {
+        m_algorithmName="获取所有硬币组合 动态规划";
+    }
+    void Solution()override
+    {
+        std::vector<int>coins={2,5};
+        int amount=5;
+        int result = change(amount,coins);
+        std::cout<<"给出的硬币 "<<std::endl;
+        PrintArray(coins);
+        std::cout<<"总共有 "<<result<<" 种组合,可以凑成 "<<amount<<" 元"<<std::endl;
+    }
+    int change(int amount, vector<int>& coins) {
+        if( amount<=0 || coins.empty() )
+            return 0;
+        std::sort(coins.begin(),coins.end(),std::less<int>());
+        std::vector<int> result(amount+1,0);
+        for( int i=1;i<=amount;i++ )
+        {
+            bool  find_equal=false;
+            for( auto e:coins )
+            {
+                if( e == i )
+                    find_equal=true;
+                //这里其实有重复的给定硬币1 2 3; 比如3元 1元1种 2元2种 3元却不是3种 而是2种即1+1+1 和2+1
+                //这里需要去重,和找最大最小还不太一样
+                //if(i-e-e>0)说明此时的i-e已经包含了这种模式
+                if(i-e>0&&i-2*e<=0)
+                    result[i] += result[i-e]+1;
+            }
+        }
+        PrintArray(result);
+        return result[amount];
+    }
 };
 #endif

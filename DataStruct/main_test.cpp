@@ -2,6 +2,7 @@
 #include<iostream>
 #include<string.h>
 #include<map>
+#include<mutex>
 using TestFunType= std::map<int,std::pair<std::string,std::function<void(int,char**)>>>;
 void PrintHelp(const TestFunType& funs )
 {
@@ -11,6 +12,7 @@ void PrintHelp(const TestFunType& funs )
         std::cout<<e.first<<" "<<e.second.first<<std::endl;
     }
     std::cout<<std::endl;
+    std::mutex mu;
 }
 //#pragma pack(4)
 int main( int argc,char**argv )
@@ -24,7 +26,8 @@ int main( int argc,char**argv )
             {3,{"双向队列",deque_test}},
             {4,{"二叉搜索树",[](int argc,char**argv){binarySearchTree_test(1,argv);}}},
             {5,{"AVL树",[](int argc,char**argv){binarySearchTree_test(2,argv);}}},
-            {6,{"红黑树",[](int argc,char**argv){binarySearchTree_test(3,argv);}}}
+            {6,{"红黑树",[](int argc,char**argv){binarySearchTree_test(3,argv);}}},
+            {7,{"自旋锁测试",spinlock_test}}
         };
         if( argc>1 )
             opt = atoi(argv[1]);

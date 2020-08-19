@@ -21,7 +21,7 @@
 #include "maxSubArray.hpp"
 #include "TopKFrequent.hpp"
 #include "Sigle_Stack.hpp"
-
+#include "BinaryTreeALgorithm.hpp"
 
 
 class TestSolutionFactory{
@@ -108,4 +108,8 @@ RegistAlgorithm(GetRainQuest)
 RegistAlgorithm(MergeOrderedList)
 //反转链表
 RegistAlgorithm(ReserverList)
+//二叉树最大路径
+RegistAlgorithm(BTMaxPathSum)
+//找出所有能组合出来零钱的方式
+RegistAlgorithm(GetAllCoin)
 #endif

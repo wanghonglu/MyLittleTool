@@ -1,0 +1,109 @@
+#include<stdio.h>
+#include<stdint.h>
+#include<stdlib.h>
+#include<string.h>
+typedef void(*fn_type)(void*,void*,void*);
+enum RegistIdx{
+    RSP,
+    RBP,
+    RIP,//指令寄存器
+    RDI,//第一个参数
+};
+//还有R12-R15 rbx 这五个也是被调用放保存
+//还有参数寄存器 如果调用jump的时候上一个函数有参数,二这个jump就俩
+//那么剩下的4个寄存器是都有值的
+//即 rsi rdx rcx r8 r9
+// 总共需要保存的 
+// rbp(栈基指针)
+// rsp(栈顶指针)
+// rip(指令寄存器) 也就是函数开始的指针
+// rdi  第一个参数
+// rsi rdx rcx r8 r9 总共6个参数
+// rbx r12-r15 被调用放保存的寄存器
+//
+//栈帧格式定义为
+//|RSP|RBP|RIP|RDI|RBX|R12|R13|R14|R15|RDX|RCX|R8|R9|RSI
+typedef struct context_t{
+    void *reg[14];
+    fn_type fun;
+    void* args1;
+    void* args2;
+    void* args3;
+    void*  st;
+}context_t;
+extern void* jump_2_context(void * cur,void* pending );
+#define Co_number 2
+context_t  stack[Co_number];
+context_t  main_stack;
+void fun1(int* a,int* b,int*c)
+{
+    int d=100;
+    printf("1 a=%d b=%d c=%d\n", *a, *b,*c);
+    jump_2_context(&stack[0],&stack[1]);
+    printf("%d\n", *a+*b+*c+d);
+    jump_2_context(&stack[0],&stack[1]);
+}
+void fun2(int* a,int* b,int*c)
+{
+    int d=200;
+    printf("2 a=%d b=%d c=%d \n", *a, *b,*c);
+    jump_2_context(&stack[1],&stack[0]);
+    printf("%d\n", *a+*b+*c+d);
+    jump_2_context(&stack[1],&main_stack);
+}
+void RoutineFun( context_t *ctx  )
+{
+    ctx->fun(ctx->args1, ctx->args2,ctx->args3 );
+}
+//函数栈帧
+//|----函数地址---|-----参数------|
+void make_stack(context_t* ctx, fn_type fun,void* args1, void*args2,void*args3 )
+{
+    memset(ctx, 0, sizeof(context_t));
+
+    ctx->fun = fun;
+    ctx->args1 = args1;
+    ctx->args2 = args2;
+    ctx->args3 = args3;
+
+
+    ctx->st = malloc(1*1024*128);//128k
+    void*tmp = ctx->st+1024*128;
+    //对齐
+    tmp = (void*)((size_t)tmp&(-16L)); //-16 掩码 1111 0000
+
+    //之所以需要中间一层调用是为了更方便的构造函数栈帧
+    //每个不同的函数,里面有不同的局部变量式 函数栈帧的结构是不一样的
+
+    ctx->reg[RSP]=tmp;
+    ctx->reg[RBP]=0;
+    ctx->reg[RIP]=RoutineFun;
+    ctx->reg[RDI]=ctx;
+
+
+}
+void clear_stack(context_t* ctx )
+{
+    free(ctx->st);
+}
+int main(int argc,char**argv)
+{
+    int a=1,b=2,c=3;
+
+
+    printf("context_t::rsp%ld \n",(size_t)(&(((context_t*)0)->reg)));
+
+    make_stack(&stack[0],(fn_type)fun1,&a,&b,&c);
+    make_stack(&stack[1],(fn_type)fun2,&a,&b,&c);
+
+    printf("stack1:%p stack2:%p \n", &stack[0],&stack[1]);
+
+    void* rax1 = jump_2_context(&main_stack, &stack[0]);
+
+    printf("end\n");
+
+    clear_stack(&stack[0]);
+    clear_stack(&stack[1]);
+
+    return 0;
+}

@@ -11,6 +11,8 @@
 #include<cassert>
 #include<algorithm>
 #include<functional>
+#include<cstdint>
+#include<limits.h>
 template<typename T>
 struct ListNode{
     ListNode(const T& val ):val_(val),next_(nullptr)
@@ -212,6 +214,107 @@ void stack_test()
     std::cout<<"stack test end "<<std::endl;
 }
 /*
+    队列相关算法数据结构实现(数组实现)
+*/
+template<typename T>
+class Queue{
+    size_t    head_;
+    size_t    tail_;
+    T         *data_;
+    size_t    size_;
+    size_t    capacity_;
+    constexpr static size_t  DefaultAlloc=4;
+    public:
+    Queue()
+    {
+        size_=0;
+        tail_ =0;
+        head_ =0;
+        capacity_ = DefaultAlloc;
+        data_ = new T[capacity_]();
+    }
+    ~Queue()
+    {
+        delete []data_;
+    }
+    void print()
+    {
+        std::cout<<"capacity "<<capacity_<<" size: "<<size_<<std::endl;
+        for(int i=0;i<size_;i++)
+        {
+            size_t idx = (head_+i)%capacity_;
+            std::cout<<data_[idx]<<"  ";
+        }
+        std::cout<<std::endl;
+    }
+    bool empty()
+    {
+        return size_ == 0;
+    }
+    size_t size()
+    {
+        return size_;
+    }
+    void push(const T&val )
+    {
+        if(size_ >= capacity_ )
+            resize();
+        data_[tail_] = val;
+        tail_ = (tail_+1)%capacity_;
+        size_++;
+        return;
+    }
+    void pop()
+    {
+        if(empty() )
+            throw std::runtime_error("Queue empty when pop");
+        data_[head_].~T();
+        head_ = (head_+1)%capacity_;
+        size_--;
+    }
+    const T& front()
+    {
+        if(empty() )
+            throw std::runtime_error("Queue empty when front");
+        return data_[head_];
+    }
+    const T& back()
+    {
+        if(empty())
+            throw std::runtime_error("Queue empty when back");
+        size_t idx = (tail_-1+capacity_)%capacity_;
+        return data_[idx];
+    }
+    private:
+    void resize()
+    {
+        T* temp = new T[capacity_*2];
+        for( int i=0;i<size_;i++ )
+        {
+            int idx = (head_+i)%capacity_;
+            temp[i]=data_[idx];
+        }
+        capacity_ *=2;
+        head_ =0;
+        tail_ = size_;
+        delete []data_;
+        data_ = temp;
+    }
+};
+void Queue_test()
+{
+    Queue<int>  q;
+    q.push(100);
+    q.push(200);
+    assert(q.front() == 100 && q.back() ==  200 );
+    q.pop();
+    for( int i=0;i<10;i++ )
+    {
+        q.push(i);
+    }
+    q.print();
+}
+/*
     二叉堆，优先级队列相关的算法实现用这个,基于数组实现，二叉堆完全二叉树 都是基于数组实现
     默认比较是std::less （a<b) 实现大顶堆 
 */
@@ -353,5 +456,138 @@ void priority_queue_test()
         q.pop();
     }
     std::cout<<__FUNCTION__<<" test end "<<std::endl;
+}
+/*
+    二叉树  二叉树相关算法 按照leetcode的风格
+    这里的树不是二叉搜索树
+    [-10,9,20,null,null,15,7]  建成的树是
+         -10
+        / \
+        9  20
+          /  \
+         15   7
+*/
+template<typename T>
+struct TreeNode{
+        T   val_;
+        TreeNode* left_;
+        TreeNode* right_;
+        TreeNode(const T& val ):val_(val),left_(nullptr),right_(nullptr){}
+        void print()//层序遍历
+        {
+            Queue<TreeNode<T>*> q;
+            std::cout<<val_<<" ";
+            q.push(left_);
+            q.push(right_);
+            while(!q.empty() )
+            {
+                auto node = q.front();
+                q.pop();
+                if( node ==nullptr )
+                {
+                    std::cout<<" null ";
+                    continue;
+                }
+
+                std::cout<<node->val<<" ";
+                q.push(node->left_);
+                q.push(node->right_);       
+            }
+        }
+};
+template<typename T>
+class BinaryTree{
+    TreeNode<T>    *root_ = nullptr;
+    void destruct(TreeNode<T>*node )
+    {
+        if( node == nullptr )
+            return ;
+        destruct(node->left_);
+        destruct(node->right_);
+        delete node;
+    }
+    public:
+
+    BinaryTree(){
+    }
+    ~BinaryTree()
+    {
+        destruct(root_);
+    }
+    TreeNode<T>* GetRoot()
+    {
+        return root_;
+    }
+    //把null节点算作 INT_MIN
+    BinaryTree( std::initializer_list<T>ll)
+    {
+        std::vector<T> l(ll.begin(),ll.end());
+        if(l.size() <=0 )
+            return;
+        if( l[0] == std::numeric_limits<T>::min() )
+            return;
+        auto nil = std::numeric_limits<T>::min();
+        root_ = new TreeNode<T>(l[0]);
+        Queue<TreeNode<T>*> q;
+        q.push(root_);
+
+        int i=1;
+        while( !q.empty() )
+        {
+            auto temp = q.front();
+            q.pop();
+            if( i<l.size() && l[i]!= nil )//左孩子
+            {
+                auto leftchild = new TreeNode<T>(l[i]);
+                temp->left_ = leftchild;
+                q.push(leftchild);
+            }
+            i++;
+            if( i<l.size() && l[i]!=nil )
+            {
+                auto rightchild = new TreeNode<T>(l[i]);
+                temp->right_ = rightchild;
+                q.push(rightchild);
+            }
+            i++;
+        }
+
+    }
+    void levelOrder()//层序遍历打印,叶子节点打印 null
+    {
+        if(root_ == nullptr )
+            return;
+        Queue<TreeNode<T>*>q;
+        q.push(root_);
+        std::cout<<"层序遍历"<<std::endl;
+        while( !q.empty() )
+        {
+            auto temp = q.front();
+            q.pop();
+            if( temp == nullptr )
+            {
+                std::cout<<" null "<<" ";
+                continue;
+            }
+            std::cout<<temp->val_<<" ";
+            q.push(temp->left_);
+            q.push(temp->right_);
+        }
+        std::cout<<std::endl;
+    }
+
+};
+void binarytree_test()
+{
+    BinaryTree<int> b={-10,9,20,INT_MIN,INT_MIN,15,7};
+    b.levelOrder();
+}
+void main_datastruct_test()
+{
+    //ListTest();
+    //stack_test();
+    //priority_queue_test();
+    //Queue_test();
+    //binarytree_test();
 }
 #endif

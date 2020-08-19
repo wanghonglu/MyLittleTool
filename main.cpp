@@ -2,6 +2,7 @@
 #ifdef LRU_TEST
 #include "LRU_Cache.h"
 #endif
+#include "LFU_Cache.h"
 #include "log.h"
 using namespace std;
 #include "json.hpp"
@@ -13,6 +14,7 @@ int main( int argc,char**argv )
 #ifdef LRU_TEST
     LRU_Test();
 #endif
+    LFU_Test();
     BeforStartProcess( "./stdout", "./stderr" );
     cerr<<GetRandomNumber()<<endl;
     cout<<GetRandomString()<<endl;

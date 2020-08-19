@@ -8,6 +8,9 @@
 #include<ctime>
 #include<cstdlib>
 #include<chrono>
+#include<thread>
+#include<mutex>
+#include "spinlock.hpp"
 using namespace std;
 using namespace datastruct;
 void bracket_match();//括号匹配
@@ -686,7 +689,40 @@ void binarySearchTree_test(int argc, char**argv)
 	delete tree;
 	delete self;
 }
-
+//单核电脑估计测试不出来差别
+template<typename LockType>
+void thread_test(std::vector<int>& v,int threadcounts,int numbercounts,LockType& lock)
+{
+	std::vector<std::thread> ths;
+	for( int i=0;i<threadcounts;++i )
+	{
+		ths.emplace_back([&v,numbercounts,threadcounts,&lock,i](){
+			for( int j=0;j<numbercounts;++j )
+			{
+				std::lock_guard<LockType> l(lock);
+				v.push_back(i*numbercounts+j);
+			}
+		});
+	}
+	for( auto& th:ths)
+		th.join();
+}
+void spinlock_test(int argc,char**argv )
+{
+	{
+		std::vector<int>v;
+		TimeCounts t(" mutex 测试 ");
+		std::mutex mu;
+		thread_test(v,4,100000,mu);
+	}	
+	{
+		std::vector<int>v;
+		TimeCounts t(" 自旋锁 测试 ");
+		Spinlock mu;
+		thread_test(v,4,100000,mu);
+	}
+	cout << __FUNCTION__ << " test end" << endl;
+}
 
 
 

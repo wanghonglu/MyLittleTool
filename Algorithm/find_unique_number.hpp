@@ -23,7 +23,6 @@ class FindUnique_number:public AlgorithmSolution{
     FindUnique_number()
     {
         m_algorithmName = "查找唯一不重复的数据 异或交换两数";
-        m_index = AlgorithmSolution::s_index++;
     }
     void Solution()override
     {

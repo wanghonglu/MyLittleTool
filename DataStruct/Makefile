@@ -6,10 +6,11 @@ Dep=$(wildcard *.d)
 -include $(Dep)
 OBJ=$(patsubst %.cpp, %.o, $(wildcard *.cpp ))
 Def= -D_UNIT_TEST_
+Lib= -lpthread
 WHL_dataStruct:$(OBJ)
-	$(CC) $(Opt) -o $@ $^ 
+	$(CC) $(Opt) -o $@ $^ $(Lib) 
 $(OBJ):%.o:%.cpp 
 	$(CC) $(Def) -c $(Opt) -o  $@  $< -MMD -MF $*.d -MP 
 clean:
-	@rm DataStruct *.o *.d
+	@rm WHL_dataStruct *.o *.d
 .PHONY:clean DataStruct

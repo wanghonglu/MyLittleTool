@@ -1,7 +1,6 @@
 /*
  * LRU(latest recently use)热点数据缓存
- * 在一些有用到redis的场景中，一些热点数据会经常访问，
- * 如果全部都从redis里获取明显不合适，缓存在内存中是个很好的方法
+ * 淘汰最久访问元素
  * 基于c++11
  * */
 #ifndef __LRU_CACHE

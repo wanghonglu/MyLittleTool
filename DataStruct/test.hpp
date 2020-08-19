@@ -12,4 +12,5 @@ void priority_queue_test(int argc, char**argv );
 void queue_test(int argc,char**argv );
 void deque_test(int argc,char**argv);
 void binarySearchTree_test(int argc, char**argv);
+void spinlock_test(int argc,char**argv);
 #endif

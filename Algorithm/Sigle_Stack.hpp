@@ -17,7 +17,6 @@ public:
     LargestRectanleArea()
     {
         m_algorithmName = "最大矩形问题  单调栈算法";
-        m_index = AlgorithmSolution::s_index++;
     }
     void Solution()override
     {
@@ -80,7 +79,6 @@ public:
     InorderLineUp()
     {
         m_algorithmName = "排队向右看问题  单调栈算法";
-        m_index = AlgorithmSolution::s_index++;
     }
     void Solution()override
     {
@@ -125,7 +123,6 @@ public:
     NextHighestTemperture()
     {
         m_algorithmName = "观测到下一个更高温度至少需要几天  单调栈算法";
-        m_index = AlgorithmSolution::s_index++;
     }
     void Solution()override
     {
@@ -169,7 +166,6 @@ public:
     GetRainQuest()
     {
         m_algorithmName = "接雨水问题  单调栈算法";
-        m_index = AlgorithmSolution::s_index++;
     }
     void Solution()override
     {

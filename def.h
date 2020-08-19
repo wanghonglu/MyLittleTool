@@ -18,11 +18,11 @@
 #include<sys/time.h>
 #include<sys/syscall.h>
 #include<unistd.h>
-#elf defined(WIN32)
+#elif defined(WIN32)
 #include<windows.h>
 #endif
-#include <boost/thread/locks.hpp>
-#include <boost/thread/shared_mutex.hpp>
+//#include <boost/thread/locks.hpp>
+//#include <boost/thread/shared_mutex.hpp>
 unsigned int Random(unsigned int max=0,unsigned int min=0 );
 int32_t GetRandomNumber();
 std::string GetRandomString();
@@ -37,7 +37,7 @@ unsigned int GetThreadId();
 std::string GetProcessName();
 
 
-using WRMUTEX=boost::shared_mutex;
-using W_LOCK=boost::unique_lock< WRMUTEX >;
-using R_LOCK=boost::shared_lock< WRMUTEX >;
+//using WRMUTEX=boost::shared_mutex;
+//using W_LOCK=boost::unique_lock< WRMUTEX >;
+//using R_LOCK=boost::shared_lock< WRMUTEX >;
 #endif

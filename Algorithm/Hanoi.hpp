@@ -54,7 +54,6 @@ class HanoiTowerAgorithm:public AlgorithmSolution
     {
         m_algorithmName = "汉诺塔问题";
         m_nNumber = N;
-        m_index = AlgorithmSolution::s_index++;
     }
     void Solution()override
     {

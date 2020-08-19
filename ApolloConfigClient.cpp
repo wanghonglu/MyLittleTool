@@ -171,7 +171,7 @@ void ApolloConfigClient::WatchCallBack(Response resp, const boost::system::error
 		//有变化会返回200 无变化会返回304 这个返回的code有个空格，不能直接跟"200"比较，略坑
 		int httpCode = std::atoi(resp->status_code.c_str());
 		if (httpCode != HTTP_OK && httpCode != HTTP_NO_CHANGE)
-			throw std::runtime_error("AppolloWatch Return httpCode Error  "+httpCode );
+			throw std::runtime_error("AppolloWatch Return httpCode Error  "+std::to_string(httpCode) );
 
 		if (httpCode == HTTP_NO_CHANGE)
 		{
