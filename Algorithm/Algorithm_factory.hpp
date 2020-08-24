@@ -112,4 +112,5 @@ RegistAlgorithm(ReserverList)
 RegistAlgorithm(BTMaxPathSum)
 //找出所有能组合出来零钱的方式
 RegistAlgorithm(GetAllCoin)
+//背包问题
 #endif
