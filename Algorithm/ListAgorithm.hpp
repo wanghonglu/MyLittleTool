@@ -87,6 +87,7 @@ class ListGetKthFromEnd:public AlgorithmSolution
 
     }
 };
+RegistAlgorithm(ListGetKthFromEnd)
 /*
  * 判断链表是否有环并且找到环所在的位置
  * 判断是否有环 可以通过快慢指针,快指针每次走2步  慢指针每次走1步
@@ -169,6 +170,7 @@ class FindListCircle:public AlgorithmSolution
         return fast;
     }
 };
+RegistAlgorithm(FindListCircle)
 /*
 输入两个递增排序的链表，合并这两个链表并使新链表中的节点仍然是递增排序的。
 */
@@ -261,6 +263,7 @@ class MergeOrderedList:public AlgorithmSolution
     }
 
 };
+RegistAlgorithm(MergeOrderedList)
 /*
     输入一个链表，反转链表
 */
@@ -298,4 +301,5 @@ class ReserverList:public AlgorithmSolution{
     }
     
 };
+RegistAlgorithm(ReserverList)
 #endif

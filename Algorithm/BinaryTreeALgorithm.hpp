@@ -68,4 +68,5 @@ class BTMaxPathSum:public AlgorithmSolution
         return std::max(left,right)+node->val_;
     }
 };
+RegistAlgorithm(BTMaxPathSum)
 #endif

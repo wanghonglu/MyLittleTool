@@ -104,7 +104,7 @@ class MaxSumArray:public AlgorithmSolution{
 
 
 };
-#endif
+RegistAlgorithm(MaxSumArray)
 class MaxProductArray:public AlgorithmSolution{
 	public:
 	MaxProductArray()
@@ -148,6 +148,8 @@ class MaxProductArray:public AlgorithmSolution{
 	}
 
 };
+RegistAlgorithm(MaxProductArray)
+#endif
 // class Solution {
 // public:
 // 	int maxSubarray(std::vector<int>&nums, int left, int right)

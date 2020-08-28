@@ -116,5 +116,5 @@ class NQueueQuest:public AlgorithmSolution{
     int        m_result;
     std::vector<std::vector<int>> m_base;
 };
-
+RegistAlgorithm(NQueueQuest<8>)
 #endif

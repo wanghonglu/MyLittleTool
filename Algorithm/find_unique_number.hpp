@@ -63,4 +63,5 @@ class FindUnique_number:public AlgorithmSolution{
         return a;
     }
 };
+RegistAlgorithm(FindUnique_number)
 #endif

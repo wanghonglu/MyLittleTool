@@ -63,6 +63,7 @@ private:
         return max;
     }
 };
+RegistAlgorithm(LargestRectanleArea)
 /*
  * 描叙：有n个人站队，所有的人全部向右看，个子高的可以看到个子低的发型，给出每个人的身高，问所有人能看到其他人发现总和是多少。
  * 输入：4 3 7 1
@@ -110,6 +111,7 @@ public:
         return total;
     }
 };
+RegistAlgorithm(InorderLineUp)
 /*
  *  下一个最高温度问题
  *  给定一个数组,代表每天的问题, 算出一个数组每一项代表下一个更高问题要等待的天数
@@ -151,6 +153,7 @@ public:
         return result;
     }
 };
+RegistAlgorithm(NextHighestTemperture)
 /*
  *  接雨水问题,跟矩阵类似,给定宽度为1 不同长度的柱子 求最大能接的雨水的量
  *  比如输入 [1,0,0,2] 那么能接的雨水就是2个单位
@@ -201,5 +204,5 @@ public:
 
     }
 };
-
+RegistAlgorithm(GetRainQuest)
 #endif
