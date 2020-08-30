@@ -1,5 +1,4 @@
-#ifndef __BINARYTREE_ALGORITHM__HPP
-#define __BINARYTREE_ALGORITHM__HPP
+
 /*
     二叉树最大路径和
     给定一个非空二叉树，返回其最大路径和。
@@ -69,4 +68,3 @@ class BTMaxPathSum:public AlgorithmSolution
     }
 };
 RegistAlgorithm(BTMaxPathSum)
-#endif

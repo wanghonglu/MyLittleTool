@@ -300,3 +300,69 @@ class ReserverList:public AlgorithmSolution{
     
 };
 RegistAlgorithm(ReserverList)
+/*
+给出两个 非空 的链表用来表示两个非负的整数。其中，它们各自的位数是按照 逆序 的方式存储的，并且它们的每个节点只能存储 一位 数字。
+
+如果，我们将这两个数相加起来，则会返回一个新的链表来表示它们的和
+输入：(2 -> 4 -> 3) + (5 -> 6 -> 5)
+输出：7 -> 0 -> 9
+原因：342 + 565 = 907
+//感觉这个得反转链表，然后计算。。。。
+*/
+class AddTwoNumberList:public AlgorithmSolution{
+    public:
+    AddTwoNumberList()
+    {
+        m_algorithmName="两数相加 两个链表代表的整数相加";
+    }
+    void Solution()override
+    {
+        List<int> l1{2,4,3};
+        List<int> l2{5,6,5};
+        std::cout<<"原始链表: "<<std::endl;
+        l1.print();
+        l2.print();
+        List<int> ret;
+        ret.head__() = addTwoNumbers(l1.head(),l2.head());
+        std::cout<<"相加之后的链表: "<<std::endl;
+        ret.print();
+    }
+    template<typename T>
+    ListNode<T>* addTwoNumbers(ListNode<T>*l1,ListNode<T>*l2 )
+    {
+        if(!l1 || !l2 )
+            return l1?l1:l2;
+        ListNode<T>*head = nullptr;
+        ListNode<T>**node = &head;
+        int k=0;
+        while( l1 && l2 )
+        {
+            *node = new ListNode<T>();
+            int temp = k+l1->val_+l2->val_;
+            (*node)->val_ = temp%10;
+            k = temp/10;
+            node = &((*node)->next_);
+            l1 = l1->next_;
+            l2 = l2->next_;
+        }
+        decltype(l1) left_list = l1?l1:l2;
+        while(left_list)
+        {
+            *node = new ListNode<T>();
+            int temp = k+left_list->val_;
+            (*node)->val_ = temp%10;
+            k = temp/10;
+            node = &((*node)->next_);
+            left_list = left_list->next_;
+        }
+        if(k>0)
+        {
+           *node = new ListNode<T>();
+           (*node)->val_ = k;
+            node = &((*node)->next_);
+        }
+        *node = NULL;
+        return head;
+    }
+};
+RegistAlgorithm(AddTwoNumberList);

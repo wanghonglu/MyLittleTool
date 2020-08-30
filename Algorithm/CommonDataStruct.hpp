@@ -21,6 +21,8 @@ struct ListNode{
     {
         
     }
+    ListNode()
+    {}
     T    val_;
     ListNode* next_;
 };
@@ -99,6 +101,10 @@ class List{
         return head_ == nullptr;
     }
     ListNode<T>* head()
+    {
+        return head_;
+    }
+    ListNode<T>*& head__()//这个用来构造临时对象
     {
         return head_;
     }
