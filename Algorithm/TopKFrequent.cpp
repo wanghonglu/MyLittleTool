@@ -16,8 +16,7 @@
  *      k个元素每次移动耗时 logk
  *      总体时间复杂度是小于 nlogn的
  * */
-#ifndef __TOP_KFREQUENT_HPP
-#define __TOP_KFREQUENT_HPP
+
 #include<vector>
 #include<iostream>
 #include<algorithm>
@@ -87,4 +86,3 @@ public:
     size_t  m_nk;
 };
 RegistAlgorithm(TopKFrequent<3>)
-#endif

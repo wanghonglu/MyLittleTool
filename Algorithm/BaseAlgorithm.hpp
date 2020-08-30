@@ -30,7 +30,7 @@ class AlgorithmSolution{
 
 };
 
-size_t AlgorithmSolution::s_index=0;
+
 #define PrintArray(a) do{\
     std::for_each(a.begin(),a.end(),[](decltype(a[0]) t ){std::cout<<t<<" ";});\
     std::cout<<std::endl;\
@@ -97,7 +97,7 @@ private:
 template<typename T>
 struct algorithm_register
 {
-    explicit algorithm_register()
+    algorithm_register()
     {
         T * temp = new T();
         TestSolutionFactory::Instant().Regiest( temp->m_index,temp );
@@ -109,8 +109,9 @@ struct algorithm_register_agent{
 };
 //终极解决方案 就是这个 注意 这里需要模板特例化 也就是那个template<>不能少 少了就编译报错了
 //而且这个必须得初始化 不初始化则不会调用构造函数 坑爹啊啊啊啊啊啊啊啊啊啊 
+// 但是如果不是模板类的静态成员这里就只需要定义而不需要初始化就会调用构造函数不知道为啥
 #define RegistAlgorithm(classname) \
- template<> algorithm_register<classname> algorithm_register_agent<classname>::help =algorithm_register<classname>() ;
+ template<> algorithm_register<classname> algorithm_register_agent<classname>::help = algorithm_register<classname>() ;
 
 
 #define GetOneTest(type)  TestSolutionFactory::Instant().GetOne(type)

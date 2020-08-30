@@ -74,5 +74,5 @@ class HanoiTowerAgorithm:public AlgorithmSolution
     size_t  m_nNumber;//总共的碟子数量
     size_t  m_step;//步数
 };
-//RegistAlgorithm(HanoiTowerAgorithm<10>)
+RegistAlgorithm(HanoiTowerAgorithm<10>)
 

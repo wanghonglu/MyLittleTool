@@ -20,8 +20,6 @@ struct ListNode {
 	当删除了倒数第二个节点后，链表变为 1->2->3->5.
 
 */
-#ifndef __FIND_KTH_FROM_END
-#define __FIND_KTH_FROM_END
 #include<stdlib.h>
 #include<stdio.h>
 #include "BaseAlgorithm.hpp"
@@ -302,4 +300,3 @@ class ReserverList:public AlgorithmSolution{
     
 };
 RegistAlgorithm(ReserverList)
-#endif

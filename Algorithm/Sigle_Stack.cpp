@@ -1,5 +1,4 @@
-#ifndef __SIGLE_STACK_HPP_
-#define __SIGLE_STACK_HPP_
+
 #include "BaseAlgorithm.hpp"
 /*
  * 给出一个矩形统计图，它的每个矩形的宽度都为1，高度是题目所给。要你求出这个矩形图中最大面积的长方形。
@@ -205,4 +204,4 @@ public:
     }
 };
 RegistAlgorithm(GetRainQuest)
-#endif
+

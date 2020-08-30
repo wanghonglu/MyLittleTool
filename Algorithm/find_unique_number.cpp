@@ -13,8 +13,6 @@
  *          得到之后,找到这个数里面第一个比特位为1的数 那么这两个数 第N为一个为0 一个为1
  *          将这组数分成两组 N位为0的一组和 N位为1的一组,然后分别把两组元素异或 即得到这两个数
  * */
-#ifndef __FIND_UNIQUE_NUMBER__
-#define __FIND_UNIQUE_NUMBER__
 #include<stdio.h>
 #include<vector>
 #include"BaseAlgorithm.hpp"
@@ -64,4 +62,3 @@ class FindUnique_number:public AlgorithmSolution{
     }
 };
 RegistAlgorithm(FindUnique_number)
-#endif

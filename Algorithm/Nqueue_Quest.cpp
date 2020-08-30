@@ -26,8 +26,6 @@
  *       这个的计算量其实很大 n^n次方 
  *       
  * */
-#ifndef _NQUEEN_QUEST__H
-#define _NQUEEN_QUEST__H
 #include<vector>
 #include<iostream>
 #include<cstring>
@@ -117,4 +115,3 @@ class NQueueQuest:public AlgorithmSolution{
     std::vector<std::vector<int>> m_base;
 };
 RegistAlgorithm(NQueueQuest<8>)
-#endif

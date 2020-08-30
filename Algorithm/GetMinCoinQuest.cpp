@@ -20,8 +20,6 @@
  *
  * */
 //硬币数组 从最大开始
-#ifndef __GETMINCOINQUEST__
-#define __GETMINCOINQUEST__
 #include<vector>
 #include<iostream>
 #include<set>
@@ -98,7 +96,7 @@ class GetAllCoin:public AlgorithmSolution{
         PrintArray(coins);
         std::cout<<"总共有 "<<result<<" 种组合,可以凑成 "<<amount<<" 元"<<std::endl;
     }
-    int change(int amount, vector<int>& coins) {
+    int change(int amount, std::vector<int>& coins) {
         if( amount<=0 || coins.empty() )
             return 0;
         std::sort(coins.begin(),coins.end(),std::less<int>());
@@ -122,4 +120,3 @@ class GetAllCoin:public AlgorithmSolution{
     }
 };
 RegistAlgorithm(GetAllCoin)
-#endif

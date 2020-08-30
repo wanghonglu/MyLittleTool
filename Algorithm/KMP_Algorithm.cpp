@@ -1,5 +1,4 @@
-#ifndef __KMP_ALGORITHM_HPP__
-#define __KMP_ALGORITHM_HPP__
+
 #include "BaseAlgorithm.hpp"
 /*
     KMP算法看了好久 总算看了个差不多，先说原理
@@ -140,4 +139,3 @@ class KMP_Algorithm:public AlgorithmSolution{
 };
 //字符串匹配算法 KMP算法
 RegistAlgorithm(KMP_Algorithm)
-#endif
