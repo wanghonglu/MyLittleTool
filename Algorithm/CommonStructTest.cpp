@@ -6,9 +6,9 @@ void ListTest()
        l.print();
        l.erase(node);
        l.print();
-       while(node->next_)
+       while(node->next)
        {
-           node = node->next_;
+           node = node->next;
        }
        l.erase(node);
        l.print();

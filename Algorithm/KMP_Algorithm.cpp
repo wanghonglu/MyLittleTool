@@ -92,7 +92,7 @@ class KMP_Algorithm:public AlgorithmSolution{
     }
     void Solution()override
     {
-        std::string  src="mississippi";
+        std::string  src="miss255555222sipiiipssssiiiiidssipsissippi";
         std::string  pattern="issip";
       
         int pos = strStr(src,pattern);

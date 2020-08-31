@@ -17,14 +17,14 @@
 
 template<typename T>
 struct ListNode{
-    ListNode(const T& val ):val_(val),next_(nullptr)
+    ListNode(const T& val ):val(val),next(nullptr)
     {
         
     }
     ListNode()
     {}
-    T    val_;
-    ListNode* next_;
+    T    val;
+    ListNode* next;
 };
 template<typename T>
 class List{
@@ -44,8 +44,8 @@ class List{
         //这里也一样~~~ head原来如果是递增的,这里按照头节点插入法,最终变成了递减的了~~~
         while( head )
         {
-            insert(head->val_);
-            head = head->next_;
+            insert(head->val);
+            head = head->next;
         }
         reverse();
     }
@@ -54,7 +54,7 @@ class List{
         auto node = head_;
         while( node )
         {
-            auto temp = node->next_;
+            auto temp = node->next;
             delete node;
             node = temp;
         }
@@ -66,8 +66,8 @@ class List{
         decltype(head_) before=nullptr;
         while( head_ )
         {
-            auto temp = head_->next_;
-            head_->next_ = before;
+            auto temp = head_->next;
+            head_->next = before;
             before = head_;
             head_ = temp;
         }
@@ -81,7 +81,7 @@ class List{
             head_ = node;
             return;
         }
-        node->next_ = head_;
+        node->next = head_;
         head_ = node;
     }
     void print()
@@ -90,8 +90,8 @@ class List{
         std::cout<<"[ ";
         while( node )
         {
-            auto temp = node->next_;
-            std::cout<<node->val_<<" ";
+            auto temp = node->next;
+            std::cout<<node->val<<" ";
             node = temp;
         }
         std::cout<<"]"<<std::endl;;
@@ -115,19 +115,19 @@ class List{
         ListNode<T> **parent = &head_, *start = head_;
         while( start && start != node )
         {
-            parent = &(start->next_);
+            parent = &(start->next);
             start =*parent;
         }
 
         if( !start )
             return;
-        *parent = node->next_;//这里就不用处理删除尾元素 头元素的情况了
-        // if( node->next_ == nullptr )
+        *parent = node->next;//这里就不用处理删除尾元素 头元素的情况了
+        // if( node->next == nullptr )
         // {
         //     //这里有意思了，这里的*parent是最有一个节点的next指针，而tail实际应该等于最有一个节点的指针的
         //     //所以需要把 next的地址转化成 整个结构的地址，即把某个成员的地址转化成整个结构体的地址
         //     //鼎鼎大名的内核宏，计算偏移量
-        //     tail_ = *( parent- (size_t)(&(((ListNode<T>*)0)->next_)));
+        //     tail_ = *( parent- (size_t)(&(((ListNode<T>*)0)->next)));
         // }    
         delete node;      
     }
@@ -421,14 +421,14 @@ void priority_queue_test();
 */
 template<typename T>
 struct TreeNode{
-        T   val_;
+        T   val;
         TreeNode* left_;
         TreeNode* right_;
-        TreeNode(const T& val ):val_(val),left_(nullptr),right_(nullptr){}
+        TreeNode(const T& val ):val(val),left_(nullptr),right_(nullptr){}
         void print()//层序遍历
         {
             Queue<TreeNode<T>*> q;
-            std::cout<<val_<<" ";
+            std::cout<<val<<" ";
             q.push(left_);
             q.push(right_);
             while(!q.empty() )
@@ -521,7 +521,7 @@ class BinaryTree{
                 std::cout<<" null "<<" ";
                 continue;
             }
-            std::cout<<temp->val_<<" ";
+            std::cout<<temp->val<<" ";
             q.push(temp->left_);
             q.push(temp->right_);
         }

@@ -37,7 +37,7 @@ class ListGetKthFromEnd:public AlgorithmSolution
         l.print();
         int k=4;
         auto node = getKthFromEnd(l.head(),k);
-        std::cout<<"倒数第 "<<k<<"个值为: "<<node->val_<<std::endl;
+        std::cout<<"倒数第 "<<k<<"个值为: "<<node->val<<std::endl;
         removeFromEnd(l,k);
         std::cout<<"删除倒数第 "<<k<<" 个值后的链表为: "<<std::endl;
         l.print();
@@ -50,15 +50,15 @@ class ListGetKthFromEnd:public AlgorithmSolution
         ListNode<T>* fast = head,*slow = head;
         int i=0;
         for( ;i<k && fast!=nullptr ;i++)
-            fast = fast->next_;
+            fast = fast->next;
         if( fast == nullptr && i == k )
             return slow;
         if( fast == nullptr )
             return nullptr;
         while( fast!=nullptr )
         {
-            slow = slow->next_;
-            fast = fast->next_;
+            slow = slow->next;
+            fast = fast->next;
         }
         return slow;
     }
@@ -69,7 +69,7 @@ class ListGetKthFromEnd:public AlgorithmSolution
         decltype(head) fast=head, slow=head;
         int i=0;
         for(;i<k&&fast!=nullptr;++i )
-            fast = fast->next_;
+            fast = fast->next;
         
         do
         {
@@ -77,8 +77,8 @@ class ListGetKthFromEnd:public AlgorithmSolution
                 return ;
             while( fast!=nullptr )
             {
-                fast = fast->next_;
-                slow = slow->next_;   
+                fast = fast->next;
+                slow = slow->next;   
             }
             l.erase(slow);
         }while(0);
@@ -107,20 +107,20 @@ class FindListCircle:public AlgorithmSolution
         List<int> l={1,2,3,4,5,6,7,8};
 
         auto node = l.head();
-        node = node->next_->next_;
+        node = node->next->next;
 
         auto temp = l.head();
-        while( temp->next_ !=nullptr )
-            temp = temp->next_;
+        while( temp->next !=nullptr )
+            temp = temp->next;
         
         //造一个环 ，让8的next指针指向3
-        temp->next_ = node;
+        temp->next = node;
 
         auto test=[this](ListNode<int>*head){
             auto temp = findListCircle(head);
             if( temp )
             {
-                std::cout<<"链表有环，环的节点的值为 "<<temp->val_<<std::endl;
+                std::cout<<"链表有环，环的节点的值为 "<<temp->val<<std::endl;
             }
             else
                 std::cout<<"链表没环"<<std::endl;
@@ -139,15 +139,15 @@ class FindListCircle:public AlgorithmSolution
         decltype(head) fast = head,slow=head,node;
         //先判断是否有环，快慢指针，快指针走两步，慢指针走一步
         bool bhaveCircle=false;
-        while( slow && fast && fast->next_ )
+        while( slow && fast && fast->next )
         {
             if( slow == fast && slow !=head )
             {
                 bhaveCircle = true;
                 break;
             }
-            slow = slow->next_;
-            fast = fast->next_->next_;
+            slow = slow->next;
+            fast = fast->next->next;
         }
         if( !bhaveCircle )
             return nullptr ;//无环
@@ -159,12 +159,12 @@ class FindListCircle:public AlgorithmSolution
         while( fast && slow && slow != fast )
         {
             parent = slow;
-            fast = fast->next_;
-            slow = slow->next_;
+            fast = fast->next;
+            slow = slow->next;
         }
         //这里多加一步，不然这个有环的链表就析构不了了，在环里的slow指针上一次指向的就是这个环
         //让它指向nullptr保证析构掉
-        parent->next_ = nullptr;
+        parent->next = nullptr;
         return fast;
     }
 };
@@ -210,17 +210,17 @@ class MergeOrderedList:public AlgorithmSolution
         ListNode<T>*head,**node = &head;//引用不能被重新赋值所以这里不许是二级指针
         while( l1!=nullptr && l2!=nullptr )
         {
-            if( l1->val_<l2->val_ )
+            if( l1->val<l2->val )
             {
                 *node = l1;
-                l1 = l1->next_;
+                l1 = l1->next;
             }
             else
             {
                 *node = l2;
-                l2 = l2->next_;
+                l2 = l2->next;
             }
-            node = &(*node)->next_;
+            node = &(*node)->next;
         }
         *node = l1?l1:l2;
         return head;
@@ -235,28 +235,28 @@ class MergeOrderedList:public AlgorithmSolution
         ListNode<T>*node =nullptr;//
         while( l1!=nullptr && l2!=nullptr )
         {
-            if( l1->val_<l2->val_ )
+            if( l1->val<l2->val )
             {
                 if(node==nullptr)
                     node = l1;
                 else
-                    node->next_ = l1;
-                l1 = l1->next_;
+                    node->next = l1;
+                l1 = l1->next;
             }
             else
             {
                 if(node==nullptr)
                     node = l2;
                 else
-                    node->next_ = l2;
-                l2 = l2->next_;
+                    node->next = l2;
+                l2 = l2->next;
             }
             if(head == nullptr )
                 head = node;
             else
-                node = node->next_;
+                node = node->next;
         }
-        node->next_ = l1?l1:l2;
+        node->next = l1?l1:l2;
         return head;
     }
 
@@ -290,8 +290,8 @@ class ReserverList:public AlgorithmSolution{
         ListNode<T>* before =nullptr,*temp;
         while( head )
         {
-            temp = head->next_;
-            head->next_ = before;
+            temp = head->next;
+            head->next = before;
             before = head;
             head = temp;
         }
@@ -338,31 +338,116 @@ class AddTwoNumberList:public AlgorithmSolution{
         while( l1 && l2 )
         {
             *node = new ListNode<T>();
-            int temp = k+l1->val_+l2->val_;
-            (*node)->val_ = temp%10;
+            int temp = k+l1->val+l2->val;
+            (*node)->val = temp%10;
             k = temp/10;
-            node = &((*node)->next_);
-            l1 = l1->next_;
-            l2 = l2->next_;
+            node = &((*node)->next);
+            l1 = l1->next;
+            l2 = l2->next;
         }
         decltype(l1) left_list = l1?l1:l2;
         while(left_list)
         {
             *node = new ListNode<T>();
-            int temp = k+left_list->val_;
-            (*node)->val_ = temp%10;
+            int temp = k+left_list->val;
+            (*node)->val = temp%10;
             k = temp/10;
-            node = &((*node)->next_);
-            left_list = left_list->next_;
+            node = &((*node)->next);
+            left_list = left_list->next;
         }
         if(k>0)
         {
            *node = new ListNode<T>();
-           (*node)->val_ = k;
-            node = &((*node)->next_);
+           (*node)->val = k;
+            node = &((*node)->next);
         }
         *node = NULL;
         return head;
     }
 };
 RegistAlgorithm(AddTwoNumberList);
+
+/*
+给你一个链表，每 k 个节点一组进行翻转，请你返回翻转后的链表。
+
+k 是一个正整数，它的值小于或等于链表的长度。
+
+如果节点总数不是 k 的整数倍，那么请将最后剩余的节点保持原有顺序。
+
+给你这个链表：1->2->3->4->5
+
+当 k = 2 时，应当返回: 2->1->4->3->5
+
+当 k = 3 时，应当返回: 3->2->1->4->5
+
+说明：
+
+你的算法只能使用常数的额外空间。
+你不能只是单纯的改变节点内部的值，而是需要实际进行节点交换。
+*/
+template<size_t N>
+class ReverseKGroup:public AlgorithmSolution{
+    public:
+    ReverseKGroup()
+    {
+        m_algorithmName = "K个一组 翻转链表";
+    }
+    void Solution()override
+    {
+        List<int> l={1,2,3,4,5};
+        std::cout<<"原始链表: ";
+        l.print();
+        List<int> ret(reverseKGroup(l.head(),N) );
+        std::cout<<" 经过 "<<N<<" 个一组 翻转后，得到 ";
+        ret.print();
+    }
+    template<typename T>
+    ListNode<T>* reverse(ListNode<T>*n )
+    {
+        ListNode<T>*head = nullptr;
+        ListNode<T>* temp = nullptr;
+        while( n )
+        {
+            temp = n->next;
+            n->next = head;
+            head= n;
+            n = temp;
+        }
+        return head;
+    }
+    //常数空间
+    template<typename T>
+    ListNode<T>* reverseKGroup(ListNode<T>*head, int k )
+    {
+        if(head==NULL || k<0 )
+            return NULL;
+        if(k<=1)
+            return head;
+        decltype(head) last_end=nullptr;
+        decltype(head) new_head=nullptr;
+        decltype(head) beg =head,end=nullptr;
+        int idx=0;
+        while(head)
+        {
+            end = head;
+            head = head->next;
+            idx++;
+            if(idx == k )
+            {
+                end->next = nullptr;
+                if(new_head == nullptr )
+                    new_head = reverse(beg);
+                else
+                    last_end->next = reverse(beg);
+                last_end = beg;//原来的beg反转后变成了最后一个元素
+                beg = head;
+                idx=0;
+            }
+        }
+        if(last_end)
+            last_end->next = beg;
+        return new_head;
+        
+    }
+};
+RegistAlgorithm(ReverseKGroup<3>)

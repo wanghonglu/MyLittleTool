@@ -51,7 +51,7 @@ class BTMaxPathSum:public AlgorithmSolution
         int left_max = std::max<int>(0,OnsideMaxPath(node->left_));
         int right_max = std::max<int>(0,OnsideMaxPath(node->right_));
 
-        m_maxpathsum = std::max<int>(m_maxpathsum, left_max+right_max+node->val_);
+        m_maxpathsum = std::max<int>(m_maxpathsum, left_max+right_max+node->val);
         maxPathSum(node->left_);
         maxPathSum(node->right_);
         return m_maxpathsum;
@@ -64,7 +64,7 @@ class BTMaxPathSum:public AlgorithmSolution
         int left = std::max<int>(0,OnsideMaxPath(node->left_));
         int right = std::max<int>(0,OnsideMaxPath(node->right_));
 
-        return std::max(left,right)+node->val_;
+        return std::max(left,right)+node->val;
     }
 };
 RegistAlgorithm(BTMaxPathSum)
