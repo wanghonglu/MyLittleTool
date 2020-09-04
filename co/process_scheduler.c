@@ -18,17 +18,6 @@ __thread ProcessScheduler* gPerThreadProcessScheduler = NULL;
  
      return scheduler;
  }
- //线程局部变量 线程安全
- common_shared_stack_t* GetGlobSharedStackPerThread(ProcessScheduler* proc)
- {
-     if( proc->co_shared_stack == NULL )
-     {
-         //默认用一个共享栈 栈空间8M
-         SetGlobleSharedStack(1,8*1024*1024);
-     }
-     size_t idx = (proc->co_shared_stack_idx++)%proc->co_total_shared_stack;
-     return proc->co_shared_stack[idx];
- }
  ProcessScheduler* GetCurrentProcessScheduler()
  {
      if(!gPerThreadProcessScheduler)
@@ -36,25 +25,4 @@ __thread ProcessScheduler* gPerThreadProcessScheduler = NULL;
  
      return gPerThreadProcessScheduler;
  }
-/*
- * count:创建几个共享栈
- * stacksize:每个栈多大
- * */
-void SetGlobleSharedStack(size_t count,size_t stacksize )
-{
-    ProcessScheduler* proc = GetCurrentProcessScheduler();
-    proc->co_total_shared_stack = count;
-    proc->co_shared_stack_idx=0;
-    proc->co_shared_stack = (common_shared_stack_t**)malloc(count*sizeof(common_shared_stack_t*));
-
-    for( int i=0;i<count;i++ )
-    {
-        proc->co_shared_stack[i]=(common_shared_stack_t*)malloc(sizeof(common_shared_stack_t));
-        proc->co_shared_stack[i]->cur_co = NULL;
-        proc->co_shared_stack[i]->stack_buf = (char*)malloc(stacksize); 
-        proc->co_shared_stack[i]->stack_size = stacksize;
-        proc->co_shared_stack[i]->co_shared_rbp = proc->co_shared_stack[i]->stack_buf+stacksize;
-    }
-}
-
 

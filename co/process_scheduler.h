@@ -25,18 +25,10 @@ typedef struct context context_t;
      size_t        co_index_;//co_index_ 号协程 当前运行协程
      size_t        co_stack_size;
  
-     //共享栈
-     size_t        co_total_shared_stack;
-     size_t        co_shared_stack_idx;
-     common_shared_stack_t** co_shared_stack;
- 
  }ProcessScheduler;
 
- void SetGlobleSharedStack( size_t count, size_t stacksize );
 
  ProcessScheduler* ProcessSchedulerInit();
  ProcessScheduler* GetCurrentProcessScheduler();
 
- common_shared_stack_t* GetGlobSharedStackPerThread(ProcessScheduler* proc);
- 
 #endif 

@@ -95,6 +95,9 @@ void co_start(context_t* co )
     coroutine_swap(last_co,co);
 }
 //创建共享栈协程
+//创建共享协程的时候必须把共享栈传进来,不能把共享栈放在调度器里面
+//因为如果在协程里面调用协程,两个协程可能会用同一个共享栈,汇编切换里面会发生
+//一个协程往里面写 同时一个协程读
 context_t* co_create_shared_stack(fn_type fun,void*args )
 {
     context_t* co = (context_t*)malloc(sizeof(context_t));

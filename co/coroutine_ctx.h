@@ -55,6 +55,7 @@ typedef struct context{
      shared_stack*  co_shared_stack;//共享栈
 
 }context_t;
+
 //汇编切换协程
 extern void* jump_2_context(void * cur,void* pending );
  //函数栈帧
@@ -68,13 +69,33 @@ void co_yield();
   * */
  //非共享栈有点坑 一个协程一个栈 内存不够用 并发上不去
  //共享站也有缺点 每次切换拷贝耗时
- //统一的协程调度器  一个线程1个
  //
  //协程启动调用函数
 void RoutineStartFun(void*);
 
 //非共享栈
 context_t* co_create(fn_type fun, void*args);
+
+//共享栈结构
+//共享栈协程运行过程是这样的
+// 协程a->协程b的时候
+// 假设协程b用的共享栈之前是由协程C使用的
+// 则 b 切人的时候 首先要把共享栈的东西拷贝给C
+//  
+//  a b用的是两个不同的栈 这个是必须的
+//
+//  切换的时候 a把寄存器的内容保存起来 b给相应的寄存器赋值
+//
+//  等到再次切换到C的时候  还需要C把自己保存的内容恢复到共享栈上
+//
+//
+typedef common_shared_stack{
+    content_t    *cur_co;//当前使用共享栈的协程
+    char*        stack_buf;
+    size_t       stack_size;//栈大小
+    char*        co_shared_rbp;//共享栈的rbp指针 
+};
+
 //共享栈
 context_t* co_create_shared_stack(fn_type fun, void*args);
 //协程启动
