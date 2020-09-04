@@ -5,11 +5,11 @@ void clear_stack(context_t* ctx )
 {
    if( ctx->is_shared_stack )
    {
-       if( ctx->co_shared_stack && ctx->co_shared_stack->buf )
+       if(ctx->co_shared_stack->buf )
        {
            free(ctx->co_shared_stack->buf);
-           free(ctx->co_shared_stack);
        }
+       free(ctx->co_shared_stack);
    }
    else
    {
@@ -28,16 +28,22 @@ void coroutine_swap(context_t*cur, context_t*next )
         cur->co_shared_stack->rsp = &rsp;
     }
 
-    ProcessScheduler* process = GetCurrentProcessScheduler();
     if( next->is_shared_stack )
     {
         //将共享栈上之前使用的协程的
-        common_shared_stack_t* shared_st = GetGlobSharedStackPerThread(process);
-        if( shared_st->cur_co  )
-            save_shared_stack(shared_st->cur_co);//保存原共享栈内容
-        
+        if( next->co_shared_stack->common_stack->cur_co  )
+            save_shared_stack(next->co_shared_stack->common_stack->cur_co);//保存原共享栈内容
     }
+    //上面是切出的时候
     jump_2_context(&(cur->co_stack),&(next->co_stack));
+    //下面是切回的时候 
+    //这个需要重新获取
+    ProcessScheduler* process = GetCurrentProcessScheduler();
+    context_t *cur_co = process->allcos_[process->co_index_];
+    if( cur_co->is_shared_stack && cur_co->co_shared_stack->buf && cur_co->co_shared_stack->len>0 )
+    {
+        resume_shared_stack(cur_co);
+    }
 }
 void co_yield()
 {
@@ -98,7 +104,7 @@ void co_start(context_t* co )
 //创建共享协程的时候必须把共享栈传进来,不能把共享栈放在调度器里面
 //因为如果在协程里面调用协程,两个协程可能会用同一个共享栈,汇编切换里面会发生
 //一个协程往里面写 同时一个协程读
-context_t* co_create_shared_stack(fn_type fun,void*args )
+context_t* co_create_shared_stack(fn_type fun,void*args,common_shared_stack_t* shared_st  )
 {
     context_t* co = (context_t*)malloc(sizeof(context_t));
     memset(co,0,sizeof(context_t));
@@ -106,24 +112,19 @@ context_t* co_create_shared_stack(fn_type fun,void*args )
     co->args = args;
     co->is_shared_stack = 1;
 
-    
     co->co_shared_stack =(shared_stack*)malloc(sizeof(shared_stack)); 
     //栈顶
     //共享栈
-    common_shared_stack_t* common_stack = GetGlobSharedStackPerThread(GetCurrentProcessScheduler());  
+    co->co_shared_stack->common_stack = shared_st;
 
-    co->co_shared_stack->common_stack = common_stack;
-
-    void* rsp = common_stack->co_shared_rbp-sizeof(void*);
-    rsp = (void*)((size_t)rsp & (-16L));
-
-    co->co_stack.reg[RSP]=rsp;//共享站 栈顶指针
+    co->co_stack.reg[RSP]=shared_st->co_shared_rbp;//共享站 栈顶指针
     co->co_stack.reg[RBP]=0;
     co->co_stack.reg[RIP]=RoutineStartFun;
     co->co_stack.reg[RDI]=co;
     return co;
 
 }
+//保存上下文 从共享栈上保存实际占用内存到自身上
 void save_shared_stack(context_t* co)
 {
     //共享栈实际使用的内存是从rbp->rsp之间的内存
@@ -132,7 +133,40 @@ void save_shared_stack(context_t* co)
     if( co->co_shared_stack->buf )
         free(co->co_shared_stack->buf);
     co->co_shared_stack->buf = (char*)malloc(len);
+    co->co_shared_stack->len = len;
     memcpy(co->co_shared_stack->buf, co->co_shared_stack->rsp, len);
+}
+//恢复上下文 把自身保存的内容 恢复到共享栈上
+void resume_shared_stack( context_t* co  )
+{
+    memcpy( co->co_shared_stack->common_stack->co_shared_rbp, co->co_shared_stack->buf, co->co_shared_stack->len );
+}
+//传入0 默认8M 共享栈
+common_shared_stack_t*
+create_shared_stack(size_t size )
+{
+    common_shared_stack_t* shared_st = (common_shared_stack_t*)malloc(sizeof(common_shared_stack_t));
+    memset(shared_st,0,sizeof(common_shared_stack_t));
+
+    if(size<1024*1024)
+        size = DefaultStackSize;
+    shared_st->stack_buf = (char*)malloc(size);
+    shared_st->stack_size = size;
+
+    //栈基指针  buf+size;
+
+    shared_st->co_shared_rbp = shared_st->stack_buf+size-sizeof(void*);
+
+    //16字节对齐
+    shared_st->co_shared_rbp =(char*)((size_t)shared_st->co_shared_rbp&(-16L));
+
+    return shared_st;
+}
+void
+shared_stack_free(common_shared_stack_t* st )
+{
+    free(st->stack_buf);
+    free(st);
 }
 
 

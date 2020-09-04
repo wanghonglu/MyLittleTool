@@ -14,19 +14,12 @@ typedef struct context context_t;
   *                                这时候要把开始保存的内容 再次拷贝进栈里
   * */
 //通用共享栈
- typedef struct common_shared_stack{
-     context_t*   cur_co;//当前使用共享栈的协程
-     char*        stack_buf; 
-     size_t       stack_size;
-     char*        co_shared_rbp;//共享栈的rbp指针 栈基指针 stack_buf+stack_size
- }common_shared_stack_t;
  typedef struct ProcessScheduler{
      context_t*    allcos_[128];//协程内部启动协程,应该不会超过128 
      size_t        co_index_;//co_index_ 号协程 当前运行协程
      size_t        co_stack_size;
  
  }ProcessScheduler;
-
 
  ProcessScheduler* ProcessSchedulerInit();
  ProcessScheduler* GetCurrentProcessScheduler();

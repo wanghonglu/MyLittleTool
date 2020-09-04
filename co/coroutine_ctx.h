@@ -34,6 +34,15 @@ typedef struct corotine_stack{
     char*   buf;//真正的栈空间
     char*   rbp;//栈基指针
 }corotine_stack;
+//默认8M共享栈
+struct context;
+#define DefaultStackSize 8*1024*1024
+typedef struct common_shared_stack{
+    struct context    *cur_co;//当前使用共享栈的协程
+    char*        stack_buf;
+    size_t       stack_size;//栈大小
+    char*        co_shared_rbp;//共享栈的rbp指针 
+}common_shared_stack_t;
 
 //共享站定义  线程内部的共享站
 typedef struct shared_stack{
@@ -89,18 +98,18 @@ context_t* co_create(fn_type fun, void*args);
 //  等到再次切换到C的时候  还需要C把自己保存的内容恢复到共享栈上
 //
 //
-typedef common_shared_stack{
-    content_t    *cur_co;//当前使用共享栈的协程
-    char*        stack_buf;
-    size_t       stack_size;//栈大小
-    char*        co_shared_rbp;//共享栈的rbp指针 
-};
+//创建共享站
+common_shared_stack_t*  create_shared_stack(size_t size );
+//释放共享站
+void shared_stack_free(common_shared_stack_t*);
 
 //共享栈
-context_t* co_create_shared_stack(fn_type fun, void*args);
+context_t* co_create_shared_stack(fn_type fun, void*args, common_shared_stack_t* shared_st );
 //协程启动
 void co_start(context_t*);
 //保存共享栈上内容
 void save_shared_stack(context_t*);
+//恢复共享栈上的内容
+void resume_shared_stack(context_t*);
 #endif
 
