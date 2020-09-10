@@ -67,39 +67,33 @@ Timer* _AddTimer(TimeWheel* timer_manage, Timer* timer )
     //32位的int  第八位由第一个时间轮用 后面24位分别由四个时间轮用 每个轮子用4位
     TimerList* list = NULL;
     size_t  real_idx=0;
-    //printf("%d \n", idx);
     if( idx<1<<TV1_BIT )//1-255
     {
         //放在tv1上  取低8位作为tv1的数组下标
         real_idx = timer->expried_time_&TV1_MASK;
-     //   printf("TV1 %ld expried:%ld now:%ld TV1_MAS:%d  now_idx:%ld\n", real_idx, timer->expried_time_,now_milliseconds(),TV1_MASK,now_milliseconds()&TV1_MASK);
         list = &timer_manage->tv1_[real_idx];
     }
     else if (idx< 1<<(TV1_BIT+TV_BIT))//1小于1左移 14位
     {
         //取出9到14位的值作为tv2_的下标
         real_idx = (timer->expried_time_>>TV1_BIT)&TV_MASK;
-      //  printf("TV2 %ld expried:%ld now:%ld TV_MAS:%d  now_idx:%ld\n", real_idx, timer->expried_time_,now_milliseconds(),TV_MASK,now_milliseconds()&TV_MASK);
         list = &timer_manage->tv2_[real_idx];
     }
     else if( idx<1<<(TV1_BIT+2*TV_BIT))
     {
         //取出 15到20位做位 tv3_的下标
         real_idx=(timer->expried_time_>>(TV1_BIT+TV_BIT))&TV_MASK;
-       // printf("TV3 %ld expried:%ld now:%ld TV_MAS:%d  now_idx:%ld\n", real_idx, timer->expried_time_,now_milliseconds(),TV_MASK,now_milliseconds()&TV_MASK);
         list = &timer_manage->tv3_[real_idx];
     }
     else if (idx<1<<(TV1_BIT+3*TV_BIT))
     {
         //取出 21到26位给 tv4_的下标
         real_idx=(timer->expried_time_>>(TV1_BIT+2*TV_BIT))&TV_MASK;
-        //printf("TV4 %ld expried:%ld now:%ld TV1_MAS:%d  now_idx:%ld\n", real_idx, timer->expried_time_,now_milliseconds(),TV1_MASK,now_milliseconds()&TV1_MASK);
         list = &timer_manage->tv4_[real_idx];
     }
     else
     {
         real_idx=(timer->expried_time_>>(TV1_BIT+3*TV_BIT))&TV_MASK;
-        //printf("TV5 %ld expried:%ld now:%ld TV1_MAS:%d  now_idx:%ld\n", real_idx, timer->expried_time_,now_milliseconds(),TV1_MASK,now_milliseconds()&TV1_MASK);
         list = &timer_manage->tv4_[real_idx];
     }
     AddTimerList(list,timer);
@@ -176,15 +170,15 @@ void SwitchOthWheel(TimeWheel* tw )
     if(index)
         return;
     //3 4 5级类似
-    index = (tw->tick_>>(TV1_BIT+TV_BIT))&TV_SIZE;
+    index = (tw->tick_>>(TV1_BIT+TV_BIT))&TV_MASK;
     _SwitchOthWheel(tw,tw->tv3_, index );
     if(index)
         return;
-    index = (tw->tick_>>(TV1_BIT+2*TV_BIT))&TV_SIZE;
+    index = (tw->tick_>>(TV1_BIT+2*TV_BIT))&TV_MASK;
     _SwitchOthWheel(tw,tw->tv4_, index );
     if(index)
         return;
-    index = (tw->tick_>>(TV1_BIT+3*TV_BIT))&TV_SIZE;
+    index = (tw->tick_>>(TV1_BIT+3*TV_BIT))&TV_MASK;
     _SwitchOthWheel(tw,tw->tv5_, index );
     return;
 }
@@ -234,7 +228,8 @@ void display_time(const char*msg)
 }
 void* time_out(void* args )
 {
-    fprintf( stderr, " %ld ms超时的处理 ", (size_t)args );
+    static int counts=0;
+    fprintf( stderr, " %ld ms超时的处理  %d  ", (size_t)args, ++counts );
     display_time("超时");
 }
 #include <sys/select.h>
@@ -244,7 +239,9 @@ void Test()
     TimeWheel* wh = InitTimeWheel();
     Timer* t1 = AddTimer(wh,time_out,50,(void*)50,Exec_Once,0);
     Timer* t4 = AddTimer(wh,time_out,1000,(void*)1000,Exec_Times,3);
-    Timer* t5 = AddTimer(wh,time_out,5000,(void*)5000,Exec_All,0);
+    Timer* t5 = AddTimer(wh,time_out,5000,(void*)5000,Exec_Once,0);
+    Timer* t6 = AddTimer(wh,time_out,1000*60*3,(void*)(1000*60*3),Exec_All,0);
+    Timer* t7 = AddTimer(wh,time_out,1000*60*5,(void*)(1000*60*5),Exec_All,0);
     while(1)
     {
         //select 每次调用返回 tv都会改变 下次调用要重新赋值
