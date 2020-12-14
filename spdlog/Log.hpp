@@ -1,5 +1,9 @@
 #ifndef __LOG_HPP
 #define __LOG_HPP
+#pragma warning (disable:4800)
+#pragma warning (disable:4305)
+//#pragma warning (disable:4305) fmt库报错的 我看fmt库修复这个告警就是直接屏蔽掉.....
+#pragma warning (disable:4566)
 //基于spdlog的json日志
 #include "Singleton.hpp"
 //#include "log.h"
@@ -17,9 +21,9 @@ class LogHelp;
 class LogFormat;
 #define F_L_F source_loc(__FILE__,__LINE__,__FUNCTION__)
 //spdlog 的file似乎是会带着目录太长了，函数里面有模板参数也不处理一下
-class Llog :public Singleton<Llog> {
-	Llog();
-	friend Singleton<Llog>;
+class JsonSpdlog :public Singleton<JsonSpdlog> {
+	JsonSpdlog();
+	friend Singleton<JsonSpdlog>;
 	template<spd_loglevel lv>
 	friend class LogHelp;
 public:
@@ -41,37 +45,37 @@ public:
 	template<typename T>
 	typename std::enable_if<std::is_arithmetic<typename std::remove_reference<T>::type>::value ||
 						   std::is_enum<typename std::remove_reference<T>::type>::value, LogFormat& >::type
-	operator()(spd_string_view key, T&& value)
+	operator()(const char* key, T&& value)
 	{
 		fmt::format_to(bufer_, ",\"{}\":{}", key,value);
 		return *this;
 	}
 	//字符串
-	LogFormat& operator()(spd_string_view key, const char* value)
+	LogFormat& operator()(const char* key, const char* value)
 	{
 		if(nullptr != value)
 			fmt::format_to(bufer_, ",\"{}\":\"{}\"", key,value);
 		return *this;
 	}
-	LogFormat& operator()(spd_string_view key,  char *const value)
+	LogFormat& operator()(const char* key,  char *const value)
 	{
 		if (nullptr != value)
 			fmt::format_to(bufer_, ",\"{}\":\"{}\"", key, value);
 		return *this;
 	}
-	LogFormat& operator()(spd_string_view key, const std::string& value)
+	LogFormat& operator()(const char* key, const std::string& value)
 	{
 		fmt::format_to(bufer_, ",\"{}\":\"{}\"", key, value);
 		return *this;
 	}
 	template<typename T1,typename T2,typename ...Args>
-	LogFormat& operator()(T1&&key,T2&&value,Args&&...args)
+	LogFormat& operator()(const char*key,T2&&value,Args&&...args)
 	{
 		//参数个数必须是2的倍数 即KV格式 且Key必须是字符串 const char*
 		static_assert(0 == (sizeof...(Args) & 1), "number of args must be mutiple of 2");
 		//static_assert(std::is_same<const char*, typename std::remove_reference<T1>::type>::value, \
 		//	typeid(key).name());
-		this->(std::forward<T1>(key),std::forward<T2>(value),std::forward<Args>(args)...);
+		(*this)(std::forward<T1>(key),std::forward<T2>(value),std::forward<Args>(args)...);
 		return *this;
 	}
 
@@ -90,7 +94,7 @@ public:
 	LogHelp(const char*file, size_t Line, const char*function)\
 		: src_loc_(file, Line, function)
 	{
-		g_logformat.shouldlog_ = loglevel >= Llog::Instance().spd_loglevel_;
+		g_logformat.shouldlog_ = loglevel >= JsonSpdlog::Instance().spd_loglevel_;
 		g_logformat.bufer_.clear();
 	}
 	static LogFormat& LogFarmater()
@@ -102,7 +106,7 @@ public:
 		try
 		{
 			if (g_logformat.shouldlog_)
-				Llog::Instance().log_->log(src_loc_, loglevel,\
+				JsonSpdlog::Instance().log_->log(src_loc_, loglevel,\
 					spd_string_view(g_logformat.bufer_.data(), g_logformat.bufer_.size()));
 		}
 		catch (...)//不抛异常 也不处理

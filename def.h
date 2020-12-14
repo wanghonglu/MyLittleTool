@@ -35,8 +35,9 @@ uint32_t GetBeginOfDay();
 std::string DateTimeFmtBySeconds(uint64_t millisec, char split='-',bool WithMillSeconds=false );
 unsigned int GetThreadId();
 std::string GetProcessName();
-
-
+bool is_str_utf8(const char* str);
+std::string UTF8_To_string(const std::string & str);
+std::string string_To_UTF8(const std::string & str);
 //using WRMUTEX=boost::shared_mutex;
 //using W_LOCK=boost::unique_lock< WRMUTEX >;
 //using R_LOCK=boost::shared_lock< WRMUTEX >;

@@ -4,21 +4,22 @@
 #include "spdlog/sinks/daily_file_sink.h"
 #include "spdlog/async_logger.h"
 thread_local LogFormat g_logformat;
-Llog::Llog()
+JsonSpdlog::JsonSpdlog()
 {
 }
 //struct caldaily
-void Llog::InitAndStart(const std::string&logfilename, spd_loglevel level,\
+void JsonSpdlog::InitAndStart(const std::string&logfilename, spd_loglevel level,\
 	size_t asyncThreadCounts, size_t asyncItem)
 {
 	
 	spdlog::init_thread_pool(asyncItem, asyncThreadCounts, []() {});
 	//日切滚动sink
-	auto dailyfilesink = std::make_shared<spdlog::sinks::daily_file_sink_mt>(logfilename, 0, 0, 0);
+	//auto dailyfilesink = std::make_shared<spdlog::sinks::daily_file_sink_mt>(logfilename, 0, 0, 0);
+	auto dailyfilesink = std::make_shared<spdlog::sinks::daily_file_sink_st>(logfilename, 0, 0, 0);
 #ifdef WIN32
 	//标准数据sink
-	auto out2consolesink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-	log_.reset(new spdlog::async_logger("spdlog", { out2consolesink ,dailyfilesink }, \
+	//auto out2consolesink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+	log_.reset(new spdlog::async_logger("spdlog", {/* out2consolesink ,*/dailyfilesink }, \
 		spdlog::thread_pool()));
 	log_->set_pattern(R"({"datetime":"%Y-%m-%d %T %e","level":"%^%l%$","thread":%t,"file":"%s-%#-%!"%v })");
 #else
@@ -33,7 +34,7 @@ void Llog::InitAndStart(const std::string&logfilename, spd_loglevel level,\
 	});
 	SetLogLevel(level);
 }
-void Llog::SetLogLevel(int level)
+void JsonSpdlog::SetLogLevel(int level)
 {
 	if(level>=spd_loglevel::trace && level<=spd_loglevel::critical )
 		spdlog::set_level(static_cast<spd_loglevel>(level));

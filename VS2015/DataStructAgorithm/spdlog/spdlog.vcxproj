@@ -143,9 +143,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\def.h" />
     <ClInclude Include="..\..\..\spdlog\Log.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\def.cpp" />
+    <ClCompile Include="..\..\..\LLog.cpp" />
     <ClCompile Include="..\..\..\spdlog\Log.cpp" />
     <ClCompile Include="..\..\..\spdlog\main.cpp" />
   </ItemGroup>
