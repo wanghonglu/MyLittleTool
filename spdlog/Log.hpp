@@ -35,33 +35,37 @@ class LogFormat {
 	template<spd_loglevel lv>
 	friend class LogHelp;
 public:
-	LogFormat&Msg(spd_string_view msg);
+	LogFormat&Msg(const char* msg);
 
 	//数值类型
 	template<typename T>
 	typename std::enable_if<std::is_arithmetic<typename std::remove_reference<T>::type>::value ||
 						   std::is_enum<typename std::remove_reference<T>::type>::value, LogFormat& >::type
-	operator()(spd_string_view key, T&& value)
+	operator()(const char* key, T&& value)
 	{
 		fmt::format_to(bufer_, ",\"{}\":{}", key,value);
 		return *this;
 	}
 	//字符串
-	LogFormat& operator()(spd_string_view key, const char* value)
+	LogFormat& operator()(const char* key, const char* value)
 	{
 		if(nullptr != value)
 			fmt::format_to(bufer_, ",\"{}\":\"{}\"", key,value);
 		return *this;
 	}
-	LogFormat& operator()(spd_string_view key,  char *const value)
+	LogFormat& operator()(const char* key,  char *const value)
 	{
 		if (nullptr != value)
 			fmt::format_to(bufer_, ",\"{}\":\"{}\"", key, value);
 		return *this;
 	}
-	LogFormat& operator()(spd_string_view key, const std::string& value)
+	LogFormat& operator()(const char* key, const std::string& value)
 	{
 		fmt::format_to(bufer_, ",\"{}\":\"{}\"", key, value);
+		return *this;
+	}
+	LogFormat& operator()()
+	{
 		return *this;
 	}
 	template<typename T1,typename T2,typename ...Args>
@@ -71,8 +75,8 @@ public:
 		static_assert(0 == (sizeof...(Args) & 1), "number of args must be mutiple of 2");
 		//static_assert(std::is_same<const char*, typename std::remove_reference<T1>::type>::value, \
 		//	typeid(key).name());
-		this->(std::forward<T1>(key),std::forward<T2>(value),std::forward<Args>(args)...);
-		return *this;
+		(*this)(std::forward<T1>(key), std::forward<T2>(value));
+		return (*this)(std::forward<Args>(args)...);
 	}
 
 

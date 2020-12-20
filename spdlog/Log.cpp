@@ -38,7 +38,7 @@ void Llog::SetLogLevel(int level)
 	if(level>=spd_loglevel::trace && level<=spd_loglevel::critical )
 		spdlog::set_level(static_cast<spd_loglevel>(level));
 }
-LogFormat& LogFormat::Msg(spd_string_view msg)
+LogFormat& LogFormat::Msg(const char* msg)
 {
 	fmt::format_to(bufer_, ",\"msg\":{}", msg);
 	return *this;

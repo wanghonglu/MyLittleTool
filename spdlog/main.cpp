@@ -1,4 +1,5 @@
 #pragma warning (disable:4800)
+#pragma warning (disable:4305)
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "Log.hpp"
