@@ -85,6 +85,7 @@
 
 namespace datastruct {
 #define GetHeight(node) ((node)?node->height_:0)
+//这里最好还有一个模板参数 cmp 进行比较 这里懒得弄了 就是测试
 template<typename Key,typename Value>
 class AVLTree :public BaseBinarySearchTree<Key,Value>
 	{
@@ -219,14 +220,18 @@ bool AVLTree<Key, Value>::is_balance(Node*node)const
 template<typename Key,typename Value>
 typename AVLTree<Key, Value>::Node* AVLTree<Key, Value>::find_min(Node* node )const
 {
-	while (node && node->left_)
+	if( nullptr == node )
+		return nullptr;
+	while (node->left_)
 		node = node->left_;
 	return node;
 }
 template<typename Key, typename Value>
 typename AVLTree<Key, Value>::Node* AVLTree<Key, Value>::find_max(Node* node)const
 {
-	while (node && node->right_)
+	if( nullptr == node )
+		return nullptr;
+	while (node->right_)
 		node = node->right_;
 	return node;
 }
@@ -557,6 +562,8 @@ typename AVLTree<Key, Value>::Node* AVLTree<Key, Value>::insert(Node* node, cons
 	else if(key == node->key_)//插入的结点 已经存在,修改一下
 	{
 		node->val_ = val;
+		//这里树高是没变的
+		return node;
 	}
 	else if (key > node->key_)//右子树插入
 	{
